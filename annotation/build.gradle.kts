@@ -1,8 +1,10 @@
 plugins {
     id("java")
     id("com.google.devtools.ksp") version "1.9.24-1.0.20"
+    id("maven-publish")
     kotlin("jvm")
 }
+apply(from = "publish_jar.gradle.kts")
 
 group = "uii.ang.creator.plugin"
 version = "1.0-SNAPSHOT"

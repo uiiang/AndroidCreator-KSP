@@ -4,20 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="删除无用代码">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/ui/Ui.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="生成代码到其它目录">
+      <change afterPath="$PROJECT_DIR$/annotation/publish_jar.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/codegen/CodeBuilder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/codegen/CodeBuilder.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorProcessor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorProcessor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AlbumDetail.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/AlbumDetail.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Products.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Products.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +39,20 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
-                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+                <item name="annotation" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
+                <item name="annotation" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
+                <item name="annotation" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="publishing" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -96,48 +100,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [init].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [jar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [:annotation:Creator.main()].executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [:annotation:CreatorProcessor.main()].executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [buildDependents].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [jar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build AndroidCreatorKsp.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build TestKsp.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.CreateTest.create generate ApiModel.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.TestKsp [:MainKt.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Kotlin.MainKt.executor&quot;: &quot;Coverage&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/code/github/kotlin/kobweb&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;D:/code/mycodes/yeoman/AndroidCreatorKsp/processor/src/main/java/uii/ang/creator/plugin/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Gradle.AndroidCreatorKsp [build].executor": "Run",
+    "Gradle.AndroidCreatorKsp [clean].executor": "Run",
+    "Gradle.AndroidCreatorKsp [init].executor": "Run",
+    "Gradle.AndroidCreatorKsp [jar].executor": "Run",
+    "Gradle.AndroidCreatorKsp [publishToMavenLocal].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [:annotation:Creator.main()].executor": "Debug",
+    "Gradle.AndroidCreatorKsp:annotation [:annotation:CreatorProcessor.main()].executor": "Debug",
+    "Gradle.AndroidCreatorKsp:annotation [buildDependents].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [build].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [clean].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [jar].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal].executor": "Run",
+    "Gradle.Build AndroidCreatorKsp.executor": "Run",
+    "Gradle.Build TestKsp.executor": "Run",
+    "Gradle.CreateTest.create generate ApiModel.executor": "Run",
+    "Gradle.TestKsp [:MainKt.main()].executor": "Run",
+    "Kotlin.MainKt.executor": "Coverage",
+    "Maven.upload_jar.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/code/mycodes/yeoman/AndroidCreatorKsp/annotation",
+    "onboarding.tips.debug.path": "D:/code/mycodes/yeoman/AndroidCreatorKsp/processor/src/main/java/uii/ang/creator/plugin/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;kotlin-gradle-user-dirs&quot;: [
-      &quot;D:\\code\\conf\\gradle\\.gradle&quot;
+  "keyToStringList": {
+    "kotlin-gradle-user-dirs": [
+      "D:\\code\\conf\\gradle\\.gradle"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\src\testFixtures\kotlin\uii\ang\creator" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\src\main\java\uii\ang\creator\processor" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\processor\src\test\resources" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp" />
-      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\processor\src\main\kotlin\uii\ang\creator\processor" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\src\main\kotlin\uii\ang\domain" />
@@ -154,7 +161,7 @@
       <recent name="uii.ang.creator.processor.Create" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.CreateTest.create generate ApiModel">
+  <component name="RunManager" selected="Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal]">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -163,50 +170,6 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="AndroidCreatorKsp [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="AndroidCreatorKsp [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="clean" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
     </configuration>
     <configuration name="AndroidCreatorKsp [init]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -230,6 +193,28 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="AndroidCreatorKsp [publishToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="publishToMavenLocal" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="AndroidCreatorKsp:annotation [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -242,6 +227,28 @@
         <option name="taskNames">
           <list>
             <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="AndroidCreatorKsp:annotation [publishToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/annotation" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="publishToMavenLocal" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -276,13 +283,57 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="upload_jar" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list />
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map>
+                <entry key="install:install-file" value="true" />
+                <entry key="Dversion=1.0.0" value="false" />
+                <entry key="Dfile=D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\build\libs\annotation-1.0-SNAPSHOT.jar" value="false" />
+                <entry key="DgroupId=uii.ang" value="false" />
+                <entry key="DartifactId=android-creator" value="false" />
+                <entry key="Dpackaging=jar" value="false" />
+              </map>
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="D:\code\conf\maven\" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Gradle.AndroidCreatorKsp [publishToMavenLocal]" />
+      <item itemvalue="Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal]" />
+      <item itemvalue="Gradle.AndroidCreatorKsp [init]" />
+      <item itemvalue="Gradle.AndroidCreatorKsp:annotation [jar]" />
+      <item itemvalue="Gradle.CreateTest.create generate ApiModel" />
+      <item itemvalue="Maven.upload_jar" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal]" />
+        <item itemvalue="Gradle.AndroidCreatorKsp [publishToMavenLocal]" />
         <item itemvalue="Gradle.CreateTest.create generate ApiModel" />
         <item itemvalue="Gradle.AndroidCreatorKsp:annotation [jar]" />
         <item itemvalue="Gradle.AndroidCreatorKsp [init]" />
-        <item itemvalue="Gradle.AndroidCreatorKsp [clean]" />
-        <item itemvalue="Gradle.AndroidCreatorKsp [build]" />
       </list>
     </recent_temporary>
   </component>
@@ -359,7 +410,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719022303719</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="生成代码到其它目录">
+      <option name="closed" value="true" />
+      <created>1719042647651</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1719042647651</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -393,7 +452,8 @@
     <MESSAGE value="生成ApiModel和Response" />
     <MESSAGE value="生成RetrofitService" />
     <MESSAGE value="删除无用代码" />
-    <option name="LAST_COMMIT_MESSAGE" value="删除无用代码" />
+    <MESSAGE value="生成代码到其它目录" />
+    <option name="LAST_COMMIT_MESSAGE" value="生成代码到其它目录" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

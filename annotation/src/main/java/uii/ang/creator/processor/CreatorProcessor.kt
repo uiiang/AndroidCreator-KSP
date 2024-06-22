@@ -46,17 +46,17 @@ class CreatorProcessor(
   private fun writeFiles() {
     CodeBuilder.allBuilder().forEach {
       val fileSpec = it.build()
-      val path = "D:\\code\\mycodes\\yeoman\\Test"
-//      logger.warn("writeFiles path=$path relativePath=${fileSpec.relativePath}")
 //      logger.warn(" content ${fileSpec} ")
       // 生成文件到指定目录
-      fileSpec.writeTo(File(path))
+//      val path = File("Test")
+//      logger.warn("writeFiles path=${path.absolutePath} relativePath=${fileSpec.relativePath}")
+//      fileSpec.writeTo(path)
       // 生成文件到build/generated/ksp/main/kotlin
-//      fileSpec
-//        .writeTo(
-//        codeGenerator,
-//        aggregating = true, // always aggregating, as any new file could be a mapper with higher prio than a potentially used one.
-//      )
+      fileSpec
+        .writeTo(
+        codeGenerator,
+        aggregating = true, // always aggregating, as any new file could be a mapper with higher prio than a potentially used one.
+      )
     }
   }
   private fun generateMappingCode(resolver: Resolver, converterData: List<AnnotatedBaseData>) {
