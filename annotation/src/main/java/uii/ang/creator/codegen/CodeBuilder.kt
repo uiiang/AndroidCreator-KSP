@@ -9,8 +9,7 @@ import com.squareup.kotlinpoet.ksp.toClassName
 
 class CodeBuilder private constructor(
   private val builder: FileSpec.Builder,
-  private val typeBuilder: TypeSpec.Builder?,
-//  val originating: MutableSet<KSFile>
+  private val typeBuilder: TypeSpec.Builder?
 ) {
   fun addConstructor(funConstructor: FunSpec.Builder) {
     typeBuilder?.primaryConstructor(funConstructor.build())
