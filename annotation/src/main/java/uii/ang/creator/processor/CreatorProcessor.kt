@@ -1,16 +1,13 @@
 package uii.ang.creator.processor
 
+import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
-import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ksp.writeTo
 import uii.ang.creator.annotation.*
 import uii.ang.creator.codegen.CodeBuilder
-import uii.ang.creator.template.showcase.ApiModelHelper
-import uii.ang.creator.template.showcase.ResponseHelper
-import uii.ang.creator.template.showcase.RetrofitServiceHelper
-import kotlin.collections.ArrayList
+import java.io.File
 
 class CreatorProcessor(
   private val environment: SymbolProcessorEnvironment,
@@ -20,8 +17,15 @@ class CreatorProcessor(
 
   @Synchronized
   override fun process(resolver: Resolver): List<KSAnnotated> {
-    val creatorAnnotated = resolver.getSymbolsWithAnnotation(Creator::class.qualifiedName!!)
-    if (creatorAnnotated.count() == 0) {
+
+    val creatorAnnotated = resolver.getSymbolsWithAnnotation(Creator::class.qualifiedName!!).toList()
+
+    creatorAnnotated.forEach {
+      it.containingFile?.let { cf ->
+        logger.warn("containingFile filePath ${cf.filePath} ${cf.packageName} ${cf.fileName}")
+      }
+    }
+    if (creatorAnnotated.isEmpty()) {
       logger.warn("not found use Creator Annotation Class")
       return emptyList()
     }
@@ -31,16 +35,28 @@ class CreatorProcessor(
     generateMappingCode(resolver, data)
     writeFiles()
 
+    resolver.getAllFiles().forEach {
+      logger.warn("allFile fileName=${it.fileName} filePath=${it.filePath} packageName=${it.packageName.getShortName()}")
+    }
+
     val unableToProcess = creatorAnnotated.filterNot { it.validate() }
     return unableToProcess.toList()
   }
 
   private fun writeFiles() {
-    CodeBuilder.all().forEach {
-      it.build().writeTo(
-        codeGenerator,
-        aggregating = true, // always aggregating, as any new file could be a mapper with higher prio than a potentially used one.
-      )
+    CodeBuilder.allBuilder().forEach {
+      val fileSpec = it.build()
+      val path = "D:\\code\\mycodes\\yeoman\\Test"
+//      logger.warn("writeFiles path=$path relativePath=${fileSpec.relativePath}")
+//      logger.warn(" content ${fileSpec} ")
+      // 生成文件到指定目录
+      fileSpec.writeTo(File(path))
+      // 生成文件到build/generated/ksp/main/kotlin
+//      fileSpec
+//        .writeTo(
+//        codeGenerator,
+//        aggregating = true, // always aggregating, as any new file could be a mapper with higher prio than a potentially used one.
+//      )
     }
   }
   private fun generateMappingCode(resolver: Resolver, converterData: List<AnnotatedBaseData>) {

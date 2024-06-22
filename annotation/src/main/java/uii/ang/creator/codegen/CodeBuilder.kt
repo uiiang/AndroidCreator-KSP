@@ -1,6 +1,5 @@
 package uii.ang.creator.codegen
 
-import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -38,8 +37,8 @@ class CodeBuilder private constructor(
 
     private val cache = mutableMapOf<QualifiedName, CodeBuilder>()
 
-    fun all(): Iterable<CodeBuilder> = cache.values
-
+    fun allBuilder(): Iterable<CodeBuilder> = cache.values
+    fun all():Map<QualifiedName, CodeBuilder> = cache
     fun clear() {
       cache.clear()
     }
@@ -59,7 +58,7 @@ class CodeBuilder private constructor(
       }
     }
 
-    private data class QualifiedName(
+    data class QualifiedName(
       val packageName: String,
       val fileName: String
     )
