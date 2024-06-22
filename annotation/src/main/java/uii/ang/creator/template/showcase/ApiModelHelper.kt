@@ -7,6 +7,10 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.PropertyDescriptor
+import uii.ang.creator.tools.firstCharUpperCase
+import uii.ang.creator.tools.isBaseType
+import uii.ang.creator.tools.isList
+import uii.ang.creator.tools.primitiveDefaultInit
 
 class ApiModelHelper(
   logger: KSPLogger,
@@ -86,10 +90,10 @@ class ApiModelHelper(
 //              " className $className " +
 //              " isBaseType ${isBaseType(typeName)}"
 //    )
-    val genTypeName = if (isBaseType(typeName)) {
+    val genTypeName = if (typeName.isBaseType()) {
       // 如果字段属性为基本类型，直接返回原类型
       typeName
-    } else if (isList(typeName)) {
+    } else if (typeName.isList()) {
       // 如果是list，获取list中的泛型类，
       // 如果泛型类是注解Creator的数据类，转换成apimodel
       // 判断当前list的泛型类是否为creator
@@ -138,15 +142,16 @@ class ApiModelHelper(
       val isList = typeName.toString().startsWith("kotlin.collections.List")
       if (isList && entry.isNullable) {
         toDomainModel.addStatement("  $paramName = this.$paramName?.map { it.toDomainModel() } ?: listOf(),")
-      } else if (isList(typeName) && !entry.isNullable) {
+      } else if (typeName.isList() && !entry.isNullable) {
         if (getListGenericsCreatorAnnotation(entry) != null) {
           toDomainModel.addStatement("  $paramName = this.$paramName.map { it.toDomainModel() },")
         } else {
           toDomainModel.addStatement("  $paramName = this.$paramName.map { it } ,")
         }
       } else {
-        if (isBaseType(typeClassName)) {
-          val defValue = if (typeName.isNullable) "?: \"\"" else ""
+//        logger.warn("  typeName=${typeName} isBaseType=${typeName.isBaseType()} primitiveDefaultInit=${typeName.primitiveDefaultInit()}")
+        if (typeName.isBaseType()) {
+          val defValue = if (typeName.isNullable) "?: ${typeName.primitiveDefaultInit()}" else ""
           toDomainModel.addStatement("  $paramName = this.$paramName $defValue,")
         } else {
           toDomainModel.addStatement("  $paramName = this.$paramName.toDomainModel(),")

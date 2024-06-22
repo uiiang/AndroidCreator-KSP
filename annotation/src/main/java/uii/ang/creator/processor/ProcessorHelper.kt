@@ -78,22 +78,6 @@ open class ProcessorHelper(
     return annotation.shortName.getShortName() == Creator::class.simpleName
   }
 
-  fun isBaseType(type: TypeName): Boolean {
-    val typeName = type.toString().replace("?", "")
-    return typeName == "kotlin.Long" ||
-            typeName == "kotlin.Double" ||
-            typeName == "kotlin.Float" ||
-            typeName == "kotlin.Int" ||
-            typeName == "kotlin.Short" ||
-            typeName == "kotlin.Char" ||
-            typeName == "kotlin.Byte" ||
-            typeName == "kotlin.String"
-  }
-
-  fun isList(type: TypeName): Boolean {
-    return (type.toString().startsWith("kotlin.collections.List"))
-  }
-
   fun isNullable(propertyDeclaration: KSPropertyDeclaration): Boolean {
     return propertyDeclaration.type.resolve().isMarkedNullable
   }
@@ -107,21 +91,5 @@ open class ProcessorHelper(
 
   fun getPackageName(classDeclaration: KSClassDeclaration): String {
     return classDeclaration.packageName.asString()
-  }
-
-
-  fun String.capitalizeAndAddSpaces(): String {
-    val tmpStr = replace(Regex("[A-Z]")) { " " + it.value.lowercase(Locale.getDefault()) }
-    return tmpStr.replaceFirstChar {
-      if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-    } + "."
-  }
-
-  fun String.firstCharUpperCase(): String {
-    return replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
-  }
-
-  fun String.firstCharLowerCase(): String {
-    return replaceFirstChar { if (it.isUpperCase()) it.lowercaseChar() + "" else it.toString() }
   }
 }

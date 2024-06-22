@@ -9,6 +9,10 @@ import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
 import uii.ang.creator.annotation.Creator
 import uii.ang.creator.annotation.Parameter
 import uii.ang.creator.annotation.requestMethodGet
+import uii.ang.creator.tools.capitalizeAndAddSpaces
+import uii.ang.creator.tools.from
+import uii.ang.creator.tools.isList
+import uii.ang.creator.tools.isNullable
 
 class CreatorData(
   val annotationData: AnnotationData,
@@ -31,6 +35,7 @@ class CreatorData(
 //                "it.simpleName ${it.simpleName.getShortName()} " +
 //                "isNullable ${it.type.resolve().isNullable()}"
 //      )
+      it.type.resolve().toClassName().isList()
       PropertyDescriptor(
         typeClassName = it.type.resolve().toClassName(),
         //包含完整包名类名

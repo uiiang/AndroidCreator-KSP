@@ -24,6 +24,7 @@ dependencies {
     implementation("com.google.auto.service:auto-service-annotations:1.0.1")
     implementation("com.squareup:kotlinpoet:1.17.0")
     implementation("com.squareup:kotlinpoet-ksp:1.17.0")
+    implementation(kotlin("reflect"))
     ksp("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")

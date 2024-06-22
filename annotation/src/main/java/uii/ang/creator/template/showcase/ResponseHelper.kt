@@ -1,13 +1,10 @@
 package uii.ang.creator.template.showcase
 
 import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.symbol.KSAnnotation
-import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.*
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
-import uii.ang.creator.processor.PropertyDescriptor
+import uii.ang.creator.tools.firstCharLowerCase
 
 class ResponseHelper(
   logger: KSPLogger,
