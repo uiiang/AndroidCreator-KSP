@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="生成RetrofitService">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/codegen/CodeBuilder.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/AnnotatedBaseData.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCodeGenerator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCollector.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorProcessor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorProcessorProvider.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/KotlinExtent.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/PropertyDescriptor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiModelHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ResponseHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RetrofitServiceHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/tools/KotlinExtent.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AlbumDetail.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Products.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/annotation">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Kotlin Annotation" />
+        <option value="Kotlin Object" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="3a36f4da05eee84f1495132fd92f5bb082b024e3" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="MIXED" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;uiiang&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/uiiang/AndroidCreator-KSP.git&quot;,
+    &quot;accountId&quot;: &quot;e81acde2-0b4f-474d-a4da-6e0f6fb062e6&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2hcpDpblehlmfP0LrZG5mE6pujY" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Gradle.AndroidCreatorKsp [build].executor": "Run",
+    "Gradle.AndroidCreatorKsp [clean].executor": "Run",
+    "Gradle.AndroidCreatorKsp [init].executor": "Run",
+    "Gradle.AndroidCreatorKsp [jar].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [:annotation:Creator.main()].executor": "Debug",
+    "Gradle.AndroidCreatorKsp:annotation [:annotation:CreatorProcessor.main()].executor": "Debug",
+    "Gradle.AndroidCreatorKsp:annotation [buildDependents].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [build].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [clean].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [jar].executor": "Run",
+    "Gradle.Build AndroidCreatorKsp.executor": "Run",
+    "Gradle.Build TestKsp.executor": "Run",
+    "Gradle.CreateTest.create generate ApiModel.executor": "Run",
+    "Gradle.TestKsp [:MainKt.main()].executor": "Run",
+    "Kotlin.MainKt.executor": "Coverage",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/code/mycodes/yeoman/AndroidCreatorKsp/annotation/src/testFixtures/kotlin/uii/ang/creator",
+    "onboarding.tips.debug.path": "D:/code/mycodes/yeoman/AndroidCreatorKsp/processor/src/main/java/uii/ang/creator/plugin/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default"
+  },
+  "keyToStringList": {
+    "kotlin-gradle-user-dirs": [
+      "D:\\code\\conf\\gradle\\.gradle"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\src\testFixtures\kotlin\uii\ang\creator" />
+      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\src\main\java\uii\ang\creator\processor" />
+      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\processor\src\test\resources" />
+      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp" />
+      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\processor\src\main\kotlin\uii\ang\creator\processor" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="uii.ang.creator.processor.create" />
+      <recent name="uii.ang.creator.template.showcase" />
+      <recent name="uii.ang.creator.processor" />
+    </key>
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="uii.ang.creator.annotation" />
+      <recent name="uii.ang.creator.processor" />
+      <recent name="uii.ang.creator.processor.create" />
+      <recent name="uii.ang.creator.processor.Create" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.CreateTest.create generate ApiModel">
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="uii.ang.creator.processor.CreatorProcessor" />
+      <module name="AndroidCreatorKsp.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AndroidCreatorKsp [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="AndroidCreatorKsp [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="AndroidCreatorKsp [init]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="init" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="AndroidCreatorKsp:annotation [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/annotation" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="CreateTest.create generate ApiModel" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":processor:test" />
+            <option value="--tests" />
+            <option value="&quot;uii.ang.creator.processor.create.CreateTest.create generate ApiModel&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.CreateTest.create generate ApiModel" />
+        <item itemvalue="Gradle.AndroidCreatorKsp:annotation [jar]" />
+        <item itemvalue="Gradle.AndroidCreatorKsp [init]" />
+        <item itemvalue="Gradle.AndroidCreatorKsp [clean]" />
+        <item itemvalue="Gradle.AndroidCreatorKsp [build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="" />
+      <created>1717903103463</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1717903103463</updated>
+    </task>
+    <task id="LOCAL-00001" summary="生成ApiModel,Response,RetrofitService">
+      <option name="closed" value="true" />
+      <created>1718414906827</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718414906827</updated>
+    </task>
+    <task id="LOCAL-00002" summary="尝试重构整体架构">
+      <option name="closed" value="true" />
+      <created>1718686106961</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1718686106961</updated>
+    </task>
+    <task id="LOCAL-00003" summary="生成ApiModel和Response">
+      <option name="closed" value="true" />
+      <created>1718853281596</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1718853281596</updated>
+    </task>
+    <task id="LOCAL-00004" summary="生成RetrofitService">
+      <option name="closed" value="true" />
+      <created>1718862195442</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1718862195442</updated>
+    </task>
+    <task id="LOCAL-00005" summary="生成RetrofitService">
+      <option name="closed" value="true" />
+      <created>1718933834931</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1718933834932</updated>
+    </task>
+    <task id="LOCAL-00006" summary="生成RetrofitService">
+      <option name="closed" value="true" />
+      <created>1719020534627</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1719020534627</updated>
+    </task>
+    <task id="LOCAL-00007" summary="生成RetrofitService">
+      <option name="closed" value="true" />
+      <created>1719020577876</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1719020577876</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/detached" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="生成ApiModel,Response,RetrofitService" />
+    <MESSAGE value="尝试重构整体架构" />
+    <MESSAGE value="生成ApiModel和Response" />
+    <MESSAGE value="生成RetrofitService" />
+    <option name="LAST_COMMIT_MESSAGE" value="生成RetrofitService" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Main.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/processor/src/main/kotlin/uii/ang/creator/processor/Main.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/processor/src/testFixtures/kotlin/uii/ang/creator/processor/KonverterITest.kt</url>
+          <line>92</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/processor/src/testFixtures/kotlin/uii/ang/creator/processor/KonverterITest.kt</url>
+          <line>69</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/processor/src/testFixtures/kotlin/uii/ang/creator/processor/KonverterITest.kt</url>
+          <line>79</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
