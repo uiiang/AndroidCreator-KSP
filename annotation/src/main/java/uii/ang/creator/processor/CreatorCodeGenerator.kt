@@ -8,15 +8,13 @@ import uii.ang.creator.template.showcase.ResponseHelper
 import uii.ang.creator.template.showcase.RetrofitServiceHelper
 
 object CreatorCodeGenerator {
-
   fun generate(data: CreatorData, resolver: Resolver, logger: KSPLogger) {
-    val basePackageName = "uii.ang"
 
 //    val processorHelper = ProcessorHelper(logger, data, basePackageName)
-    val apiModelHelper = ApiModelHelper(logger, data, basePackageName)
-    val responseHelper = ResponseHelper(logger, data, basePackageName)
-    val retrofitServiceHelper = RetrofitServiceHelper(logger, data, basePackageName)
-    
+    val apiModelHelper = ApiModelHelper(logger, data)
+    val responseHelper = ResponseHelper(logger, data)
+    val retrofitServiceHelper = RetrofitServiceHelper(logger, data)
+
     // 生成ApiDomain代码
     generatorApiModel(apiModelHelper, data)
 

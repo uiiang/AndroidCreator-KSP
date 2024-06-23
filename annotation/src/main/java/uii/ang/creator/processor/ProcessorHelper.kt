@@ -6,17 +6,14 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSNode
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.ksp.toTypeName
-import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
 import uii.ang.creator.annotation.Creator
-import java.util.*
+import uii.ang.creator.basePackageName
+import uii.ang.creator.modulePackageName
 
 open class ProcessorHelper(
   val logger: KSPLogger,
   val data: CreatorData,
-  val basePackageName: String
 ) {
   val classDeclaration = data.sourceClassDeclaration
   val dataClassName = getClassName(classDeclaration)
@@ -24,9 +21,9 @@ open class ProcessorHelper(
   //  val responseClassName = getClassName(classDeclaration, suffix = "Response")
   val classKdoc = classDeclaration.docString
   val dataClassPackageName = getPackageName(classDeclaration)
-  val apiModelPackageName = "${basePackageName}.product.data.datasource.api.model"
-  val responsePackageName = "${basePackageName}.product.data.datasource.api.response"
-  val retrofitServicePackageName = "${basePackageName}.product.data.datasource.api.service"
+  val apiModelPackageName = "${basePackageName}.${modulePackageName}.data.datasource.api.model"
+  val responsePackageName = "${basePackageName}.${modulePackageName}.data.datasource.api.response"
+  val retrofitServicePackageName = "${basePackageName}.${modulePackageName}.data.datasource.api.service"
   val baseRetrofitPackageName = "$basePackageName.base.data.retrofit"
 
   val apiModelClassName = ClassName(

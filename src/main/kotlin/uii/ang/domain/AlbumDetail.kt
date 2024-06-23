@@ -1,4 +1,4 @@
-package uii.ang.product.domain.model.uii.ang.domain
+package uii.ang.domain
 
 import uii.ang.creator.annotation.Creator
 import uii.ang.creator.annotation.Parameter

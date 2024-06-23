@@ -14,9 +14,8 @@ import uii.ang.creator.tools.primitiveDefaultInit
 
 class ApiModelHelper(
   logger: KSPLogger,
-  data: CreatorData,
-  basePackageName: String
-) : ProcessorHelper(logger, data, basePackageName) {
+  data: CreatorData
+) : ProcessorHelper(logger, data) {
   // @Serializable
   // internal data class AlbumApiModel(
   fun genClassBuilder(): TypeSpec.Builder {

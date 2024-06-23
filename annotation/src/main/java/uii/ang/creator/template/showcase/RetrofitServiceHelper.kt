@@ -8,9 +8,8 @@ import uii.ang.creator.processor.ProcessorHelper
 
 class RetrofitServiceHelper(
   logger: KSPLogger,
-  data: CreatorData,
-  basePackageName: String
-) : ProcessorHelper(logger, data, basePackageName) {
+  data: CreatorData
+) : ProcessorHelper(logger, data) {
 
   fun genClassBuilder(): TypeSpec.Builder {
 //    val apiModelClassName = apiModelClassName
