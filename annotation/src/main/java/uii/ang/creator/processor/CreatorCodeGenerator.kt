@@ -16,12 +16,50 @@ object CreatorCodeGenerator {
     val apiModelHelper = ApiModelHelper(logger, data, basePackageName)
     val responseHelper = ResponseHelper(logger, data, basePackageName)
     val retrofitServiceHelper = RetrofitServiceHelper(logger, data, basePackageName)
-
-    val apiModelClassNameStr = apiModelHelper.apiModelClassName.simpleName
-    val responseClassNameStr = responseHelper.responseClassName.simpleName
-    val retrofitServiceClassNameStr = retrofitServiceHelper.retrofitServiceClassName.simpleName
-
+    
     // 生成ApiDomain代码
+    generatorApiModel(apiModelHelper, data)
+
+    // 生成Response代码
+    if (data.generateResponse) {
+      generatorResponse(responseHelper)
+    }
+
+    // 生成Retrofit代码
+    if (data.generateRetrofitService) {
+      generatorRetrofitService(retrofitServiceHelper)
+    }
+  }
+
+  private fun generatorRetrofitService(
+    retrofitServiceHelper: RetrofitServiceHelper
+  ) {
+    val retrofitServiceClassNameStr = retrofitServiceHelper.retrofitServiceClassName.simpleName
+    val retrofitServiceClassName = retrofitServiceHelper.genClassBuilder()
+    val retrofitServiceCodeBuilder = CodeBuilder.getOrCreate(retrofitServiceHelper.retrofitServicePackageName,
+      retrofitServiceClassNameStr,
+      typeBuilderProvider = { retrofitServiceClassName }
+    )
+    val genFun = retrofitServiceHelper.genRetrofitServiceFuncCode()
+    retrofitServiceCodeBuilder.addFunction(genFun.build(), true)
+  }
+
+  private fun generatorResponse(
+    responseHelper: ResponseHelper
+  ) {
+    val responseClassNameStr = responseHelper.responseClassName.simpleName
+    val responseClassName = responseHelper.genClassBuilder()
+    CodeBuilder.getOrCreate(responseHelper.responsePackageName,
+      responseClassNameStr,
+      typeBuilderProvider = { responseClassName }
+    )
+  }
+
+  private fun generatorApiModel(
+    apiModelHelper: ApiModelHelper,
+    data: CreatorData
+  ) {
+    val apiModelClassNameStr = apiModelHelper.apiModelClassName.simpleName
     val apiModelClassName = apiModelHelper.genClassBuilder()
     val apiModelCodeBuilder = CodeBuilder.getOrCreate(
       apiModelHelper.apiModelPackageName,
@@ -36,26 +74,6 @@ object CreatorCodeGenerator {
       data
     )
     apiModelCodeBuilder.addFunction(toDomainModel, false)
-
-    // 生成Response代码
-    if (data.generateResponse) {
-      val responseClassName = responseHelper.genClassBuilder()
-      CodeBuilder.getOrCreate(responseHelper.responsePackageName,
-        responseClassNameStr,
-        typeBuilderProvider = { responseClassName }
-      )
-    }
-
-    // 生成Retrofit代码
-    if (data.generateRetrofitService) {
-      val retrofitServiceClassName = retrofitServiceHelper.genClassBuilder()
-      val retrofitServiceCodeBuilder = CodeBuilder.getOrCreate(retrofitServiceHelper.retrofitServicePackageName,
-        retrofitServiceClassNameStr,
-        typeBuilderProvider = { retrofitServiceClassName }
-      )
-      val genFun = retrofitServiceHelper.genRetrofitServiceFuncCode()
-      retrofitServiceCodeBuilder.addFunction(genFun.build(), true)
-    }
   }
 }
 
