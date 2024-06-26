@@ -26,17 +26,25 @@ open class ProcessorHelper(
   val retrofitServicePackageName = "${basePackageName}.${modulePackageName}.data.datasource.api.service"
   val baseRetrofitPackageName = "$basePackageName.base.data.retrofit"
 
+  fun getApiModelClassNameByDataModel(dataModelName:String):ClassName = ClassName(
+      apiModelPackageName,
+      dataModelName + "ApiModel"
+    )
+
   val apiModelClassName = ClassName(
-  apiModelPackageName,
+    apiModelPackageName,
     classDeclaration.simpleName.getShortName() + "ApiModel"
   )
-  val responseClassName =ClassName(
+  val responseClassName = ClassName(
     responsePackageName,
-    data.annotationData.responseClassName.ifEmpty { "${data.sourceClassDeclaration.simpleName.getShortName()}Response" })
+    if (data.annotationData.responseClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}Response"
+    else "${data.annotationData.responseClassName}Response"
+  )
 
   val retrofitServiceClassName = ClassName(
     retrofitServicePackageName,
-    data.annotationData.retrofitServiceClassName.ifEmpty { "${data.sourceClassDeclaration.simpleName.getShortName()}RetrofitService" }
+    if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}RetrofitService"
+    else "${data.annotationData.retrofitServiceClassName}RetrofitService"
   )
 
   val retrofitPackageName = "retrofit2.http"

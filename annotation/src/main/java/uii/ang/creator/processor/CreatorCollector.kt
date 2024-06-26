@@ -11,10 +11,10 @@ import uii.ang.creator.annotation.Creator
 object CreatorCollector {
 
   fun collect(resolver: Resolver, logger: KSPLogger): List<CreatorData> {
-    logger.warn("CreatorCollector collect")
+//    logger.warn("CreatorCollector collect")
     val creatorAnnotated = resolver.getSymbolsWithAnnotation(Creator::class.qualifiedName!!)
     if (creatorAnnotated.count() == 0) {
-      logger.warn("未找到使用Creator注解的类")
+//      logger.warn("未找到使用Creator注解的类")
       return emptyList()
     }
     return creatorAnnotated
@@ -23,7 +23,7 @@ object CreatorCollector {
         isInvalidAnnotatedSetup(ksClassDeclaration, logger)
       }
       .flatMap {
-        logger.warn("CreatorCollector collect flatmap count=${it.annotations.count()}")
+//        logger.warn("CreatorCollector collect flatmap count=${it.annotations.count()}")
         val ksClassDeclaration = it as KSClassDeclaration
         it.annotations
           .filter { anno ->
@@ -33,7 +33,7 @@ object CreatorCollector {
           .map { anno ->
             CreatorData.AnnotationData.from(anno)
           }.map { anno ->
-            logger.warn("CreatorCollector collect map2 ${anno.methodName}")
+//            logger.warn("CreatorCollector collect map2 ${anno.methodName}")
             CreatorData(
               annotationData = anno,
               sourceClassDeclaration = ksClassDeclaration,

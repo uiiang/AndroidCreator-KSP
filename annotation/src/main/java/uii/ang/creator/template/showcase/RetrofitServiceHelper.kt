@@ -30,13 +30,13 @@ class RetrofitServiceHelper(
     var generateParameters = anno.parameters
 //    var requestParams: Array<String> = []
 
-    generateParameters.forEach {
-      logger.warn("generaterParameters name ${it.paramName} type ${it.paramType}")
-    }
-    logger.warn(
-      "packageName $responsePackageName" +
-              " className ${classDeclaration.simpleName.asString()}"
-    )
+    // generateParameters.forEach {
+    //   logger.warn("generaterParameters name ${it.paramName} type ${it.paramType}")
+    // }
+    // logger.warn(
+    //   "packageName $responsePackageName" +
+    //           " className ${classDeclaration.simpleName.asString()}"
+    // )
     // 生成如下代码
     //        @POST("./?method=album.search")
     //    suspend fun searchAlbumAsync(
@@ -47,7 +47,7 @@ class RetrofitServiceHelper(
 //    val classBuilder = TypeSpec.interfaceBuilder(retrofitServiceClassName)
 //      .addModifiers(KModifier.INTERNAL)
 
-    val genFunction = FunSpec.builder(methodName)
+    val genFunction = FunSpec.builder(methodName+"Async")
       .addModifiers(KModifier.ABSTRACT, KModifier.SUSPEND)
     generateParameters.forEach { param ->
       val paramSpec = ParameterSpec.builder(param.paramName, convertType(param.paramType))

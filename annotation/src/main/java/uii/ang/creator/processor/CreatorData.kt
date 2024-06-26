@@ -1,5 +1,6 @@
 package uii.ang.creator.processor
 
+import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
@@ -8,11 +9,9 @@ import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
 import uii.ang.creator.annotation.Creator
 import uii.ang.creator.annotation.Parameter
+import uii.ang.creator.annotation.ParseRoot
 import uii.ang.creator.annotation.requestMethodGet
-import uii.ang.creator.tools.capitalizeAndAddSpaces
-import uii.ang.creator.tools.from
-import uii.ang.creator.tools.isList
-import uii.ang.creator.tools.isNullable
+import uii.ang.creator.tools.*
 
 class CreatorData(
   val annotationData: AnnotationData,
@@ -20,6 +19,7 @@ class CreatorData(
   val logger: KSPLogger
 ) : AnnotatedBaseData {
 
+  val generateApiModel: Boolean = annotationData.generateApiModel
   val generateResponse: Boolean = annotationData.generateResponse
   val generateRetrofitService: Boolean = annotationData.generateRetrofitService
 
@@ -31,11 +31,14 @@ class CreatorData(
     sourceClassDeclaration.getAllProperties().map {
 //      logger.warn(
 //        "declaration ${it.type.resolve().toClassName().simpleName} "+
-//        "toTypeName ${it.type.resolve().toTypeName(sourceClassDeclaration.typeParameters.toTypeParameterResolver())} " +
+//        "toTypeName ${it.type.resolve().toTypeName(sourceClassDeclaration.typeParameters.toTypeParameterResolver()).annotations.count()} " +
 //                "it.simpleName ${it.simpleName.getShortName()} " +
 //                "isNullable ${it.type.resolve().isNullable()}"
 //      )
-      it.type.resolve().toClassName().isList()
+//      logger.warn("propertyDescriptorList\n \tprop = ${it.type.resolve().toClassName()}\n " +
+//              "\tannotations.count=${it.type.resolve().annotations.count()}\n " +
+//              "\tdeclaration =${it.type.resolve().declaration.simpleName.getShortName()}\n " +
+//              "\tit.count=${it.annotations.count()}")
       PropertyDescriptor(
         typeClassName = it.type.resolve().toClassName(),
         //包含完整包名类名

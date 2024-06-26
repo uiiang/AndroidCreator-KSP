@@ -14,7 +14,7 @@ const val requestMethodGet = "GET"
 @Target(AnnotationTarget.CLASS)
 annotation class Creator(
   // 是否生成apiModel类
-  val generateApiModel: Boolean = true,
+  val generateApiModel: Boolean = false,
   /**
   是否生成Response类
    */

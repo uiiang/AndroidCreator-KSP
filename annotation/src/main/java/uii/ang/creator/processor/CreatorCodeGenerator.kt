@@ -16,7 +16,9 @@ object CreatorCodeGenerator {
     val retrofitServiceHelper = RetrofitServiceHelper(logger, data)
 
     // 生成ApiDomain代码
-    generatorApiModel(apiModelHelper, data)
+    if (data.generateApiModel){
+      generatorApiModel(apiModelHelper, data)
+    }
 
     // 生成Response代码
     if (data.generateResponse) {
