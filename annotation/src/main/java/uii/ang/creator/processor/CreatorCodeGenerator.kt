@@ -3,6 +3,9 @@ package uii.ang.creator.processor
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import uii.ang.creator.codegen.CodeBuilder
+import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.responsePackageName
+import uii.ang.creator.processor.Const.retrofitServicePackageName
 import uii.ang.creator.template.showcase.ApiModelHelper
 import uii.ang.creator.template.showcase.ResponseHelper
 import uii.ang.creator.template.showcase.RetrofitServiceHelper
@@ -36,7 +39,7 @@ object CreatorCodeGenerator {
   ) {
     val retrofitServiceClassNameStr = retrofitServiceHelper.retrofitServiceClassName.simpleName
     val retrofitServiceClassName = retrofitServiceHelper.genClassBuilder()
-    val retrofitServiceCodeBuilder = CodeBuilder.getOrCreate(retrofitServiceHelper.retrofitServicePackageName,
+    val retrofitServiceCodeBuilder = CodeBuilder.getOrCreate(retrofitServicePackageName,
       retrofitServiceClassNameStr,
       typeBuilderProvider = { retrofitServiceClassName }
     )
@@ -49,7 +52,7 @@ object CreatorCodeGenerator {
   ) {
     val responseClassNameStr = responseHelper.responseClassName.simpleName
     val responseClassName = responseHelper.genClassBuilder()
-    CodeBuilder.getOrCreate(responseHelper.responsePackageName,
+    CodeBuilder.getOrCreate(responsePackageName,
       responseClassNameStr,
       typeBuilderProvider = { responseClassName }
     )
@@ -62,7 +65,7 @@ object CreatorCodeGenerator {
     val apiModelClassNameStr = apiModelHelper.apiModelClassName.simpleName
     val apiModelClassName = apiModelHelper.genClassBuilder()
     val apiModelCodeBuilder = CodeBuilder.getOrCreate(
-      apiModelHelper.apiModelPackageName,
+      apiModelPackageName,
       apiModelClassNameStr,
       typeBuilderProvider = {
         apiModelClassName
@@ -70,7 +73,7 @@ object CreatorCodeGenerator {
     )
     val toDomainModel = apiModelHelper.toDomainModel(
       apiModelClassNameStr,
-      apiModelHelper.apiModelPackageName,
+      apiModelPackageName,
       data
     )
     apiModelCodeBuilder.addFunction(toDomainModel, false)

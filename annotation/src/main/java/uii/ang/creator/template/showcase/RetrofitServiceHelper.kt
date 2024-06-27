@@ -3,6 +3,14 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import uii.ang.creator.*
+import uii.ang.creator.processor.Const.baseRetrofitApiResultClassName
+import uii.ang.creator.processor.Const.retrofitFieldClassName
+import uii.ang.creator.processor.Const.retrofitFormUrlEncodedClassName
+import uii.ang.creator.processor.Const.retrofitGetClassName
+import uii.ang.creator.processor.Const.retrofitPathClassName
+import uii.ang.creator.processor.Const.retrofitPostClassName
+import uii.ang.creator.processor.Const.retrofitQueryClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 
@@ -109,7 +117,7 @@ class RetrofitServiceHelper(
     "POST" -> retrofitPostClassName
     "GET" -> retrofitGetClassName
     "Query" -> retrofitQueryClassName
-    "Path" -> retrofitPostClassName
+    "Path" -> retrofitPathClassName
     "Field" -> retrofitFieldClassName
     else -> retrofitGetClassName
   }
