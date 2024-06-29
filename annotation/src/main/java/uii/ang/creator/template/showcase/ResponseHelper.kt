@@ -16,14 +16,10 @@ class ResponseHelper(
 //    val apiModelClassName = apiModelClassName
 //    val responseClassNameStr = responseClassName.simpleName
 //    logger.warn("ResponseHelper responseClassName ${responseClassName}")
-    logger.warn("sourceClassDeclaration= ${data.sourceClassDeclaration.simpleName.getShortName()}")
+//    logger.warn("sourceClassDeclaration= ${data.sourceClassDeclaration.simpleName.getShortName()}")
 
     val parseRootProperty = data.primaryConstructorParameters.firstOrNull { it.isParseRoot }
-    val apiModel = parseRootProperty?.let {
-//      val typeName = it.typeClassName
-//      getApiModelClassNameByDataModel(typeName.simpleName)
-      it.wrapperTypeName
-    } ?: apiModelClassName
+    val apiModel = parseRootProperty?.wrapperTypeName ?: apiModelClassName
 
     val builderPropName = parseRootProperty?.className?.getShortName() ?: dataClassName.firstCharLowerCase()
     val flux = genConstructor(apiModel, builderPropName)

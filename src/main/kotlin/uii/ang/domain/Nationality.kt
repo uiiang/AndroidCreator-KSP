@@ -1,6 +1,7 @@
 package uii.ang.domain
 
 import uii.ang.creator.annotation.Creator
+import uii.ang.creator.annotation.ParseReturn
 import uii.ang.creator.annotation.ParseRoot
 import uii.ang.creator.annotation.requestMethodPost
 
@@ -18,6 +19,7 @@ data class Nationality (
     val requestID: String,
     val error: Long,
     @ParseRoot
+    @ParseReturn
     val nation: List<Nation>
 )
 @Creator(generateApiModel = true)

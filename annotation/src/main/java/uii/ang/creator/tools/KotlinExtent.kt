@@ -160,26 +160,6 @@ fun KSPropertyDeclaration.isNullable(): Boolean {
 }
 
 
-fun getListGenericsCreatorAnnotation(propertyDesc: PropertyDescriptor):
-        KSNode? {
-  val ksType = propertyDesc.arguments.first()
-    .type?.resolve()
-  val annoList = ksType?.declaration?.annotations
-    ?.filter {
-      it.isCreatorAnnotation()
-    } ?: emptySequence()
-  return if (annoList.count() > 0) annoList.first().parent else null
-}
-
-fun getListGenericsCreatorAnnotation(ksType:  KSType):
-        KSNode? {
-  val annoList = ksType?.declaration?.annotations
-    ?.filter {
-      it.isCreatorAnnotation()
-    } ?: emptySequence()
-  return if (annoList.count() > 0) annoList.first().parent else null
-}
-
 fun KSAnnotation.isCreatorAnnotation(): Boolean {
   return shortName.getShortName() == Creator::class.simpleName
 }

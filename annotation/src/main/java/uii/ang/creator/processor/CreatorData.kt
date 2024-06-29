@@ -10,12 +10,12 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
-import uii.ang.creator.annotation.Creator
-import uii.ang.creator.annotation.Parameter
-import uii.ang.creator.annotation.ParseRoot
-import uii.ang.creator.annotation.requestMethodGet
+import uii.ang.creator.annotation.*
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.listClassName
+import uii.ang.creator.processor.Utils.convertKSValueParameterToPropertyDescriptor
+import uii.ang.creator.processor.Utils.findParseReturnChain
+import uii.ang.creator.processor.Utils.getListGenericsCreatorAnnotation
 import uii.ang.creator.tools.*
 
 class CreatorData(
@@ -28,66 +28,21 @@ class CreatorData(
   val generateResponse: Boolean = annotationData.generateResponse
   val generateRetrofitService: Boolean = annotationData.generateRetrofitService
 
+
   // 如果没有指定responseClassName, 使用默认的 [data className]加Response
 //  val responseClassName = getResponseClass()
 //  val apiModelClassName = getApiModelClass()
 
+
+//  val getParseReturnChain: List<Any> = findParseReturnChain(sourceClassDeclaration, logger)
+
   // 使用primaryConstructor来转换构造函数中的参数，可以获得给参数标注的注解
   val primaryConstructorParameters: List<PropertyDescriptor> =
     sourceClassDeclaration.primaryConstructor?.parameters?.map {
-      val resolve = it.type.resolve()
-      val toTypeName = resolve.toTypeName(sourceClassDeclaration.typeParameters.toTypeParameterResolver())
-      val wrapperType = getWrapperType(it)
-      val propertyDescriptor = PropertyDescriptor(
-        sourceClassName = sourceClassDeclaration.toClassName(),
-        typeClassName = resolve.toClassName(),
-        //包含完整包名类名
-        typeName = toTypeName,
-        wrapperTypeName = wrapperType,
-        isNullable = resolve.isNullable(),
-        //仅类名
-        className = it.name!!,
-        //泛型参数
-        arguments = resolve.arguments,
-        mandatoryForConstructor = true,
-        kDoc = "",
-        isParseRoot = it.hasAnnotation<ParseRoot>()
-      )
-      logger.warn(propertyDescriptor.toString())
+      val propertyDescriptor = convertKSValueParameterToPropertyDescriptor(it, sourceClassDeclaration)
+//      logger.warn(propertyDescriptor.toString())
       propertyDescriptor
     }?.toList() ?: emptyList()
-
-  private fun getWrapperType(it: KSValueParameter): TypeName {
-    val resolve = it.type.resolve()
-    val toTypeName = resolve.toTypeName(sourceClassDeclaration.typeParameters.toTypeParameterResolver())
-    val wrapperType = if (toTypeName.isBaseType()) {
-      toTypeName
-    } else if (toTypeName.isList()) {
-      // 如果是list，获取list中的泛型类，
-      // 如果泛型类是注解Creator的数据类，转换成apimodel
-      // 判断当前list的泛型类是否为creator
-      val ksNode = resolve.arguments.first()
-        .type?.resolve()?.let { it1 -> getListGenericsCreatorAnnotation(it1) }
-      ksNode?.let { node ->
-        // 字段属性为List<注解了Create的data class>
-        val apiModelName = node.toString() + "ApiModel"
-        //        logger.warn("apiModelName $apiModelName")
-        val apiModelClass = ClassName(apiModelPackageName, apiModelName)
-        val parameterizedBy = listClassName.parameterizedBy(apiModelClass)
-        //        logger.warn("  convert parameterizedBy ${parameterizedBy.toString()}")
-        parameterizedBy
-      } ?: toTypeName
-    } else {
-      // 字段属性为data class
-      val retClassName = ClassName(
-        apiModelPackageName,
-        it.name!!.getShortName().firstCharUpperCase() + "ApiModel"
-      )
-      //      logger.warn("  convert api model ${retClassName.simpleName}")
-      retClassName
-    }
-    return wrapperType
-  }
 
   //使用getAllProperties来转换构造函数中的参数，无法获得给参数标注的注解
 //  val propertyDescriptorList: List<PropertyDescriptor> =

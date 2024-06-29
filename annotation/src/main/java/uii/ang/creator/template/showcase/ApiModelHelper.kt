@@ -8,6 +8,7 @@ import uii.ang.creator.processor.Const.serializableClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.PropertyDescriptor
+import uii.ang.creator.processor.Utils.getListGenericsCreatorAnnotation
 import uii.ang.creator.tools.isBaseType
 import uii.ang.creator.tools.isList
 import uii.ang.creator.tools.primitiveDefaultInit
@@ -90,7 +91,7 @@ class ApiModelHelper(
       val typeName = entry.typeName
       val paramName = entry.className.getShortName()
       val typeClassName = entry.typeClassName
-      logger.warn("toDomainModel type = $typeName null = ${entry.isNullable}")
+//      logger.warn("toDomainModel type = $typeName null = ${entry.isNullable}")
 
       val isList = typeName.toString().startsWith("kotlin.collections.List")
       if (isList && entry.isNullable) {

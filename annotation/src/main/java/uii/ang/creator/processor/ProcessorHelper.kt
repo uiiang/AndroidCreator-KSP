@@ -9,9 +9,13 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asClassName
 import uii.ang.creator.*
 import uii.ang.creator.annotation.Creator
+import uii.ang.creator.annotation.ParseReturn
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
+import uii.ang.creator.processor.Utils.getClassName
+import uii.ang.creator.processor.Utils.getPackageName
 
 open class ProcessorHelper(
   val logger: KSPLogger,
@@ -24,10 +28,10 @@ open class ProcessorHelper(
   val classKdoc = classDeclaration.docString
   val dataClassPackageName = getPackageName(classDeclaration)
 
-  fun getApiModelClassNameByDataModel(dataModelName:String):ClassName = ClassName(
-      apiModelPackageName,
-      dataModelName + "ApiModel"
-    )
+  fun getApiModelClassNameByDataModel(dataModelName: String): ClassName = ClassName(
+    apiModelPackageName,
+    dataModelName + "ApiModel"
+  )
 
   val apiModelClassName = ClassName(
     apiModelPackageName,
@@ -43,35 +47,13 @@ open class ProcessorHelper(
     retrofitServicePackageName,
     if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}RetrofitService"
     else "${data.annotationData.retrofitServiceClassName}RetrofitService"
+//    "${data.sourceClassDeclaration.simpleName.getShortName()}RetrofitService"
   )
 
-  fun getListGenericsCreatorAnnotation(propertyDesc: PropertyDescriptor):
-          KSNode? {
-    val ksType = propertyDesc.arguments.first()
-      .type?.resolve()
-    val annoList = ksType?.declaration?.annotations
-      ?.filter {
-        isCreatorAnnotation(it)
-      } ?: emptySequence()
-    return if (annoList.count() > 0) annoList.first().parent else null
-  }
+  val repositoryClassName = ClassName(
+    repositoryPackageName,
+    if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}Repository"
+    else "${data.annotationData.retrofitServiceClassName}Repository"
+  )
 
-  fun isCreatorAnnotation(annotation: KSAnnotation): Boolean {
-    return annotation.shortName.getShortName() == Creator::class.simpleName
-  }
-
-  fun isNullable(propertyDeclaration: KSPropertyDeclaration): Boolean {
-    return propertyDeclaration.type.resolve().isMarkedNullable
-  }
-
-  fun getClassName(
-    classDeclaration: KSClassDeclaration,
-    prex: String = "", suffix: String = ""
-  ): String {
-    return prex + classDeclaration.simpleName.asString() + suffix
-  }
-
-  fun getPackageName(classDeclaration: KSClassDeclaration): String {
-    return classDeclaration.packageName.asString()
-  }
 }

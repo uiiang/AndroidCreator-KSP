@@ -14,7 +14,7 @@ object CreatorCollector {
 //    logger.warn("CreatorCollector collect")
     val creatorAnnotated = resolver.getSymbolsWithAnnotation(Creator::class.qualifiedName!!)
     if (creatorAnnotated.count() == 0) {
-//      logger.warn("未找到使用Creator注解的类")
+      logger.warn("CreatorCollector 未找到使用Creator注解的类")
       return emptyList()
     }
     return creatorAnnotated

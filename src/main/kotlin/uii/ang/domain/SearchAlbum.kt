@@ -1,14 +1,12 @@
 package uii.ang.domain
 
-import uii.ang.creator.annotation.Creator
-import uii.ang.creator.annotation.Parameter
-import uii.ang.creator.annotation.ParseRoot
-import uii.ang.creator.annotation.requestMethodPost
+import uii.ang.creator.annotation.*
 
 @Creator(
   generateApiModel = true,
   generateResponse = true,
   generateRetrofitService = true,
+  retrofitServiceClassName = "Album",
   method = requestMethodPost,
   methodName = "searchAlbum",
   url = "./?method=album.search",
@@ -34,6 +32,7 @@ data class Results(
 
 @Creator(generateApiModel = true)
 data class Albummatches(
+  @ParseReturn
   val album: List<Album>
 )
 

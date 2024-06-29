@@ -20,8 +20,6 @@ class RetrofitServiceHelper(
 ) : ProcessorHelper(logger, data) {
 
   fun genClassBuilder(): TypeSpec.Builder {
-//    val apiModelClassName = apiModelClassName
-//    val responseClassNameStr = responseClassName.simpleName
     val classBuilder = TypeSpec.interfaceBuilder(retrofitServiceClassName)
       .addModifiers(KModifier.INTERNAL)
 
@@ -36,15 +34,6 @@ class RetrofitServiceHelper(
     var url = anno.url
     var methodName = data.annotationData.methodName
     var generateParameters = anno.parameters
-//    var requestParams: Array<String> = []
-
-    // generateParameters.forEach {
-    //   logger.warn("generaterParameters name ${it.paramName} type ${it.paramType}")
-    // }
-    // logger.warn(
-    //   "packageName $responsePackageName" +
-    //           " className ${classDeclaration.simpleName.asString()}"
-    // )
     // 生成如下代码
     //        @POST("./?method=album.search")
     //    suspend fun searchAlbumAsync(
