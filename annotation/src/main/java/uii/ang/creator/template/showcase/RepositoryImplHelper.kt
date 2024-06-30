@@ -91,7 +91,6 @@ class RepositoryImplHelper(
       )
     }
 
-
     // when (val apiResult = albumRetrofitService.searchAlbumAsync(phrase)) {
     val paramList = generateParameters.joinToString(",") { param ->
       param.paramName
@@ -106,8 +105,6 @@ class RepositoryImplHelper(
     returnChain.forEach { (t, u) ->
       apiResultSuccessCodeBlock.addStatement("\t\t.${t.getShortName()}")
     }
-//    returnChain.values.last {  }
-    // TODO 需要import 这个ApiModel的toDomainModel方法
     apiResultSuccessCodeBlock.addStatement("\t\t.map { it.%M() }", moduleToDomainMemberName)
       .addStatement("\t%T.Success(result)", baseDomainResultClassName)
       .addStatement("}")
