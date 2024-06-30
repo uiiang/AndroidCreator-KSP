@@ -128,7 +128,10 @@ class RepositoryImplHelper(
       .addCode(apiResultExceptionCodeBlock.build())
       .endControlFlow()
 
-    genFunction.returns(baseDomainResultClassName.parameterizedBy(returnChain.values.last()))
+
+    if (returnChain.values.isNotEmpty()) {
+      genFunction.returns(baseDomainResultClassName.parameterizedBy(returnChain.values.last()))
+    }
     return genFunction
   }
 

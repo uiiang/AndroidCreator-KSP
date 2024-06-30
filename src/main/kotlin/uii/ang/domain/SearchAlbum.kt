@@ -32,7 +32,7 @@ data class Results(
 
 @Creator(generateApiModel = true)
 data class Albummatches(
-  @ParseReturn
+//  @ParseReturn
   val album: List<Album>
 )
 
