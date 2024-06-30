@@ -2,15 +2,16 @@ package uii.ang.creator.processor
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSType
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.MemberName
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
-import uii.ang.creator.template.showcase.ApiModelHelper
-import uii.ang.creator.template.showcase.RepositoryHelper
-import uii.ang.creator.template.showcase.ResponseHelper
-import uii.ang.creator.template.showcase.RetrofitServiceHelper
+import uii.ang.creator.template.showcase.*
 
 object CreatorCodeGenerator {
   fun generate(data: CreatorData, resolver: Resolver, logger: KSPLogger) {
@@ -20,9 +21,10 @@ object CreatorCodeGenerator {
     val responseHelper = ResponseHelper(logger, data)
     val retrofitServiceHelper = RetrofitServiceHelper(logger, data)
     val repositoryHelper = RepositoryHelper(logger, data)
+    val repositoryImplHelper = RepositoryImplHelper(logger, data)
 
     // 生成ApiDomain代码
-    if (data.generateApiModel){
+    if (data.generateApiModel) {
       generatorApiModel(apiModelHelper, data)
     }
 
@@ -33,14 +35,14 @@ object CreatorCodeGenerator {
 
     // 生成Retrofit代码
     if (data.generateRetrofitService) {
-      generatorRetrofitService(retrofitServiceHelper)
-      generatorRepository(repositoryHelper)
+      val retrofitServiceClassName = generatorRetrofitService(retrofitServiceHelper)
+      generatorRepository(repositoryHelper, repositoryImplHelper)
     }
   }
 
   private fun generatorRetrofitService(
     retrofitServiceHelper: RetrofitServiceHelper
-  ) {
+  ): ClassName {
     val retrofitServiceClassNameStr = retrofitServiceHelper.retrofitServiceClassName.simpleName
     val retrofitServiceClassName = retrofitServiceHelper.genClassBuilder()
     val retrofitServiceCodeBuilder = CodeBuilder.getOrCreate(retrofitServicePackageName,
@@ -49,15 +51,27 @@ object CreatorCodeGenerator {
     )
     val genFun = retrofitServiceHelper.genRetrofitServiceFuncCode()
     retrofitServiceCodeBuilder.addFunction(genFun.build(), true)
+    return retrofitServiceHelper.retrofitServiceClassName
   }
 
-  private fun generatorRepository(repositoryHelper: RepositoryHelper) {
-    val repositoryClassNameStr = repositoryHelper.repositoryClassName.simpleName
-    val repositoryClassName = repositoryHelper.genClassBuilder()
-    val repositoryCodeBuilder = CodeBuilder.getOrCreate(repositoryPackageName,
-      repositoryClassNameStr, typeBuilderProvider = {repositoryClassName})
-    val genFun = repositoryHelper.genRepositoryFuncCode()
-    repositoryCodeBuilder.addFunction(genFun.build(), true)
+  private fun generatorRepository(
+    repositoryHelper: RepositoryHelper,
+    repositoryImplHelper: RepositoryImplHelper
+  ) {
+    val repositoryInterfaceClassNameStr = repositoryHelper.repositoryInterfaceClassName.simpleName
+    val repositoryInterfaceClassName = repositoryHelper.genClassBuilder()
+    val repositoryInterfaceCodeBuilder = CodeBuilder.getOrCreate(repositoryPackageName,
+      repositoryInterfaceClassNameStr, typeBuilderProvider = { repositoryInterfaceClassName })
+    val genInterfaceFun = repositoryHelper.genRepositoryFuncCode()
+    repositoryInterfaceCodeBuilder.addFunction(genInterfaceFun.build(), true)
+
+    val repositoryImplClassNameStr = repositoryImplHelper.repositoryImplClassName.simpleName
+    val repositoryImplClassName = repositoryImplHelper.genClassBuilder()
+    val repositoryImplCodeBuilder = CodeBuilder.getOrCreate(
+      repositoryImplPackageName,
+      repositoryImplClassNameStr, typeBuilderProvider = { repositoryImplClassName })
+    val genImplFun = repositoryImplHelper.genRepositoryFuncCode()
+    repositoryImplCodeBuilder.addFunction(genImplFun.build(), true)
   }
 
   private fun generatorResponse(

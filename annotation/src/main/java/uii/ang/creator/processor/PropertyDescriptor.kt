@@ -18,7 +18,7 @@ data class PropertyDescriptor(
   val sourceClassName: ClassName,// 属性所属的原类
   val typeClassName: ClassName,//参数的类型className
   val typeName: TypeName,//参数的类型包含完整包名类名,包括?
-  val wrapperTypeName: TypeName,
+  val wrapperTypeName: TypeName, // 参数被包裹后的类，如果是list型就转成List<xxxApiModel>如果是普通类型就直接返回
   val isNullable: Boolean,
   val className: KSName,//变量
   val arguments: List<KSTypeArgument>,//泛型参数

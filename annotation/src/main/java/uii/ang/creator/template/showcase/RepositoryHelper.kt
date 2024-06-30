@@ -4,8 +4,6 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import uii.ang.creator.processor.Const.baseDomainResultClassName
-import uii.ang.creator.processor.Const.baseRetrofitApiResultClassName
-import uii.ang.creator.processor.Const.retrofitFormUrlEncodedClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
@@ -16,7 +14,7 @@ class RepositoryHelper(
 ) : ProcessorHelper(logger, data) {
 
   fun genClassBuilder(): TypeSpec.Builder {
-    val classBuilder = TypeSpec.interfaceBuilder(repositoryClassName)
+    val classBuilder = TypeSpec.interfaceBuilder(repositoryInterfaceClassName)
       .addModifiers(KModifier.INTERNAL)
     return classBuilder
   }

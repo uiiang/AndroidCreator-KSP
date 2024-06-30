@@ -1,16 +1,9 @@
 package uii.ang.creator.processor
 
 import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.symbol.KSAnnotation
-import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSNode
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.asClassName
-import uii.ang.creator.*
-import uii.ang.creator.annotation.Creator
-import uii.ang.creator.annotation.ParseReturn
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
@@ -50,10 +43,16 @@ open class ProcessorHelper(
 //    "${data.sourceClassDeclaration.simpleName.getShortName()}RetrofitService"
   )
 
-  val repositoryClassName = ClassName(
+  val repositoryInterfaceClassName = ClassName(
     repositoryPackageName,
     if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}Repository"
     else "${data.annotationData.retrofitServiceClassName}Repository"
+  )
+
+  val repositoryImplClassName = ClassName(
+    repositoryImplPackageName,
+    if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}Repository"
+    else "${data.annotationData.retrofitServiceClassName}RepositoryImpl"
   )
 
 }
