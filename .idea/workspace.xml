@@ -4,10 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="生成RepositoryImpl代码">
+    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="未标注@ParseReturn注解时，暂时不返回类型，以后根据实际 需要再做修改">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/Constants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/Constants.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCodeGenerator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCodeGenerator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/PropertyDescriptor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/PropertyDescriptor.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryHelper.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryImplHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryImplHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ResponseHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ResponseHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RetrofitServiceHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RetrofitServiceHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/tools/KotlinExtent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/tools/KotlinExtent.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Nationality.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Nationality.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" afterDir="false" />
     </list>
@@ -518,7 +528,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719711178978</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="未标注@ParseReturn注解时，暂时不返回类型，以后根据实际 需要再做修改">
+      <option name="closed" value="true" />
+      <created>1719711775192</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1719711775192</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -561,7 +579,8 @@
     <MESSAGE value="解决response中参数为list型时生成代码错误的BUG" />
     <MESSAGE value="根据@praseReturn注解，查找Repository中方法要返回的数据类型和调用链" />
     <MESSAGE value="生成RepositoryImpl代码" />
-    <option name="LAST_COMMIT_MESSAGE" value="生成RepositoryImpl代码" />
+    <MESSAGE value="未标注@ParseReturn注解时，暂时不返回类型，以后根据实际 需要再做修改" />
+    <option name="LAST_COMMIT_MESSAGE" value="未标注@ParseReturn注解时，暂时不返回类型，以后根据实际 需要再做修改" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

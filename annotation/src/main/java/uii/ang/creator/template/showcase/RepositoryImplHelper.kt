@@ -3,17 +3,10 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.baseDomainResultClassName
-import uii.ang.creator.processor.Const.baseDomainResultFailureMemberName
-import uii.ang.creator.processor.Const.baseDomainResultSuccessMemberName
 import uii.ang.creator.processor.Const.baseRetrofitApiResultClassName
-import uii.ang.creator.processor.Const.baseRetrofitApiResultErrorMemberName
-import uii.ang.creator.processor.Const.baseRetrofitApiResultExceptionMemberName
-import uii.ang.creator.processor.Const.baseRetrofitApiResultSuccessMemberName
 import uii.ang.creator.processor.Const.moduleToDomainMemberName
 import uii.ang.creator.processor.Const.timberClassName
-import uii.ang.creator.processor.Const.timberErrorMemberName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain

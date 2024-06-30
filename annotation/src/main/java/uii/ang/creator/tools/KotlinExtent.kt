@@ -9,7 +9,6 @@ import com.squareup.kotlinpoet.*
 import uii.ang.creator.annotation.Creator
 import uii.ang.creator.annotation.Parameter
 import uii.ang.creator.processor.CreatorData
-import uii.ang.creator.processor.PropertyDescriptor
 import java.util.*
 import javax.lang.model.element.AnnotationMirror
 

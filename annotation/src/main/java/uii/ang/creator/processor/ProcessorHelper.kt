@@ -26,6 +26,7 @@ open class ProcessorHelper(
     dataModelName + "ApiModel"
   )
 
+  // 根据当前类生成apiModelClassName对象
   val apiModelClassName = ClassName(
     apiModelPackageName,
     classDeclaration.simpleName.getShortName() + "ApiModel"

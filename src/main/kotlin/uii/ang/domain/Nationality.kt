@@ -19,7 +19,7 @@ data class Nationality (
     val requestID: String,
     val error: Long,
     @ParseRoot
-//    @ParseReturn
+    @ParseReturn
     val nation: List<Nation>
 )
 @Creator(generateApiModel = true)

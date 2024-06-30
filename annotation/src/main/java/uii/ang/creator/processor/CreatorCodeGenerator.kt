@@ -2,9 +2,7 @@ package uii.ang.creator.processor
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.MemberName
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.repositoryImplPackageName

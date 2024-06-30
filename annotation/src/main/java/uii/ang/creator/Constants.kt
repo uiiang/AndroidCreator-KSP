@@ -1,8 +1,5 @@
 package uii.ang.creator
 
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.asClassName
-
 const val default_base_package_name = "uii.ang"
 const val default_module_package_name = "creator"
 lateinit var basePackageName: String

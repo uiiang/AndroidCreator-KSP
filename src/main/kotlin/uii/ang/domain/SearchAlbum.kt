@@ -32,7 +32,6 @@ data class Results(
 
 @Creator(generateApiModel = true)
 data class Albummatches(
-//  @ParseReturn
   val album: List<Album>
 )
 
@@ -41,6 +40,7 @@ data class Album(
   val name: String,
   val artist: String,
   val url: String,
+  @ParseReturn
   val image: List<Image>,
   val streamable: String,
   val mbid: String

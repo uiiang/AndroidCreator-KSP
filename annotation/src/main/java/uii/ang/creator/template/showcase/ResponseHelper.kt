@@ -13,11 +13,6 @@ class ResponseHelper(
   data: CreatorData
 ) : ProcessorHelper(logger, data) {
   fun genClassBuilder(): TypeSpec.Builder {
-//    val apiModelClassName = apiModelClassName
-//    val responseClassNameStr = responseClassName.simpleName
-//    logger.warn("ResponseHelper responseClassName ${responseClassName}")
-//    logger.warn("sourceClassDeclaration= ${data.sourceClassDeclaration.simpleName.getShortName()}")
-
     val parseRootProperty = data.primaryConstructorParameters.firstOrNull { it.isParseRoot }
     val apiModel = parseRootProperty?.wrapperTypeName ?: apiModelClassName
 

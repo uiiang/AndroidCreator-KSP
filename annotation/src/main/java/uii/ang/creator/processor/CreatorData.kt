@@ -3,20 +3,11 @@ package uii.ang.creator.processor
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSValueParameter
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.ksp.toClassName
-import com.squareup.kotlinpoet.ksp.toTypeName
-import com.squareup.kotlinpoet.ksp.toTypeParameterResolver
-import uii.ang.creator.annotation.*
-import uii.ang.creator.processor.Const.apiModelPackageName
-import uii.ang.creator.processor.Const.listClassName
+import uii.ang.creator.annotation.Creator
+import uii.ang.creator.annotation.Parameter
+import uii.ang.creator.annotation.requestMethodGet
 import uii.ang.creator.processor.Utils.convertKSValueParameterToPropertyDescriptor
-import uii.ang.creator.processor.Utils.findParseReturnChain
-import uii.ang.creator.processor.Utils.getListGenericsCreatorAnnotation
-import uii.ang.creator.tools.*
+import uii.ang.creator.tools.from
 
 class CreatorData(
   val annotationData: AnnotationData,
@@ -27,14 +18,6 @@ class CreatorData(
   val generateApiModel: Boolean = annotationData.generateApiModel
   val generateResponse: Boolean = annotationData.generateResponse
   val generateRetrofitService: Boolean = annotationData.generateRetrofitService
-
-
-  // 如果没有指定responseClassName, 使用默认的 [data className]加Response
-//  val responseClassName = getResponseClass()
-//  val apiModelClassName = getApiModelClass()
-
-
-//  val getParseReturnChain: List<Any> = findParseReturnChain(sourceClassDeclaration, logger)
 
   // 使用primaryConstructor来转换构造函数中的参数，可以获得给参数标注的注解
   val primaryConstructorParameters: List<PropertyDescriptor> =
@@ -76,15 +59,45 @@ class CreatorData(
 
 
   data class AnnotationData(
+    /**
+     * 是否生成apiModel类
+     */
     val generateApiModel: Boolean,
+    /**
+    是否生成Response类
+     */
     val generateResponse: Boolean,
+    /**
+     * 是否生成RetrofitService类
+     */
     val generateRetrofitService: Boolean,
+    /**
+     * response类名
+     */
     val responseClassName: String,
+    /**
+     * 指定retrofitService类名，被指定同一类名的方法会自动生成到一个类文件中
+     */
     val retrofitServiceClassName: String,
+    /**
+     * url请求方法， POST, GET
+     */
     val method: String = requestMethodGet,
+    /**
+     * 请求的url地址
+     */
     val url: String,
+    /**
+     * 代码中的方法名
+     */
     val methodName: String,
+    /**
+     * 返回的Response类名，会自动被ApiResult包裹
+     */
     val returnResponseClassName: String,
+    /**
+     * 发送请求中包含的参数
+     */
     val parameters: List<Parameter>,
   ) {
     companion object {

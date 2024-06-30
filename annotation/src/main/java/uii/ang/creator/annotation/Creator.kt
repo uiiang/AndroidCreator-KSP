@@ -1,7 +1,5 @@
 package uii.ang.creator.annotation
 
-import com.google.devtools.ksp.symbol.KSAnnotation
-
 enum class AnnotationRetrofitService {
   POST, GET
 }
@@ -48,6 +46,9 @@ annotation class Creator(
    */
   val returnResponseClassName: String = "",
 
+  /**
+   * 发送请求中包含的参数
+   */
   val parameters: Array<Parameter> = [],
 )
 
