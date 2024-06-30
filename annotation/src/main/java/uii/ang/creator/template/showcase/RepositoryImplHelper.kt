@@ -128,6 +128,11 @@ class RepositoryImplHelper(
     return genFunction
   }
 
+  fun genKoinInjectionCode(): CodeBlock.Builder {
+    return CodeBlock.builder()
+      .addStatement("\tsingle<%T> { %T(get()) }", repositoryInterfaceClassName, repositoryImplClassName)
+  }
+
   private fun convertType(type: String) = when (type) {
     "String" -> String::class
     "Long" -> Long::class

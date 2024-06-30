@@ -9,6 +9,7 @@ import uii.ang.creator.modulePackageName
 object Const {
 
   // 模块包相关路径
+  val dataModulePackageName = "$basePackageName.$modulePackageName.data"
   val apiModelPackageName = "$basePackageName.$modulePackageName.data.datasource.api.model"
   val responsePackageName = "$basePackageName.$modulePackageName.data.datasource.api.response"
   val retrofitServicePackageName = "$basePackageName.$modulePackageName.data.datasource.api.service"
@@ -37,6 +38,8 @@ object Const {
   // 第三方为相关
   // retrofit库
   val retrofitPackageName = "retrofit2.http"
+  val retrofitBasePackageName = "retrofit2"
+  val retrofitClassName = ClassName(retrofitBasePackageName, "Retrofit")
   val retrofitFormUrlEncodedClassName = ClassName(retrofitPackageName, "FormUrlEncoded")
   val retrofitPostClassName = ClassName(retrofitPackageName, "POST")
   val retrofitGetClassName = ClassName(retrofitPackageName, "GET")
@@ -57,6 +60,9 @@ object Const {
   // Timber
   val timberClassName = ClassName("timber.log", "Timber")
   val timberErrorMemberName = MemberName(timberClassName, "e")
+
+  val koinModuleFunClassName = ClassName("org.koin.dsl", "module")
+  val koinModuleClassName = ClassName("org.koin.core.module", "Module")
 }
 
 

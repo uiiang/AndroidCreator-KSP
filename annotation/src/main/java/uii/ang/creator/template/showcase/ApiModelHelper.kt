@@ -13,6 +13,11 @@ import uii.ang.creator.tools.isBaseType
 import uii.ang.creator.tools.isList
 import uii.ang.creator.tools.primitiveDefaultInit
 
+/**
+ * 根据数据类生成ApiModel，包含构造函数和toDomainModel方法
+ *
+ * 一个数据类生成一个ApiModel
+ */
 class ApiModelHelper(
   logger: KSPLogger,
   data: CreatorData

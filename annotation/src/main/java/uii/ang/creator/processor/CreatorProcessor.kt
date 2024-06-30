@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.ksp.writeTo
 import uii.ang.creator.*
 import uii.ang.creator.annotation.Creator
 import uii.ang.creator.codegen.CodeBuilder
+import uii.ang.creator.processor.CollectCodeHelper.genClassBuilder
 
 class CreatorProcessor(
   private val environment: SymbolProcessorEnvironment,
@@ -63,13 +64,17 @@ class CreatorProcessor(
 //      val path = File("Test")
 //      fileSpec.writeTo(path)
       // 生成文件到build/generated/ksp/main/kotlin
-      fileSpec
-        .writeTo(
+      fileSpec.writeTo(
         codeGenerator,
         aggregating = true, // always aggregating, as any new file could be a mapper with higher prio than a potentially used one.
       )
     }
+
+    genClassBuilder(CodeBuilder.allCollect(), logger).forEach {
+      it.writeTo(codeGenerator, aggregating = true)
+    }
   }
+
   private fun generateMappingCode(resolver: Resolver, converterData: List<AnnotatedBaseData>) {
     converterData.forEach {
       when (it) {

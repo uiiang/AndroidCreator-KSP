@@ -52,8 +52,11 @@ open class ProcessorHelper(
 
   val repositoryImplClassName = ClassName(
     repositoryImplPackageName,
-    if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}Repository"
+    if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}RepositoryImpl"
     else "${data.annotationData.retrofitServiceClassName}RepositoryImpl"
   )
 
+  val dataModuleClassName = ClassName(
+    dataClassPackageName, "DataModule"
+  )
 }

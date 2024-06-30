@@ -4,6 +4,7 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import uii.ang.creator.processor.Const.baseRetrofitApiResultClassName
+import uii.ang.creator.processor.Const.retrofitClassName
 import uii.ang.creator.processor.Const.retrofitFieldClassName
 import uii.ang.creator.processor.Const.retrofitFormUrlEncodedClassName
 import uii.ang.creator.processor.Const.retrofitGetClassName
@@ -77,6 +78,14 @@ class RetrofitServiceHelper(
 //    return FileSpec.builder(retrofitServicePackageName, retrofitServiceClassName)
 //      .addType(classBuilder.build())
     return genFunction
+  }
+
+
+
+  fun genKoinInjectionCode(): CodeBlock.Builder {
+    //  single { get<Retrofit>().create(AlbumRetrofitService::class.java) }
+    return CodeBlock.builder()
+      .addStatement("\tsingle { get<%T>().create(%T::class.java) }", retrofitClassName, repositoryImplClassName)
   }
 
   private fun convertType(type: String) = when (type) {
