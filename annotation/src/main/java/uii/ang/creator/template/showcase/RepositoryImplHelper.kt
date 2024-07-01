@@ -118,8 +118,13 @@ class RepositoryImplHelper(
     val apiResultExceptionCodeBlock = CodeBlock.builder()
       .addStatement("is %T.Exception -> {", baseRetrofitApiResultClassName)
       .addStatement("\t%T.e(apiResult.throwable)", timberClassName)
-      .addStatement("\t%T.Success(emptyList())", baseDomainResultClassName)
-      .addStatement("}")
+
+    if (returnChain.values.last().isList()) {
+      apiResultExceptionCodeBlock.addStatement("\t%T.Success(emptyList())", baseDomainResultClassName)
+    } else {
+      apiResultExceptionCodeBlock.addStatement("\t%T.Success(null)")
+    }
+    apiResultExceptionCodeBlock.addStatement("}")
 
     genFunction.beginControlFlow(whenCodeBlock)
       .addCode(apiResultSuccessCodeBlock.build())
