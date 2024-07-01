@@ -32,15 +32,28 @@ data class Results(
 
 @Creator(generateApiModel = true)
 data class Albummatches(
+  @ParseReturn
   val album: List<Album>
 )
 
-@Creator(generateApiModel = true)
+@Creator(
+  generateApiModel = true,
+  generateResponse = true,
+  generateRetrofitService = true,
+  retrofitServiceClassName = "Album",
+  method = requestMethodPost,
+  methodName = "getAlbum",
+  url = "./?method=album.getInfo",
+  parameters = [
+    Parameter(paramName = "artist", paramType = "String", paramQueryType = "Query"),
+    Parameter(paramName = "album", paramType = "String", paramQueryType = "Query"),
+    Parameter(paramName = "mbid", paramType = "String", paramQueryType = "Query")
+  ]
+)
 data class Album(
   val name: String,
   val artist: String,
   val url: String,
-  @ParseReturn
   val image: List<Image>,
   val streamable: String,
   val mbid: String

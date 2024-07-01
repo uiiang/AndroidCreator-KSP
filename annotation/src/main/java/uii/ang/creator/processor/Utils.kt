@@ -169,7 +169,7 @@ object Utils {
       // 1.1, 如果有返回参数typeName kotlin.String // kotlin.collections.List<uii.ang.domain.Album>
       // 1.2, 如果没有判断参数原类型是否为标注@Creator注解的自定义dataclass，
       // 如果是则使用自定义dataclass的构造函数里的参数递归判断第1步
-      // 如果
+      // 如果没有找到链条，没有标注ParseReturn注解，则使用原数据类做为返回数据类型
       val parameters = classDeclaration.primaryConstructor?.parameters ?: emptyList()
       // 构造函数中的参数不为空时
       parameters.filter {
