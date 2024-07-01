@@ -218,6 +218,9 @@ object Utils {
 //      }
     }
     traverse(classDeclaration, null, null, logger)
+    if (chainMap.isEmpty()) {
+      chainMap[classDeclaration.simpleName] = classDeclaration.toClassName()
+    }
     logger.warn("查找${classDeclaration.simpleName.getShortName()}的ParseReturn链条结果 ${chainMap.count()} 层")
     chainMap.forEach { (t, u) ->
       logger.warn("\t参数名：${t.getShortName()} 类型：${u}")

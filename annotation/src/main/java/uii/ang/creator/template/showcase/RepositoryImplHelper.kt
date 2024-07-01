@@ -11,6 +11,7 @@ import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
 import uii.ang.creator.tools.firstCharLowerCase
+import uii.ang.creator.tools.isList
 
 class RepositoryImplHelper(
   logger: KSPLogger,
@@ -96,9 +97,14 @@ class RepositoryImplHelper(
       .addStatement("is %T.Success -> {", baseRetrofitApiResultClassName)
       .addStatement("\tval result = apiResult.data")
     returnChain.forEach { (t, u) ->
-      apiResultSuccessCodeBlock.addStatement("\t\t.${t.getShortName()}")
+      apiResultSuccessCodeBlock.addStatement("\t\t.${t.getShortName().firstCharLowerCase()}")
     }
-    apiResultSuccessCodeBlock.addStatement("\t\t.map { it.%M() }", moduleToDomainMemberName)
+    if (returnChain.values.last().isList()) {
+      apiResultSuccessCodeBlock.addStatement("\t\t.map { it.%M() }", moduleToDomainMemberName)
+    } else {
+      apiResultSuccessCodeBlock.addStatement("\t\t.%M()", moduleToDomainMemberName)
+    }
+    apiResultSuccessCodeBlock
       .addStatement("\t%T.Success(result)", baseDomainResultClassName)
       .addStatement("}")
 
