@@ -9,6 +9,7 @@ import uii.ang.creator.processor.Const.moduleToDomainMemberName
 import uii.ang.creator.processor.Const.timberClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
+import uii.ang.creator.processor.Utils.convertType
 import uii.ang.creator.processor.Utils.findParseReturnChain
 import uii.ang.creator.tools.firstCharLowerCase
 import uii.ang.creator.tools.isList
@@ -122,7 +123,7 @@ class RepositoryImplHelper(
     if (returnChain.values.last().isList()) {
       apiResultExceptionCodeBlock.addStatement("\t%T.Success(emptyList())", baseDomainResultClassName)
     } else {
-      apiResultExceptionCodeBlock.addStatement("\t%T.Success(null)")
+      apiResultExceptionCodeBlock.addStatement("\t%T.Success(null)", baseDomainResultClassName)
     }
     apiResultExceptionCodeBlock.addStatement("}")
 
@@ -143,16 +144,4 @@ class RepositoryImplHelper(
     return CodeBlock.builder()
       .addStatement("\tsingle<%T> { %T(get()) }", repositoryInterfaceClassName, repositoryImplClassName)
   }
-
-  private fun convertType(type: String) = when (type) {
-    "String" -> String::class
-    "Long" -> Long::class
-    "Int" -> Int::class
-    "Double" -> Double::class
-    "Float" -> Float::class
-    "Short" -> Short::class
-    "Boolean" -> Boolean::class
-    else -> String::class
-  }
-
 }

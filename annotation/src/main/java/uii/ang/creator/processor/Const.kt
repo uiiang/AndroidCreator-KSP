@@ -13,10 +13,15 @@ object Const {
   val apiModelPackageName = "$basePackageName.$modulePackageName.data.datasource.api.model"
   val responsePackageName = "$basePackageName.$modulePackageName.data.datasource.api.response"
   val retrofitServicePackageName = "$basePackageName.$modulePackageName.data.datasource.api.service"
-  val repositoryPackageName = "$basePackageName.$modulePackageName.domain.repository"
   val repositoryImplPackageName = "$basePackageName.$modulePackageName.data.repository"
+  val koinDataModuleGenName = "DataModuleGen"
 
-  // base包相关路径
+  val domainModulePackageName = "$basePackageName.$modulePackageName.domain"
+  val repositoryPackageName = "$basePackageName.$modulePackageName.domain.repository"
+  val useCasePackageName = "$basePackageName.$modulePackageName.domain.usecase"
+  val koinDomainModuleGenName = "DomainModuleGen"
+
+  // base模块相关路径
   val baseRetrofitPackageName = "$basePackageName.base.data.retrofit"
   val baseDomainResultPackageName = "$basePackageName.base.domain.result"
 
@@ -31,6 +36,8 @@ object Const {
   val baseDomainResultClassName = ClassName(baseDomainResultPackageName, "Result")
   val baseDomainResultSuccessMemberName = ClassName(baseDomainResultPackageName+"."+baseDomainResultClassName.simpleName, "Success")
   val baseDomainResultFailureMemberName = ClassName(baseDomainResultPackageName+"."+baseDomainResultClassName.simpleName, "Failure")
+
+  val baseDomainResultMemberName = MemberName(baseDomainResultPackageName, "mapSuccess")
 
   val listClassName = List::class.asClassName()
 

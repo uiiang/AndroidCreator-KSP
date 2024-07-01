@@ -7,8 +7,10 @@ import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
+import uii.ang.creator.processor.Const.useCasePackageName
 import uii.ang.creator.processor.Utils.getClassName
 import uii.ang.creator.processor.Utils.getPackageName
+import uii.ang.creator.tools.firstCharUpperCase
 
 open class ProcessorHelper(
   val logger: KSPLogger,
@@ -55,6 +57,11 @@ open class ProcessorHelper(
     if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}RepositoryImpl"
     else "${data.annotationData.retrofitServiceClassName}RepositoryImpl"
   )
+
+  val userCaseClassName = ClassName(useCasePackageName,
+    "${ data.annotationData.methodName.firstCharUpperCase() }UseCase")
+  val userCaseGenClassName = ClassName(useCasePackageName,
+    "${ data.annotationData.methodName.firstCharUpperCase() }UseCaseGen")
 
   val dataModuleClassName = ClassName(
     dataClassPackageName, "DataModule"

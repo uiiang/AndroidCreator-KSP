@@ -6,6 +6,7 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import uii.ang.creator.codegen.CollectCodeDesc
 import uii.ang.creator.processor.Const.koinModuleClassName
 import uii.ang.creator.processor.Const.koinModuleFunClassName
+import uii.ang.creator.tools.firstCharLowerCase
 
 object CollectCodeHelper {
   fun genClassBuilder(collectCodeList: List<CollectCodeDesc>, logger: KSPLogger): List<FileSpec> {
@@ -15,7 +16,7 @@ object CollectCodeHelper {
     codeGroup.forEach { (t, u) ->
       logger.warn(" 注入代码分组$t")
       val fileSpec = FileSpec.builder(ClassName(t.packageName, t.fileName))
-      val funSpec = FunSpec.builder("dataModule")
+      val funSpec = FunSpec.builder(t.fileName.firstCharLowerCase())
         .addModifiers(KModifier.INTERNAL)
         .returns(koinModuleClassName)
         .addStatement("")

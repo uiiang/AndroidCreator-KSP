@@ -40,7 +40,7 @@ annotation class Creator(
   /**
    * 方法名
    */
-  val methodName: String = "request",
+  val methodName: String = "",
   /**
    * 返回的Response类名，会自动被ApiResult包裹
    */

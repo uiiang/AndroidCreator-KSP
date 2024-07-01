@@ -5,10 +5,14 @@ import com.google.devtools.ksp.processing.Resolver
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.dataModulePackageName
+import uii.ang.creator.processor.Const.domainModulePackageName
+import uii.ang.creator.processor.Const.koinDataModuleGenName
+import uii.ang.creator.processor.Const.koinDomainModuleGenName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
+import uii.ang.creator.processor.Const.useCasePackageName
 import uii.ang.creator.template.showcase.*
 
 object CreatorCodeGenerator {
@@ -20,6 +24,7 @@ object CreatorCodeGenerator {
     val retrofitServiceHelper = RetrofitServiceHelper(logger, data)
     val repositoryHelper = RepositoryHelper(logger, data)
     val repositoryImplHelper = RepositoryImplHelper(logger, data)
+    val useCaseHelper = UseCaseHelper(logger, data)
 
     // 生成ApiDomain代码
     if (data.generateApiModel) {
@@ -38,6 +43,26 @@ object CreatorCodeGenerator {
       generatorRepository(repositoryHelper, repositoryImplHelper, logger)
       logger.warn("generateRetrofitService ioc2 =${CodeBuilder.allCollect().count()}")
     }
+
+    generatorUseCase(useCaseHelper, logger)
+  }
+
+  private fun generatorUseCase(useCaseHelper: UseCaseHelper, logger: KSPLogger) {
+    if (useCaseHelper.data.annotationData.methodName.isNotEmpty()) {
+      val useCaseClassNameStr = useCaseHelper.userCaseGenClassName.simpleName
+      val useCaseClassBuilder = useCaseHelper.genClassBuilder()
+      CodeBuilder.getOrCreate(useCasePackageName, useCaseClassNameStr,
+        typeBuilderProvider = { useCaseClassBuilder })
+      val genFun = useCaseHelper.genUseCaseFunCode()
+      useCaseClassBuilder.addFunction(genFun.build())
+
+      val useCaseKoinCodeBlock = useCaseHelper.genKoinInjectionCode()
+      CodeBuilder.putCollectCodeBlock(
+        domainModulePackageName,
+        koinDomainModuleGenName,
+        useCaseKoinCodeBlock, logger
+      )
+    }
   }
 
   private fun generatorRetrofitService(retrofitServiceHelper: RetrofitServiceHelper, logger: KSPLogger) {
@@ -52,9 +77,11 @@ object CreatorCodeGenerator {
     val genFun = retrofitServiceHelper.genRetrofitServiceFuncCode()
     retrofitServiceCodeBuilder.addFunction(genFun.build(), true)
 
-    CodeBuilder.putCollectCodeBlock(dataModulePackageName,
-      "DataModuleGen",
-      retrofitServiceKoinCodeBlock, logger)
+    CodeBuilder.putCollectCodeBlock(
+      dataModulePackageName,
+      koinDataModuleGenName,
+      retrofitServiceKoinCodeBlock, logger
+    )
     logger.warn("ioc1 ${CodeBuilder.allCollect().count()}")
   }
 
@@ -81,9 +108,11 @@ object CreatorCodeGenerator {
     val genImplFun = repositoryImplHelper.genRepositoryFuncCode()
     repositoryImplCodeBuilder.addFunction(genImplFun.build(), true)
 
-    CodeBuilder.putCollectCodeBlock(dataModulePackageName,
-      "DataModuleGen",
-      repositoryKoinCodeBlock, logger)
+    CodeBuilder.putCollectCodeBlock(
+      dataModulePackageName,
+      koinDataModuleGenName,
+      repositoryKoinCodeBlock, logger
+    )
     logger.warn("ioc2 ${CodeBuilder.allCollect().count()}")
   }
 

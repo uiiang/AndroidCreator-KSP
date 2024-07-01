@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import uii.ang.creator.processor.Const.baseDomainResultClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
+import uii.ang.creator.processor.Utils.convertType
 import uii.ang.creator.processor.Utils.findParseReturnChain
 
 class RepositoryHelper(
@@ -55,15 +56,5 @@ class RepositoryHelper(
     return genFunction
   }
 
-  private fun convertType(type: String) = when (type) {
-    "String" -> String::class
-    "Long" -> Long::class
-    "Int" -> Int::class
-    "Double" -> Double::class
-    "Float" -> Float::class
-    "Short" -> Short::class
-    "Boolean" -> Boolean::class
-    else -> String::class
-  }
 
 }

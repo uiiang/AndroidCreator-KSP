@@ -16,6 +16,16 @@ import uii.ang.creator.tools.*
 
 object Utils {
 
+  fun convertType(type: String) = when (type) {
+    "String" -> String::class
+    "Long" -> Long::class
+    "Int" -> Int::class
+    "Double" -> Double::class
+    "Float" -> Float::class
+    "Short" -> Short::class
+    "Boolean" -> Boolean::class
+    else -> String::class
+  }
   fun getListGenericsCreatorAnnotation(ksType: KSType):
           KSNode? {
     val annoList = ksType.declaration.annotations.filter {
