@@ -39,9 +39,7 @@ object CreatorCodeGenerator {
     // 生成Retrofit代码
     if (data.generateRetrofitService) {
       generatorRetrofitService(retrofitServiceHelper, logger)
-      logger.warn("generateRetrofitService ioc1 =${CodeBuilder.allCollect().count()}")
       generatorRepository(repositoryHelper, repositoryImplHelper, logger)
-      logger.warn("generateRetrofitService ioc2 =${CodeBuilder.allCollect().count()}")
     }
 
     generatorUseCase(useCaseHelper, logger)
@@ -82,7 +80,6 @@ object CreatorCodeGenerator {
       koinDataModuleGenName,
       retrofitServiceKoinCodeBlock, logger
     )
-    logger.warn("ioc1 ${CodeBuilder.allCollect().count()}")
   }
 
   private fun generatorRepository(
@@ -113,7 +110,6 @@ object CreatorCodeGenerator {
       koinDataModuleGenName,
       repositoryKoinCodeBlock, logger
     )
-    logger.warn("ioc2 ${CodeBuilder.allCollect().count()}")
   }
 
   private fun generatorResponse(responseHelper: ResponseHelper) {

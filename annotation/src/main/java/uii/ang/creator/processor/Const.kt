@@ -70,6 +70,7 @@ object Const {
 
   val koinModuleFunClassName = ClassName("org.koin.dsl", "module")
   val koinModuleClassName = ClassName("org.koin.core.module", "Module")
+  val koinSingleOfMemberName = MemberName("org.koin.core.module.dsl", "singleOf")
 }
 
 

@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import uii.ang.creator.processor.Const.baseDomainResultClassName
 import uii.ang.creator.processor.Const.baseDomainResultMemberName
+import uii.ang.creator.processor.Const.koinSingleOfMemberName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
@@ -80,6 +81,6 @@ class UseCaseHelper(
   }
 
   fun genKoinInjectionCode(): CodeBlock.Builder {
-    return CodeBlock.builder().addStatement("\tsingleOf(::%T)", userCaseGenClassName)
+    return CodeBlock.builder().addStatement("\t%M(::%T)", koinSingleOfMemberName, userCaseGenClassName)
   }
 }
