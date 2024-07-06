@@ -45,9 +45,9 @@ data class Albummatches(
   methodName = "getAlbum",
   url = "./?method=album.getInfo",
   parameters = [
-    Parameter(paramName = "artist", paramType = "String", paramQueryType = "Query"),
-    Parameter(paramName = "album", paramType = "String", paramQueryType = "Query"),
-    Parameter(paramName = "mbid", paramType = "String", paramQueryType = "Query")
+    Parameter(paramName = "artist", paramType = requestParamDataTypeString, paramQueryType = requestParamTypeField),
+    Parameter(paramName = "album", paramType = requestParamDataTypeInt, paramQueryType = requestParamTypeMap, paramDefault = "0"),
+    Parameter(paramName = "mbid", paramType = requestParamDataTypeString, paramQueryType = requestParamTypeMap)
   ]
 )
 data class Album(

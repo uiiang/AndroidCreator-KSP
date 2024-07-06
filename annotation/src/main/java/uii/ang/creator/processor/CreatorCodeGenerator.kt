@@ -2,6 +2,7 @@ package uii.ang.creator.processor
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
+import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.dataModulePackageName
@@ -10,10 +11,12 @@ import uii.ang.creator.processor.Const.koinDataModuleGenName
 import uii.ang.creator.processor.Const.koinDomainModuleGenName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
+import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
 import uii.ang.creator.processor.Const.useCasePackageName
 import uii.ang.creator.template.showcase.*
+import uii.ang.creator.tools.firstCharUpperCase
 
 object CreatorCodeGenerator {
   fun generate(data: CreatorData, resolver: Resolver, logger: KSPLogger) {
@@ -25,10 +28,16 @@ object CreatorCodeGenerator {
     val repositoryHelper = RepositoryHelper(logger, data)
     val repositoryImplHelper = RepositoryImplHelper(logger, data)
     val useCaseHelper = UseCaseHelper(logger, data)
+    val queryBodyHelper = RequestQueryBodyHelper(logger, data)
 
     // 生成ApiDomain代码
     if (data.generateApiModel) {
       generatorApiModel(apiModelHelper, data)
+    }
+
+    val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
+    if (hasBody) {
+      generatorQueryBodyObj(queryBodyHelper, data)
     }
 
     // 生成Response代码
@@ -118,6 +127,15 @@ object CreatorCodeGenerator {
     CodeBuilder.getOrCreate(responsePackageName,
       responseClassNameStr,
       typeBuilderProvider = { responseClassName }
+    )
+  }
+
+  private fun generatorQueryBodyObj(queryBodyHelper: RequestQueryBodyHelper, data: CreatorData) {
+    data.annotationData.methodName
+    val queryBodyObjClassNameStr = "${data.annotationData.methodName.firstCharUpperCase()}QueryBody"
+    val queryBodyClassName = queryBodyHelper.genClassBuilder()
+    val queryBodyCodeBuilder = CodeBuilder.getOrCreate(
+      requestBodyPackageName, queryBodyObjClassNameStr, typeBuilderProvider = { queryBodyClassName }
     )
   }
 

@@ -3,18 +3,93 @@ package uii.ang.creator.processor
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
-import uii.ang.creator.annotation.Creator
-import uii.ang.creator.annotation.ParseReturn
-import uii.ang.creator.annotation.ParseRoot
+import uii.ang.creator.annotation.*
+import uii.ang.creator.processor.Const.anyClassName
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.hashMapClassName
 import uii.ang.creator.processor.Const.listClassName
+import uii.ang.creator.processor.Const.requestBodyPackageName
+import uii.ang.creator.processor.Const.retrofitBodyClassName
+import uii.ang.creator.processor.Const.retrofitFieldClassName
+import uii.ang.creator.processor.Const.retrofitGetClassName
+import uii.ang.creator.processor.Const.retrofitPathClassName
+import uii.ang.creator.processor.Const.retrofitPostClassName
+import uii.ang.creator.processor.Const.retrofitQueryClassName
+import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.tools.*
 
 object Utils {
+
+  fun convertToType(type: String) = when (type) {
+    "String" -> ""
+    "Long" -> ".toLong()"
+    "Int" -> ".toInt()"
+    "Double" -> ".toDouble()"
+    "Float" -> ".toFloat()"
+    "Short" -> ".toShort()"
+    "Boolean" -> ".Boolean()"
+    else -> ""
+  }
+
+  fun requestParamHasBody(parameters: List<Parameter>) =
+    parameters.any { param -> param.paramQueryType == requestParamTypeBody }
+
+  fun requestParamHasMap(parameters: List<Parameter>) =
+    parameters.any { param -> param.paramQueryType == requestParamTypeMap }
+
+  fun getRequestParamWithoutBody(parameters: List<Parameter>) =
+    parameters.filter { param -> param.paramQueryType != requestParamTypeBody && param.paramQueryType != requestParamTypeMap }
+
+  fun getRequestParamWithBody(parameters: List<Parameter>) =
+    parameters.filter { param -> param.paramQueryType == requestParamTypeBody }
+
+  fun getRequestParamWithMap(parameters: List<Parameter>) =
+    parameters.filter { param -> param.paramQueryType == requestParamTypeMap }
+
+  fun getRequestParameterSpecBody(objectName: String): ParameterSpec.Builder {
+    val queryObjName = "${objectName}QueryBody"
+    return ParameterSpec.builder(
+      "paramData", ClassName(requestBodyPackageName, queryObjName.firstCharUpperCase())
+    )
+  }
+
+  fun getRequestHashMapClassName() = hashMapClassName.parameterizedBy(listOf(stringClassName, stringClassName))
+  fun getRequestParameterSpecBodyWithMap(): ParameterSpec.Builder {
+    return ParameterSpec.builder(
+      "paramMap",
+      getRequestHashMapClassName()
+    )
+  }
+
+  fun getRequestParameterSpecList(parameters: List<Parameter>, hasDefaultValue: Boolean = false): List<ParameterSpec> {
+    return parameters.map { param ->
+      val paramSpec = ParameterSpec.builder(param.paramName, convertType(param.paramType))
+      if (hasDefaultValue && param.paramDefault.isNotEmpty()) {
+        if (param.paramType == "String") {
+          paramSpec.defaultValue("\"${param.paramDefault}\"")
+        } else {
+          paramSpec.defaultValue(param.paramDefault)
+        }
+      }
+      paramSpec.build()
+    }
+  }
+
+  fun getRetrofitClassName(method: String) = when (method) {
+    requestMethodPost -> retrofitPostClassName
+    requestMethodGet -> retrofitGetClassName
+    requestParamTypeQuery -> retrofitQueryClassName
+    requestParamTypePath -> retrofitPathClassName
+    requestParamTypeField -> retrofitFieldClassName
+    requestParamTypeBody -> retrofitBodyClassName
+    requestParamTypeMap -> retrofitBodyClassName
+    else -> retrofitGetClassName
+  }
 
   fun convertType(type: String) = when (type) {
     "String" -> String::class
@@ -26,6 +101,7 @@ object Utils {
     "Boolean" -> Boolean::class
     else -> String::class
   }
+
   fun getListGenericsCreatorAnnotation(ksType: KSType):
           KSNode? {
     val annoList = ksType.declaration.annotations.filter {

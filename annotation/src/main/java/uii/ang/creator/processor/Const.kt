@@ -12,6 +12,7 @@ object Const {
   val dataModulePackageName = "$basePackageName.$modulePackageName.data"
   val apiModelPackageName = "$basePackageName.$modulePackageName.data.datasource.api.model"
   val responsePackageName = "$basePackageName.$modulePackageName.data.datasource.api.response"
+  val requestBodyPackageName = "$basePackageName.$modulePackageName.data.datasource.api.querybody"
   val retrofitServicePackageName = "$basePackageName.$modulePackageName.data.datasource.api.service"
   val repositoryImplPackageName = "$basePackageName.$modulePackageName.data.repository"
   val koinDataModuleGenName = "DataModuleGen"
@@ -40,6 +41,9 @@ object Const {
   val baseDomainResultMemberName = MemberName(baseDomainResultPackageName, "mapSuccess")
 
   val listClassName = List::class.asClassName()
+  val hashMapClassName = HashMap::class.asClassName()
+  val stringClassName = String::class.asClassName()
+  val anyClassName = Any::class.asClassName()
 
 
   // 第三方为相关
@@ -56,6 +60,9 @@ object Const {
 
   //"News/{userId}
   val retrofitPathClassName = ClassName(retrofitPackageName, "Path")
+  
+  // POST请求体直接发送JSON数据
+  val retrofitBodyClassName = ClassName(retrofitPackageName, "Body")
 
   //POST请求体内的字段
   val retrofitFieldClassName = ClassName(retrofitPackageName, "Field")

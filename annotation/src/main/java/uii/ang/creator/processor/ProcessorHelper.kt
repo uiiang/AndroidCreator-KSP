@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.ClassName
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
+import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
 import uii.ang.creator.processor.Const.useCasePackageName
@@ -32,6 +33,9 @@ open class ProcessorHelper(
   val apiModelClassName = ClassName(
     apiModelPackageName,
     classDeclaration.simpleName.getShortName() + "ApiModel"
+  )
+  val queryQueryBodyClassName = ClassName(
+    requestBodyPackageName, classDeclaration.simpleName.getShortName()+"QueryBody"
   )
   val responseClassName = ClassName(
     responsePackageName,

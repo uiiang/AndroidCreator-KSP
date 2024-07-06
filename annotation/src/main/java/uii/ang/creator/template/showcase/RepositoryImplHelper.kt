@@ -11,6 +11,12 @@ import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
 import uii.ang.creator.processor.Utils.findParseReturnChain
+import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
+import uii.ang.creator.processor.Utils.getRequestParameterSpecBody
+import uii.ang.creator.processor.Utils.getRequestParameterSpecBodyWithMap
+import uii.ang.creator.processor.Utils.getRequestParameterSpecList
+import uii.ang.creator.processor.Utils.requestParamHasBody
+import uii.ang.creator.processor.Utils.requestParamHasMap
 import uii.ang.creator.tools.firstCharLowerCase
 import uii.ang.creator.tools.isList
 
@@ -77,19 +83,42 @@ class RepositoryImplHelper(
 //          Result.Success(albums)
 //        }
 //      }
+    val noBodyParamList = getRequestParamWithoutBody(generateParameters)
+    val hasBody = requestParamHasBody(generateParameters)
+    val hasMap = requestParamHasMap(generateParameters)
+
     val genFunction = FunSpec.builder(methodName)
       .addModifiers(KModifier.OVERRIDE, KModifier.SUSPEND)
-    generateParameters.forEach { param ->
-      val paramSpec = ParameterSpec.builder(param.paramName, convertType(param.paramType))
-      genFunction.addParameter(
-        paramSpec.build()
-      )
-    }
-
-    // when (val apiResult = albumRetrofitService.searchAlbumAsync(phrase)) {
-    val paramList = generateParameters.joinToString(",") { param ->
+    val parameterSpecList = getRequestParameterSpecList(noBodyParamList)
+    genFunction.addParameters(parameterSpecList)
+    var timberLogCodeBlock = CodeBlock.builder()
+    var paramList = noBodyParamList.joinToString(",") { param ->
       param.paramName
     }
+    if (hasBody) {
+      timberLogCodeBlock = CodeBlock.builder()
+        .addStatement(
+          "%T.d(\"${retrofitServiceClassName.simpleName}\"+\"${methodName}QueryBody\"+" +
+                  "\"params=\${paramData.toString()}\")",
+          timberClassName
+        )
+      val bodyParamSpec = getRequestParameterSpecBody(methodName)
+      genFunction.addParameter(bodyParamSpec.build())
+      if (paramList.isNotEmpty()) {
+        paramList += ", "
+      }
+      paramList += "paramData"
+    }
+    if (hasMap) {
+      val bodyParamSpec = getRequestParameterSpecBodyWithMap()
+      genFunction.addParameter(bodyParamSpec.build())
+      if (paramList.isNotEmpty()) {
+        paramList += ", "
+      }
+      paramList += "paramMap"
+    }
+    // when (val apiResult = albumRetrofitService.searchAlbumAsync(phrase)) {
+
     val whenCodeBlock = "return when (val apiResult = " +
             "${retrofitServiceClassName.simpleName.firstCharLowerCase()}.${methodName}Async($paramList))"
 
@@ -127,7 +156,9 @@ class RepositoryImplHelper(
     }
     apiResultExceptionCodeBlock.addStatement("}")
 
-    genFunction.beginControlFlow(whenCodeBlock)
+    genFunction
+      .addCode(timberLogCodeBlock.build())
+      .beginControlFlow(whenCodeBlock)
       .addCode(apiResultSuccessCodeBlock.build())
       .addCode(apiResultErrorCodeBlock.build())
       .addCode(apiResultExceptionCodeBlock.build())

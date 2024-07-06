@@ -11,6 +11,12 @@ import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
 import uii.ang.creator.processor.Utils.findParseReturnChain
+import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
+import uii.ang.creator.processor.Utils.getRequestParameterSpecBody
+import uii.ang.creator.processor.Utils.getRequestParameterSpecBodyWithMap
+import uii.ang.creator.processor.Utils.getRequestParameterSpecList
+import uii.ang.creator.processor.Utils.requestParamHasBody
+import uii.ang.creator.processor.Utils.requestParamHasMap
 
 class RepositoryHelper(
   logger: KSPLogger,
@@ -34,20 +40,21 @@ class RepositoryHelper(
 //      suspend fun searchAlbum(phrase: String?):
 //        Result<List<Album>>
 //    }
+    val noBodyParamList = getRequestParamWithoutBody(generateParameters)
+    val hasBody = requestParamHasBody(generateParameters)
+    val hasMap = requestParamHasMap(generateParameters)
+
     val genFunction = FunSpec.builder(methodName)
       .addModifiers(KModifier.ABSTRACT, KModifier.SUSPEND)
-    generateParameters.forEach { param ->
-      val paramSpec = ParameterSpec.builder(param.paramName, convertType(param.paramType))
-      if (param.paramDefault.isNotEmpty()) {
-        if (param.paramType == "String") {
-          paramSpec.defaultValue("\"${param.paramDefault}\"")
-        } else {
-          paramSpec.defaultValue(param.paramDefault)
-        }
-      }
-      genFunction.addParameter(
-        paramSpec.build()
-      )
+    val parameterSpecList = getRequestParameterSpecList(noBodyParamList)
+    genFunction.addParameters(parameterSpecList)
+    if (hasBody) {
+      val bodyParamSpec = getRequestParameterSpecBody(methodName)
+      genFunction.addParameter(bodyParamSpec.build())
+    }
+    if (hasMap) {
+      val bodyParamSpec = getRequestParameterSpecBodyWithMap()
+      genFunction.addParameter(bodyParamSpec.build())
     }
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
     if (returnChain.values.isNotEmpty()) {

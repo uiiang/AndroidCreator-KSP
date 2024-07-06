@@ -7,6 +7,16 @@ enum class AnnotationRetrofitService {
 const val requestMethodPost = "POST"
 const val requestMethodGet = "GET"
 
+const val requestParamTypePath = "Path"
+const val requestParamTypeQuery = "Query"
+const val requestParamTypeField = "Field"
+const val requestParamTypeBody = "Body"
+const val requestParamTypeMap = "Map"
+
+
+const val requestParamDataTypeString = "String"
+const val requestParamDataTypeInt = "Int"
+
 
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
@@ -56,9 +66,9 @@ annotation class Creator(
 @Retention(AnnotationRetention.SOURCE)
 annotation class Parameter(
   val paramName: String,
-  val paramType: String,
-  val paramDefault: String="",
-  val paramQueryType: String="Path",
+  val paramType: String = requestParamDataTypeString,
+  val paramDefault: String = "",
+  val paramQueryType: String = requestParamTypePath
 ) {
   companion object
 }

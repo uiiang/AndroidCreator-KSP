@@ -3,14 +3,24 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.processor.Const.baseDomainResultClassName
 import uii.ang.creator.processor.Const.baseDomainResultMemberName
 import uii.ang.creator.processor.Const.koinSingleOfMemberName
+import uii.ang.creator.processor.Const.requestBodyPackageName
+import uii.ang.creator.processor.Const.timberClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
 import uii.ang.creator.processor.Utils.findParseReturnChain
+import uii.ang.creator.processor.Utils.getRequestHashMapClassName
+import uii.ang.creator.processor.Utils.getRequestParamWithBody
+import uii.ang.creator.processor.Utils.getRequestParamWithMap
+import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
+import uii.ang.creator.processor.Utils.requestParamHasBody
+import uii.ang.creator.processor.Utils.requestParamHasMap
 import uii.ang.creator.tools.firstCharLowerCase
+import uii.ang.creator.tools.firstCharUpperCase
 
 class UseCaseHelper(
   logger: KSPLogger,
@@ -64,11 +74,59 @@ class UseCaseHelper(
 
     if (returnChain.values.isNotEmpty()) {
       val returnParam = baseDomainResultClassName.parameterizedBy(returnChain.values.last())
-
       PropertySpec.builder("result", returnParam).build()
       val funCodeBlock = CodeBlock.builder()
-        .addStatement("val result = ${repositoryInterfaceClassName.simpleName.firstCharLowerCase()}")
-        .addStatement("\t.$methodName(${generateParameters.joinToString(",") { it.paramName }})")
+
+      val hasBody = requestParamHasBody(generateParameters)
+      val hasMap = requestParamHasMap(generateParameters)
+      val noBodyParamList = getRequestParamWithoutBody(generateParameters)
+      var paramList = noBodyParamList.joinToString(", ") { param ->
+        param.paramName
+      }
+      if (hasBody) {
+        val bodyParamList = getRequestParamWithBody(generateParameters)
+          .joinToString(",") {
+//          if (it.paramType=="String") {
+//            "\n${it.paramName} = \"${it.paramName}\""
+//          } else {
+            "\n${it.paramName} = ${it.paramName}"
+//          }
+          }
+        val queryBodyClassName = "${methodName}QueryBody"
+        val queryBodyCodeBlock = CodeBlock.builder()
+          .addStatement(
+            "val ${queryBodyClassName.firstCharLowerCase()} = %T(",
+            ClassName(requestBodyPackageName, queryBodyClassName.firstCharUpperCase())
+          )
+          .addStatement(bodyParamList)
+          .addStatement(")")
+        genFunction.addCode(queryBodyCodeBlock.build())
+        if (paramList.isNotEmpty()) {
+          paramList += ", "
+        }
+        paramList += queryBodyClassName
+        funCodeBlock.addStatement(
+          "%T.d(\"$queryBodyClassName params=\${$queryBodyClassName.toString()}\")",
+          timberClassName
+        )
+      }
+
+      if (hasMap) {
+        val bodyParamList = getRequestParamWithMap(generateParameters)
+        val queryMapCodeBlock = CodeBlock.builder()
+        queryMapCodeBlock.addStatement("val paramMap = %T()", getRequestHashMapClassName())
+        bodyParamList.forEach { param->
+          queryMapCodeBlock.addStatement("paramMap[\"${param.paramName}\"] = ${param.paramName}")
+        }
+        funCodeBlock.add(queryMapCodeBlock.build())
+        if (paramList.isNotEmpty()) {
+          paramList += ", "
+        }
+        paramList += "paramMap"
+      }
+
+      funCodeBlock.addStatement("val result = ${repositoryInterfaceClassName.simpleName.firstCharLowerCase()}")
+        .addStatement("\t.$methodName($paramList)")
         .addStatement("\t.%M {", baseDomainResultMemberName)
         .addStatement("\t\tcopy(value = value)")
         .addStatement("\t}")
