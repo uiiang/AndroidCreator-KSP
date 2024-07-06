@@ -24,7 +24,6 @@ import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.tools.*
 
 object Utils {
-
   fun convertToType(type: String) = when (type) {
     "String" -> ""
     "Long" -> ".toLong()"

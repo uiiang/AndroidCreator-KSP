@@ -46,7 +46,7 @@ class RepositoryHelper(
 
     val genFunction = FunSpec.builder(methodName)
       .addModifiers(KModifier.ABSTRACT, KModifier.SUSPEND)
-    val parameterSpecList = getRequestParameterSpecList(noBodyParamList)
+    val parameterSpecList = getRequestParameterSpecList(noBodyParamList, true)
     genFunction.addParameters(parameterSpecList)
     if (hasBody) {
       val bodyParamSpec = getRequestParameterSpecBody(methodName)

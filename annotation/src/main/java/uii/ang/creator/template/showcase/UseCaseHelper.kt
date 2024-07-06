@@ -17,6 +17,7 @@ import uii.ang.creator.processor.Utils.getRequestHashMapClassName
 import uii.ang.creator.processor.Utils.getRequestParamWithBody
 import uii.ang.creator.processor.Utils.getRequestParamWithMap
 import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
+import uii.ang.creator.processor.Utils.getRequestParameterSpecList
 import uii.ang.creator.processor.Utils.requestParamHasBody
 import uii.ang.creator.processor.Utils.requestParamHasMap
 import uii.ang.creator.tools.firstCharLowerCase
@@ -55,20 +56,8 @@ class UseCaseHelper(
     val generateParameters = anno.parameters
     val genFunction = FunSpec.builder("invoke")
       .addModifiers(KModifier.SUSPEND, KModifier.OPERATOR)
-
-    generateParameters.forEach { param ->
-      val paramSpec = ParameterSpec.builder(param.paramName, convertType(param.paramType))
-      if (param.paramDefault.isNotEmpty()) {
-        if (param.paramType == "String") {
-          paramSpec.defaultValue("\"${param.paramDefault}\"")
-        } else {
-          paramSpec.defaultValue(param.paramDefault)
-        }
-      }
-      genFunction.addParameter(
-        paramSpec.build()
-      )
-    }
+    val parameterSpecList = getRequestParameterSpecList(generateParameters, true)
+    genFunction.addParameters(parameterSpecList)
 
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
 

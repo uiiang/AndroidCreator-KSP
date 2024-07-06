@@ -42,14 +42,17 @@ class ApiModelHelper(
   // 生成构造函数里的参数
   fun genConstructor(propertyList: List<PropertyDescriptor>): FunSpec.Builder {
     val flux = FunSpec.constructorBuilder()
-    for (entry in propertyList) {
+    val parameterSpecList = propertyList.map { entry->
       val genTypeName = entry.wrapperTypeName
-      flux.addParameter(
-        ParameterSpec.builder(
-          entry.className.getShortName(), genTypeName.copy(nullable = entry.isNullable)
-        ).build()
+      val paramSpec = ParameterSpec.builder(
+        entry.className.getShortName(), genTypeName.copy(nullable = entry.isNullable)
       )
+      if (entry.isNullable) {
+        paramSpec.defaultValue("${entry.typeClassName.primitiveDefaultInit()}")
+      }
+      paramSpec.build()
     }
+    flux.addParameters(parameterSpecList)
     return flux
   }
 
