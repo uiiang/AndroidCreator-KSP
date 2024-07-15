@@ -26,6 +26,10 @@ class CodeBuilder private constructor(
 //    if (originating != null) this.originating += originating
   }
 
+  fun addType(typeSpecBuilder:TypeSpec.Builder) {
+    builder.addType(typeSpecBuilder.build())
+  }
+
   fun addImport(type: KSType, alias: String) {
     builder.addAliasedImport(type.toClassName(), alias)
   }

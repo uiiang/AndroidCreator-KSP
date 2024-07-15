@@ -7,6 +7,7 @@ import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.dataModulePackageName
 import uii.ang.creator.processor.Const.domainModulePackageName
+import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.koinDataModuleGenName
 import uii.ang.creator.processor.Const.koinDomainModuleGenName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
@@ -29,11 +30,13 @@ object CreatorCodeGenerator {
     val repositoryImplHelper = RepositoryImplHelper(logger, data)
     val useCaseHelper = UseCaseHelper(logger, data)
     val queryBodyHelper = RequestQueryBodyHelper(logger, data)
-
+    val entityModelHelper = EntityModelHelper(logger, data)
     // 生成ApiDomain代码
     if (data.generateApiModel) {
       generatorApiModel(apiModelHelper, data)
     }
+
+    genEntityModel(entityModelHelper, data)
 
     val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
     if (hasBody) {
@@ -137,6 +140,30 @@ object CreatorCodeGenerator {
     val queryBodyCodeBuilder = CodeBuilder.getOrCreate(
       requestBodyPackageName, queryBodyObjClassNameStr, typeBuilderProvider = { queryBodyClassName }
     )
+  }
+
+  private fun genEntityModel(entityModelHelper: EntityModelHelper, data: CreatorData) {
+    val entityModelNameStr = entityModelHelper.entityModelClassName.simpleName
+    val entityModelName = entityModelHelper.genClassBuilder()
+    val entityModelBuilder = CodeBuilder.getOrCreate(
+      entityModelPackageName,
+      entityModelNameStr,
+      typeBuilderProvider = {
+        entityModelName
+      }
+    )
+    val toDomainModel = entityModelHelper.toDomainModel(
+      entityModelNameStr,
+      entityModelPackageName,
+      data
+    )
+    data.primaryConstructorParameters.filter { !it.isBaseType }
+      .map {
+        entityModelHelper.genTypeConverter(it)
+      }.onEach {
+        entityModelBuilder.addType(it)
+      }
+    entityModelBuilder.addFunction(toDomainModel, false)
   }
 
   private fun generatorApiModel(apiModelHelper: ApiModelHelper, data: CreatorData) {

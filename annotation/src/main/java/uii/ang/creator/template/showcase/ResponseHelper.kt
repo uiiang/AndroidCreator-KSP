@@ -2,7 +2,7 @@ package uii.ang.creator.template.showcase
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
-import uii.ang.creator.processor.Const.serialNameClassName
+import uii.ang.creator.processor.Const.serializableSerialNameClassName
 import uii.ang.creator.processor.Const.serializableClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
@@ -14,7 +14,7 @@ class ResponseHelper(
 ) : ProcessorHelper(logger, data) {
   fun genClassBuilder(): TypeSpec.Builder {
     val parseRootProperty = data.primaryConstructorParameters.firstOrNull { it.isParseRoot }
-    val apiModel = parseRootProperty?.wrapperTypeName ?: apiModelClassName
+    val apiModel = parseRootProperty?.apiModelWrapperTypeName ?: apiModelClassName
 
     val builderPropName = parseRootProperty?.className?.getShortName() ?: dataClassName.firstCharLowerCase()
     val flux = genConstructor(apiModel, builderPropName)
@@ -42,7 +42,7 @@ class ResponseHelper(
     val builder =
       parameterSpec.builder(builderPropName, apiModelClassName).addAnnotation(
         AnnotationSpec.builder(
-          serialNameClassName
+          serializableSerialNameClassName
         ).addMember("\"${builderPropName}\"").build()
       )
 

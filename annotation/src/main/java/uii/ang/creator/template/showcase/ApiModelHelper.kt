@@ -3,7 +3,7 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ksp.toClassName
-import uii.ang.creator.processor.Const.serialNameClassName
+import uii.ang.creator.processor.Const.serializableSerialNameClassName
 import uii.ang.creator.processor.Const.serializableClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
@@ -43,7 +43,7 @@ class ApiModelHelper(
   fun genConstructor(propertyList: List<PropertyDescriptor>): FunSpec.Builder {
     val flux = FunSpec.constructorBuilder()
     val parameterSpecList = propertyList.map { entry->
-      val genTypeName = entry.wrapperTypeName
+      val genTypeName = entry.apiModelWrapperTypeName
       val paramSpec = ParameterSpec.builder(
         entry.className.getShortName(), genTypeName.copy(nullable = entry.isNullable)
       )
@@ -61,7 +61,7 @@ class ApiModelHelper(
           List<PropertySpec> {
     val retList: MutableList<PropertySpec> = mutableListOf()
     for (entry in propertyList) {
-      val genTypeName = entry.wrapperTypeName
+      val genTypeName = entry.apiModelWrapperTypeName
       val prop = PropertySpec.builder(
         entry.className.getShortName(),
         genTypeName.copy(nullable = entry.isNullable)
@@ -73,7 +73,7 @@ class ApiModelHelper(
       }
       prop
         .addAnnotation(
-          AnnotationSpec.builder(serialNameClassName)
+          AnnotationSpec.builder(serializableSerialNameClassName)
             .addMember("\"${entry.className.getShortName()}\"").build()
         )
       retList.add(prop.build())

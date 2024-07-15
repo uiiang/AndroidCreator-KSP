@@ -34,7 +34,11 @@ data class PropertyDescriptor(
   /**
    * 参数被包裹后的类，如果是list型就转成List<xxxApiModel>如果是普通类型就直接返回
    */
-  val wrapperTypeName: TypeName, // 参数被包裹后的类，如果是list型就转成List<xxxApiModel>如果是普通类型就直接返回
+  val apiModelWrapperTypeName: TypeName, // 参数被包裹后的类，如果是list型就转成List<xxxApiModel>如果是普通类型就直接返回
+  /**
+   * 参数被包裹后的类，如果是list型就转成List<xxxEntityModel>如果是普通类型就直接返回
+   */
+  val entityModelWrapperTypeName: TypeName, // 参数被包裹后的类，如果是list型就转成List<xxxEntityModel>如果是普通类型就直接返回
   /**
    * 该参数是否可空
    */
@@ -63,6 +67,10 @@ data class PropertyDescriptor(
    * 如果标有ParseReturn注解，则在List中包含完整的调用链条
    */
   val parseReturnChain: List<PropertyDescriptor> = emptyList(),
+  /**
+   * 是否基本类型
+   */
+  val isBaseType:Boolean = false,
   val resolve: KSType
 ) {
   override fun toString(): String {

@@ -14,6 +14,9 @@ object Const {
   val responsePackageName = "$basePackageName.$modulePackageName.data.datasource.api.response"
   val requestBodyPackageName = "$basePackageName.$modulePackageName.data.datasource.api.querybody"
   val retrofitServicePackageName = "$basePackageName.$modulePackageName.data.datasource.api.service"
+  val entityModelPackageName = "$basePackageName.$modulePackageName.data.datasource.database.model"
+  val databasePackageName = "$basePackageName.$modulePackageName.data.datasource.database"
+
   val repositoryImplPackageName = "$basePackageName.$modulePackageName.data.repository"
   val koinDataModuleGenName = "DataModuleGen"
 
@@ -21,6 +24,7 @@ object Const {
   val repositoryPackageName = "$basePackageName.$modulePackageName.domain.repository"
   val useCasePackageName = "$basePackageName.$modulePackageName.domain.usecase"
   val koinDomainModuleGenName = "DomainModuleGen"
+
 
   // base模块相关路径
   val baseRetrofitPackageName = "$basePackageName.base.data.retrofit"
@@ -30,13 +34,18 @@ object Const {
 
   // base模块包含的类
   val baseRetrofitApiResultClassName = ClassName(baseRetrofitPackageName, "ApiResult")
-  val baseRetrofitApiResultSuccessMemberName = ClassName(baseRetrofitPackageName+"."+baseRetrofitApiResultClassName.simpleName, "Success")
-  val baseRetrofitApiResultErrorMemberName = ClassName(baseRetrofitPackageName+"."+baseRetrofitApiResultClassName.simpleName, "Error")
-  val baseRetrofitApiResultExceptionMemberName = ClassName(baseRetrofitPackageName+"."+baseRetrofitApiResultClassName.simpleName, "Exception")
+  val baseRetrofitApiResultSuccessMemberName =
+    ClassName(baseRetrofitPackageName + "." + baseRetrofitApiResultClassName.simpleName, "Success")
+  val baseRetrofitApiResultErrorMemberName =
+    ClassName(baseRetrofitPackageName + "." + baseRetrofitApiResultClassName.simpleName, "Error")
+  val baseRetrofitApiResultExceptionMemberName =
+    ClassName(baseRetrofitPackageName + "." + baseRetrofitApiResultClassName.simpleName, "Exception")
 
   val baseDomainResultClassName = ClassName(baseDomainResultPackageName, "Result")
-  val baseDomainResultSuccessMemberName = ClassName(baseDomainResultPackageName+"."+baseDomainResultClassName.simpleName, "Success")
-  val baseDomainResultFailureMemberName = ClassName(baseDomainResultPackageName+"."+baseDomainResultClassName.simpleName, "Failure")
+  val baseDomainResultSuccessMemberName =
+    ClassName(baseDomainResultPackageName + "." + baseDomainResultClassName.simpleName, "Success")
+  val baseDomainResultFailureMemberName =
+    ClassName(baseDomainResultPackageName + "." + baseDomainResultClassName.simpleName, "Failure")
 
   val baseDomainResultMemberName = MemberName(baseDomainResultPackageName, "mapSuccess")
 
@@ -60,7 +69,7 @@ object Const {
 
   //"News/{userId}
   val retrofitPathClassName = ClassName(retrofitPackageName, "Path")
-  
+
   // POST请求体直接发送JSON数据
   val retrofitBodyClassName = ClassName(retrofitPackageName, "Body")
 
@@ -69,7 +78,10 @@ object Const {
 
   // 序列化库
   val serializableClassName = ClassName("kotlinx.serialization", "Serializable")
-  val serialNameClassName = ClassName("kotlinx.serialization", "SerialName")
+  val serializableSerialNameClassName = ClassName("kotlinx.serialization", "SerialName")
+  val serializableJsonClassName = ClassName("kotlinx.serialization.json", "Json")
+  val serialEncodeToStringMemberName = MemberName("kotlinx.serialization", "encodeToString")
+  val serialDecodeFromStringMemberName = MemberName("kotlinx.serialization", "decodeFromString")
 
   // Timber
   val timberClassName = ClassName("timber.log", "Timber")
@@ -78,6 +90,18 @@ object Const {
   val koinModuleFunClassName = ClassName("org.koin.dsl", "module")
   val koinModuleClassName = ClassName("org.koin.core.module", "Module")
   val koinSingleOfMemberName = MemberName("org.koin.core.module.dsl", "singleOf")
+
+  // Room数据库操作
+  val roomEntityClassName = ClassName("androidx.room", "Entity")
+  val roomPrimaryKeyClassName = ClassName("androidx.room", "PrimaryKey")
+  val roomTypeConverterClassName = ClassName("androidx.room", "TypeConverter")
+  val roomDaoClassName = ClassName("androidx.room", "Dao")
+  val roomInsertClassName = ClassName("androidx.room", "Insert")
+  val roomOnConflictStrategyClassName = ClassName("androidx.room", "OnConflictStrategy")
+  val roomQueryClassName = ClassName("androidx.room", "Query")
+  val roomDatabaseClassName = ClassName("androidx.room", "Database")
+  val roomRoomDatabaseClassName = ClassName("androidx.room", "RoomDatabase")
+
 }
 
 

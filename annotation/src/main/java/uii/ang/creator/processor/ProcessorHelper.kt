@@ -3,6 +3,7 @@ package uii.ang.creator.processor
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.ClassName
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.requestBodyPackageName
@@ -37,10 +38,17 @@ open class ProcessorHelper(
   val queryQueryBodyClassName = ClassName(
     requestBodyPackageName, classDeclaration.simpleName.getShortName()+"QueryBody"
   )
+  // Response对象
   val responseClassName = ClassName(
     responsePackageName,
     if (data.annotationData.responseClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}Response"
     else "${data.annotationData.responseClassName}Response"
+  )
+
+  // EntityModel对象
+  val entityModelClassName = ClassName(
+    entityModelPackageName,
+    classDeclaration.simpleName.getShortName()+"EntityModel"
   )
 
   val retrofitServiceClassName = ClassName(

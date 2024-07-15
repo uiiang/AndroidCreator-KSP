@@ -9,8 +9,8 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import uii.ang.creator.annotation.*
-import uii.ang.creator.processor.Const.anyClassName
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.hashMapClassName
 import uii.ang.creator.processor.Const.listClassName
 import uii.ang.creator.processor.Const.requestBodyPackageName
@@ -149,14 +149,17 @@ object Utils {
   ): PropertyDescriptor {
     val resolve = kp.type.resolve()
     val toTypeName = resolve.toTypeName()
-    val wrapperType = getWrapperType(kp)
+    val apiModelWrapperType = getApiModelWrapperType(kp)
+    val entityModelWrapperType = getEntityModelWrapperType(kp)
+    val isBaseType = isBaseType(kp)
     val isParseReturn = kp.hasAnnotation<ParseReturn>()
     return PropertyDescriptor(
       sourceClassName = sourceClassDeclaration.toClassName(),
       typeClassName = resolve.toClassName(),
       //包含完整包名类名
       typeName = toTypeName,
-      wrapperTypeName = wrapperType,
+      apiModelWrapperTypeName = apiModelWrapperType,
+      entityModelWrapperTypeName = entityModelWrapperType,
       isNullable = resolve.isNullable(),
       //仅类名
       className = kp.name!!,
@@ -166,11 +169,50 @@ object Utils {
       kDoc = "",
       isParseRoot = kp.hasAnnotation<ParseRoot>(),
       isParseReturn = isParseReturn,
+      isBaseType = isBaseType,
       resolve = resolve,
     )
   }
 
-  private fun getWrapperType(it: KSValueParameter): TypeName {
+  private fun isBaseType(it: KSValueParameter) :Boolean {
+    val resolve = it.type.resolve()
+    val toTypeName = resolve.toTypeName()
+    return toTypeName.isBaseType()
+  }
+
+  private fun getEntityModelWrapperType(it: KSValueParameter): TypeName {
+    val resolve = it.type.resolve()
+    val toTypeName = resolve.toTypeName()
+    val wrapperType = if (toTypeName.isBaseType()) {
+      toTypeName
+    } else if (toTypeName.isList()) {
+      // 如果是list，获取list中的泛型类，
+      // 如果泛型类是注解Creator的数据类，转换成apimodel
+      // 判断当前list的泛型类是否为creator
+      val ksNode = resolve.arguments.first()
+        .type?.resolve()?.let { it1 -> getListGenericsCreatorAnnotation(it1) }
+      ksNode?.let { node ->
+        // 字段属性为List<注解了Create的data class>
+        val entityModelName = node.toString() + "EntityModel"
+        //        logger.warn("apiModelName $apiModelName")
+        val entityModelClass = ClassName(entityModelPackageName, entityModelName)
+        val parameterizedBy = listClassName.parameterizedBy(entityModelClass)
+        //        logger.warn("  convert parameterizedBy ${parameterizedBy.toString()}")
+        parameterizedBy
+      } ?: toTypeName
+    } else {
+      // 字段属性为data class
+      val retClassName = ClassName(
+        entityModelPackageName,
+        it.name!!.getShortName().firstCharUpperCase() + "EntityModel"
+      )
+      //      logger.warn("  convert api model ${retClassName.simpleName}")
+      retClassName
+    }
+    return wrapperType
+  }
+
+  private fun getApiModelWrapperType(it: KSValueParameter): TypeName {
     val resolve = it.type.resolve()
     val toTypeName = resolve.toTypeName()
     val wrapperType = if (toTypeName.isBaseType()) {

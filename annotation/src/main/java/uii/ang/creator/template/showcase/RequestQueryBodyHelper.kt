@@ -4,13 +4,12 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import uii.ang.creator.annotation.Parameter
 import uii.ang.creator.annotation.requestParamTypeBody
-import uii.ang.creator.processor.Const.serialNameClassName
+import uii.ang.creator.processor.Const.serializableSerialNameClassName
 import uii.ang.creator.processor.Const.serializableClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
 import uii.ang.creator.tools.firstCharUpperCase
-import kotlin.math.log
 
 class RequestQueryBodyHelper(
   logger: KSPLogger,
@@ -64,7 +63,7 @@ class RequestQueryBodyHelper(
         }
         propSpec
           .addAnnotation(
-            AnnotationSpec.builder(serialNameClassName)
+            AnnotationSpec.builder(serializableSerialNameClassName)
               .addMember("\"${param.paramName}\"").build()
           )
         propSpec.build()
