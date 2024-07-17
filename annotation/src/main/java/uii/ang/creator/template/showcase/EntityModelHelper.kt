@@ -5,9 +5,11 @@ import com.google.devtools.ksp.symbol.KSTypeArgument
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
+import com.squareup.kotlinpoet.ksp.toTypeName
 import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.listClassName
 import uii.ang.creator.processor.Const.roomEntityClassName
+import uii.ang.creator.processor.Const.roomPrimaryKeyClassName
 import uii.ang.creator.processor.Const.roomTypeConverterClassName
 import uii.ang.creator.processor.Const.serialDecodeFromStringMemberName
 import uii.ang.creator.processor.Const.serialEncodeToStringMemberName
@@ -25,6 +27,10 @@ class EntityModelHelper(
   logger: KSPLogger,
   data: CreatorData
 ) : ProcessorHelper(logger, data) {
+
+  fun getToDatabaseAnno() =
+    data.primaryConstructorParameters.filter { it.isToDatabase }//.filter { !it.isBaseType }
+
   //  @Entity(tableName = "albums")
 //  @TypeConverters(
 //    AlbumImageEntityTypeConverter::class,
@@ -41,6 +47,65 @@ class EntityModelHelper(
 //  val tags: List<TagEntityModel>?,
   fun genClassBuilder(): TypeSpec.Builder {
     val constructorParams = genConstructor(data.primaryConstructorParameters)
+//    logger.warn("开始生成entity Model类")
+    val propertyList = convertProperty(data.primaryConstructorParameters)
+    val roomEntityAnno = AnnotationSpec.builder(roomEntityClassName)
+      .addMember("tableName = \"${classDeclaration.simpleName.getShortName().lowercase()}\"")
+    val typeConvertParamClass = genTypeConvertParameterAnnotation(data.primaryConstructorParameters)
+    val roomTypeConvertAnno = AnnotationSpec.builder(roomTypeConverterClassName)
+    typeConvertParamClass.onEach {
+      roomTypeConvertAnno.addMember("\t${it.simpleName}::class,")
+    }
+    return TypeSpec.classBuilder(entityModelClassName)
+      .addModifiers(KModifier.INTERNAL, KModifier.DATA)
+      .addAnnotation(roomEntityAnno.build())
+      .primaryConstructor(constructorParams.build())
+      .addProperties(propertyList)
+      .apply {
+        if (typeConvertParamClass.isNotEmpty()) {
+          addAnnotation(roomTypeConvertAnno.build())
+        }
+      }
+  }
+
+  // 循环构造函数里的参数，生成TypeConverters注解中的参数类
+  //  @TypeConverters(
+  //    AlbumImageEntityTypeConverter::class,
+  //    AlbumTrackEntityTypeConverter::class,
+  //    AlbumTagEntityTypeConverter::class,
+  //  )
+  fun genTypeConvertParameterAnnotation(primaryConstructorParameters: List<PropertyDescriptor>): List<ClassName> {
+    val classes = primaryConstructorParameters.filter { !it.isBaseType }.map {
+      getEntityTypeConvertClassName(it)
+    }
+    return classes
+  }
+
+  @OptIn(DelicateKotlinPoetApi::class)
+  fun genClassBuilder(propertyDescriptor: PropertyDescriptor): TypeSpec.Builder {
+    val constructorParams = genConstructor(data.primaryConstructorParameters)
+    logger.warn("开始生成entity Model类")
+    // 获取当前属性的数据类型
+    // 数据类型是否@Creator
+    // 获取data class对象，生成entityModel
+    val resolve = propertyDescriptor.resolve
+    val toTypeName = resolve.toTypeName()
+    if (toTypeName.isList()) {
+      val ksNode = resolve.arguments.first()
+        .type?.resolve()?.let { it1 -> getListGenericsCreatorAnnotation(it1) }
+      ksNode?.let { node ->
+        val className = node.javaClass.asClassName()
+
+        logger.warn("\t当前属性${propertyDescriptor.typeClassName.simpleName} 是List对象，数据类型为${ksNode.toString()} toClassName=${resolve.toClassName().simpleName}")
+      }
+    } else {
+      val ksNode = getListGenericsCreatorAnnotation(resolve)
+      ksNode?.let { node ->
+        val className = resolve.toClassName()
+        logger.warn("\t当前属性${propertyDescriptor.typeClassName.simpleName} 非List对象，数据类型为${ksNode.toString()} toClassName=${resolve.toClassName().simpleName}")
+      }
+    }
+
 
     val propertyList = convertProperty(data.primaryConstructorParameters)
     val roomEntityAnno = AnnotationSpec.builder(roomEntityClassName)
@@ -65,8 +130,19 @@ class EntityModelHelper(
       }
       paramSpec.build()
     }
+    val idKey = getPrimaryKeyParameterSpec()
+    flux.addParameter(idKey.build())
     flux.addParameters(parameterSpecList)
     return flux
+  }
+
+  private fun getPrimaryKeyParameterSpec(): ParameterSpec.Builder {
+    val primaryKeyAnno = AnnotationSpec.builder(roomPrimaryKeyClassName)
+      .addMember("autoGenerate = true")
+    val idKey = ParameterSpec.builder("id", Int::class.java)
+      .addAnnotation(primaryKeyAnno.build())
+      .defaultValue("0")
+    return idKey
   }
 
   // 生成构造函数中的属性列表
@@ -86,6 +162,12 @@ class EntityModelHelper(
       }
       retList.add(prop.build())
     }
+//    val primaryKeyAnno = AnnotationSpec.builder(roomPrimaryKeyClassName)
+//      .addMember("autoGenerate = true")
+    val idKey = PropertySpec.builder("id", Int::class.java)
+//      .addAnnotation(primaryKeyAnno.build())
+      .initializer("id", 0)
+    retList.add(idKey.build())
     return retList
   }
 
@@ -141,12 +223,11 @@ class EntityModelHelper(
 //    fun listToString(someObjects: List<ImageEntityModel>): String =
 //        Json.encodeToString(someObjects)
 //}
+
   fun genTypeConverter(propertyDescriptor: PropertyDescriptor): TypeSpec.Builder {
-    val className =
-      "${classDeclaration.simpleName.getShortName()}${propertyDescriptor.typeClassName.simpleName}EntityTypeConverter"
-    logger.warn("准备生成TypeConverter类， 类名$className")
+    val typeConverterClassName = getEntityTypeConvertClassName(propertyDescriptor)
+    logger.warn("准备生成TypeConverter类， 类名${typeConverterClassName.simpleName}")
     logger.warn(propertyDescriptor.toString())
-    val typeConverterClassName = ClassName(entityModelPackageName, className)
     val targetClassName = if (propertyDescriptor.typeClassName.isList()) {
       val entityModelName = "${propertyDescriptor.arguments.first().type}EntityModel"
       ClassName(entityModelPackageName, entityModelName)
@@ -161,6 +242,13 @@ class EntityModelHelper(
       .addModifiers(KModifier.INTERNAL)
       .addFunction(stringToListFunc.build())
       .addFunction(listToStringFunc.build())
+  }
+
+  private fun getEntityTypeConvertClassName(propertyDescriptor: PropertyDescriptor): ClassName {
+    val className =
+      "${classDeclaration.simpleName.getShortName()}${propertyDescriptor.typeClassName.simpleName}EntityTypeConverter"
+    val typeConverterClassName = ClassName(entityModelPackageName, className)
+    return typeConverterClassName
   }
 
   fun genListToString(entityModel: ClassName): FunSpec.Builder {

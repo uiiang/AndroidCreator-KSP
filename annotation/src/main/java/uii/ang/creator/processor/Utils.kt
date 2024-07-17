@@ -153,6 +153,7 @@ object Utils {
     val entityModelWrapperType = getEntityModelWrapperType(kp)
     val isBaseType = isBaseType(kp)
     val isParseReturn = kp.hasAnnotation<ParseReturn>()
+    val isToDatabase = kp.hasAnnotation<ToDatabase>()
     return PropertyDescriptor(
       sourceClassName = sourceClassDeclaration.toClassName(),
       typeClassName = resolve.toClassName(),
@@ -169,6 +170,7 @@ object Utils {
       kDoc = "",
       isParseRoot = kp.hasAnnotation<ParseRoot>(),
       isParseReturn = isParseReturn,
+      isToDatabase = isToDatabase,
       isBaseType = isBaseType,
       resolve = resolve,
     )
@@ -187,7 +189,7 @@ object Utils {
       toTypeName
     } else if (toTypeName.isList()) {
       // 如果是list，获取list中的泛型类，
-      // 如果泛型类是注解Creator的数据类，转换成apimodel
+      // 如果泛型类是注解Creator的数据类，转换成EntityModel
       // 判断当前list的泛型类是否为creator
       val ksNode = resolve.arguments.first()
         .type?.resolve()?.let { it1 -> getListGenericsCreatorAnnotation(it1) }

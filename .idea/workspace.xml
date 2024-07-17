@@ -4,18 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="可空字段在apimodel中提供默认值">
-      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/EntityModelHelper.kt" afterDir="false" />
+    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="生成database包里的entityModel">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/codegen/CodeBuilder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/codegen/CodeBuilder.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Const.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Const.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCodeGenerator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCodeGenerator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/PropertyDescriptor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/PropertyDescriptor.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Utils.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiModelHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiModelHelper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RequestQueryBodyHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RequestQueryBodyHelper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ResponseHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ResponseHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/EntityModelHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/EntityModelHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Nationality.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Nationality.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -598,7 +597,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720251027308</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="生成database包里的entityModel">
+      <option name="closed" value="true" />
+      <created>1721051465921</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1721051465921</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -649,7 +656,8 @@
     <MESSAGE value="生成useCase和相关依赖注入中import singleOf方法" />
     <MESSAGE value="post请求支持body和map方式提交数据" />
     <MESSAGE value="可空字段在apimodel中提供默认值" />
-    <option name="LAST_COMMIT_MESSAGE" value="可空字段在apimodel中提供默认值" />
+    <MESSAGE value="生成database包里的entityModel" />
+    <option name="LAST_COMMIT_MESSAGE" value="生成database包里的entityModel" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

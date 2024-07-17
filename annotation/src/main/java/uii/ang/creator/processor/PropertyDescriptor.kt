@@ -6,6 +6,7 @@ import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSTypeArgument
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.TypeName
+import uii.ang.creator.annotation.ToDatabase
 
 //  typeClassName=String
 //	typeName=kotlin.String // kotlin.collections.List<uii.ang.domain.Album>
@@ -67,6 +68,10 @@ data class PropertyDescriptor(
    * 如果标有ParseReturn注解，则在List中包含完整的调用链条
    */
   val parseReturnChain: List<PropertyDescriptor> = emptyList(),
+  /**
+   * ToDatabase注解，被注解的字段生成数据库操作代码
+   */
+  val isToDatabase: Boolean = false,
   /**
    * 是否基本类型
    */

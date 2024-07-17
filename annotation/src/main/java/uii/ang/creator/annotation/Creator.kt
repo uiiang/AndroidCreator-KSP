@@ -36,6 +36,10 @@ annotation class Creator(
    */
   val generateRetrofitService: Boolean = false,
   /**
+   * 是否生成EntityModel类
+   */
+  val generatorEntityModel: Boolean = false,
+  /**
    * 指定retrofitService类名，被指定同一类名的方法会自动生成到一个类文件中
    */
   val retrofitServiceClassName: String = "",

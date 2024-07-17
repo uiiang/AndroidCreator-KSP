@@ -3,7 +3,7 @@ package uii.ang.creator.annotation
 
 /**
  * 用于标注RetrofitImpl中返回哪个数据
- * 比如一个数据类内含有其它数据类，并可能有多层数据类，而要使用的可能是三四层之后某个数据
+ * 比如一个数据类内含有其它数据类字段，并可能有多层数据类，而要使用的可能是三四层之后某个数据
  * 则在该数据上标注此注解，
  *
  * example:
@@ -18,7 +18,7 @@ package uii.ang.creator.annotation
  *   val image: List<Image>,
  * )
  *
- * 我们只需要Album下的List<Image>数据，上面那些不考虑的情况下，就在image上标注此注解
+ * 我们只需要Album下的List<Image>数据，上级那些字段不需要使用的情况下，就在image上标注此注解
  * RepositoryImpl 中则会生成代码
  * override suspend fun searchAlbum(album: String, limit: Int): Result<List<Image>>
  * 返回的数据是 Result<List<Image>>
@@ -52,3 +52,10 @@ annotation class ParseReturn
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.VALUE_PARAMETER)
 annotation class ParseRoot
+
+/**
+ * 用于注解此字段的类会生成数据表存储相关代码
+ */
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.VALUE_PARAMETER)
+annotation class ToDatabase

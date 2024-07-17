@@ -33,6 +33,7 @@ data class Results(
 @Creator(generateApiModel = true)
 data class Albummatches(
   @ParseReturn
+//  @ToDatabase
   val album: List<Album>
 )
 
@@ -40,6 +41,7 @@ data class Albummatches(
   generateApiModel = true,
   generateResponse = true,
   generateRetrofitService = true,
+  generatorEntityModel = true,
   retrofitServiceClassName = "Album",
   method = requestMethodPost,
   methodName = "getAlbum",
@@ -59,7 +61,8 @@ data class Album(
   val mbid: String
 )
 
-@Creator(generateApiModel = true)
+@Creator(generateApiModel = true,
+  generatorEntityModel = true,)
 data class Image(
   val text: String,
   val size: String

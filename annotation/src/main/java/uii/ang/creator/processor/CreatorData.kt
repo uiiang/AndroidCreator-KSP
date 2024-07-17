@@ -18,6 +18,7 @@ class CreatorData(
   val generateApiModel: Boolean = annotationData.generateApiModel
   val generateResponse: Boolean = annotationData.generateResponse
   val generateRetrofitService: Boolean = annotationData.generateRetrofitService
+  val generateEntityModel: Boolean = annotationData.generatorEntityModel
 
   // 使用primaryConstructor来转换构造函数中的参数，可以获得给参数标注的注解
   val primaryConstructorParameters: List<PropertyDescriptor> =
@@ -26,37 +27,6 @@ class CreatorData(
 //      logger.warn(propertyDescriptor.toString())
       propertyDescriptor
     }?.toList() ?: emptyList()
-
-  //使用getAllProperties来转换构造函数中的参数，无法获得给参数标注的注解
-//  val propertyDescriptorList: List<PropertyDescriptor> =
-//    sourceClassDeclaration.getAllProperties().map {
-////      logger.warn("sourceClassDeclaration ${sourceClassDeclaration.simpleName.getShortName()}")
-////      logger.warn(
-////        "declaration ${it.type.resolve().toClassName().simpleName} "+
-////        "toTypeName ${it.type.resolve().toTypeName(sourceClassDeclaration.typeParameters.toTypeParameterResolver()).annotations.count()} " +
-////                "it.simpleName ${it.simpleName.getShortName()} " +
-////                "isNullable ${it.type.resolve().isNullable()}"
-////      )
-////      logger.warn("propertyDescriptorList\n \tprop = ${it.simpleName.getShortName()}\n " +
-////              "\tannotations.count=${it.type.resolve().annotations.count()}\n " +
-////              "\tdeclaration =${it.type.resolve().declaration.simpleName.getShortName()}\n " +
-////              "\tit.count=${it.annotations.count()}")
-//      PropertyDescriptor(
-//        sourceClassName = sourceClassDeclaration.toClassName(),
-//        typeClassName = it.type.resolve().toClassName(),
-//        //包含完整包名类名
-//        typeName = it.type.resolve().toTypeName(sourceClassDeclaration.typeParameters.toTypeParameterResolver()),
-//        isNullable = it.type.resolve().isNullable(),
-//        //仅类名
-//        className = it.simpleName,
-//        //泛型参数
-//        arguments = it.type.resolve().arguments,
-//        mandatoryForConstructor = true,
-//        kDoc = it.docString?.trim(' ', '\n') ?: it.toString()
-//          .capitalizeAndAddSpaces()
-//      )
-//    }.toList()
-
 
   data class AnnotationData(
     /**
@@ -71,6 +41,10 @@ class CreatorData(
      * 是否生成RetrofitService类
      */
     val generateRetrofitService: Boolean,
+    /**
+     * 是否生成EntityModel类
+     */
+    val generatorEntityModel: Boolean,
     /**
      * response类名
      */
@@ -106,6 +80,7 @@ class CreatorData(
           generateApiModel = annotation.arguments.first { it.name?.asString() == Creator::generateApiModel.name }.value as Boolean,
           generateResponse = annotation.arguments.first { it.name?.asString() == Creator::generateResponse.name }.value as Boolean,
           generateRetrofitService = annotation.arguments.first { it.name?.asString() == Creator::generateRetrofitService.name }.value as Boolean,
+          generatorEntityModel = annotation.arguments.first{ it.name?.asString() == Creator::generatorEntityModel.name }.value as Boolean,
           responseClassName = annotation.arguments.first { it.name?.asString() == Creator::responseClassName.name }.value as String,
           retrofitServiceClassName = annotation.arguments.first { it.name?.asString() == Creator::retrofitServiceClassName.name }.value as String,
           method = annotation.arguments.first { it.name?.asString() == Creator::method.name }.value as String,

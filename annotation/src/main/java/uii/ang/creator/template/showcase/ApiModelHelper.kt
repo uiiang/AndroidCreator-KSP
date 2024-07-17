@@ -40,9 +40,9 @@ class ApiModelHelper(
   }
 
   // 生成构造函数里的参数
-  fun genConstructor(propertyList: List<PropertyDescriptor>): FunSpec.Builder {
+  private fun genConstructor(propertyList: List<PropertyDescriptor>): FunSpec.Builder {
     val flux = FunSpec.constructorBuilder()
-    val parameterSpecList = propertyList.map { entry->
+    val parameterSpecList = propertyList.map { entry ->
       val genTypeName = entry.apiModelWrapperTypeName
       val paramSpec = ParameterSpec.builder(
         entry.className.getShortName(), genTypeName.copy(nullable = entry.isNullable)
@@ -81,6 +81,47 @@ class ApiModelHelper(
     return retList
   }
 
+  // 生成ApiModel类中的XXXApiModel.toEntityModel()方法
+  fun toEntityModel(
+    className: String,
+    packageName: String,
+    data: CreatorData): FunSpec {
+    val propertyList = data.primaryConstructorParameters
+    val toEntityModel = FunSpec.builder("toEntityModel")
+      .receiver(ClassName(packageName, className))
+      .returns(entityModelClassName)
+      .addModifiers(KModifier.INTERNAL)
+      .addStatement("")
+      .addStatement("return %T (", entityModelClassName)
+    for (entry in propertyList) {
+      val typeName = entry.typeName
+      val paramName = entry.className.getShortName()
+      val typeClassName = entry.typeClassName
+//      logger.warn("toDomainModel type = $typeName null = ${entry.isNullable}")
+
+      val isList = typeName.toString().startsWith("kotlin.collections.List")
+      if (isList && entry.isNullable) {
+        toEntityModel.addStatement("  $paramName = this.$paramName?.map { it.toEntityModel() } ?: listOf(),")
+      } else if (typeName.isList() && !entry.isNullable) {
+        if (getListGenericsCreatorAnnotation(entry) != null) {
+          toEntityModel.addStatement("  $paramName = this.$paramName.map { it.toEntityModel() },")
+        } else {
+          toEntityModel.addStatement("  $paramName = this.$paramName.map { it },")
+        }
+      } else {
+//        logger.warn("  typeName=${typeName} isBaseType=${typeName.isBaseType()} primitiveDefaultInit=${typeName.primitiveDefaultInit()}")
+        if (typeName.isBaseType()) {
+          val defValue = if (typeName.isNullable) "?: ${typeName.primitiveDefaultInit()}" else ""
+          toEntityModel.addStatement("  $paramName = this.$paramName $defValue,")
+        } else {
+          toEntityModel.addStatement("  $paramName = this.$paramName.toEntityModel(),")
+        }
+      }
+    }
+    toEntityModel.addStatement(")")
+    return toEntityModel.build()
+  }
+
   // 生成toDomainModel扩展方法
   fun toDomainModel(
     className: String,
@@ -107,7 +148,7 @@ class ApiModelHelper(
         if (getListGenericsCreatorAnnotation(entry) != null) {
           toDomainModel.addStatement("  $paramName = this.$paramName.map { it.toDomainModel() },")
         } else {
-          toDomainModel.addStatement("  $paramName = this.$paramName.map { it } ,")
+          toDomainModel.addStatement("  $paramName = this.$paramName.map { it },")
         }
       } else {
 //        logger.warn("  typeName=${typeName} isBaseType=${typeName.isBaseType()} primitiveDefaultInit=${typeName.primitiveDefaultInit()}")

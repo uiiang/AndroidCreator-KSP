@@ -35,8 +35,9 @@ object CreatorCodeGenerator {
     if (data.generateApiModel) {
       generatorApiModel(apiModelHelper, data)
     }
-
-    genEntityModel(entityModelHelper, data)
+    if (data.generateEntityModel) {
+      generatorEntityModel(entityModelHelper, data)
+    }
 
     val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
     if (hasBody) {
@@ -142,8 +143,12 @@ object CreatorCodeGenerator {
     )
   }
 
-  private fun genEntityModel(entityModelHelper: EntityModelHelper, data: CreatorData) {
+  private fun generatorEntityModel(entityModelHelper: EntityModelHelper, data: CreatorData) {
     val entityModelNameStr = entityModelHelper.entityModelClassName.simpleName
+//    val toDatabaseAnno = entityModelHelper.getToDatabaseAnno()
+//    toDatabaseAnno.forEach {
+//      val entityModelName = entityModelHelper.genClassBuilder(it)
+//    }
     val entityModelName = entityModelHelper.genClassBuilder()
     val entityModelBuilder = CodeBuilder.getOrCreate(
       entityModelPackageName,
@@ -157,6 +162,7 @@ object CreatorCodeGenerator {
       entityModelPackageName,
       data
     )
+    // 循环数据类的构造参数，用非基本类型的字段生成TypeConvert
     data.primaryConstructorParameters.filter { !it.isBaseType }
       .map {
         entityModelHelper.genTypeConverter(it)
@@ -182,6 +188,13 @@ object CreatorCodeGenerator {
       data
     )
     apiModelCodeBuilder.addFunction(toDomainModel, false)
+    if (data.generateEntityModel) {
+      val toEntityModel = apiModelHelper.toEntityModel(
+        apiModelClassNameStr,
+        apiModelPackageName, data
+      )
+      apiModelCodeBuilder.addFunction(toEntityModel, false)
+    }
   }
 }
 
