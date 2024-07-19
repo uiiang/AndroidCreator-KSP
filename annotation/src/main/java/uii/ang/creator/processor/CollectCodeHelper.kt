@@ -1,8 +1,10 @@
 package uii.ang.creator.processor
 
 import com.google.devtools.ksp.processing.KSPLogger
-import com.squareup.kotlinpoet.*
-import com.squareup.kotlinpoet.ksp.toClassName
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import uii.ang.creator.codegen.CollectCodeDesc
 import uii.ang.creator.processor.Const.koinModuleClassName
 import uii.ang.creator.processor.Const.koinModuleFunClassName
@@ -21,7 +23,7 @@ object CollectCodeHelper {
         .returns(koinModuleClassName)
         .addStatement("")
         .addStatement("return %T {", koinModuleFunClassName)
-      u.map { it.codeBlock.build() }.onEach {
+      u.map { it.codeBlock }.onEach {
 //        logger.warn("在文件 ${t.fileName} 中生成代码片段 $it")
         funSpec.addCode(it)
 //        funSpec.addStatement("single<AlbumRepository> { AlbumRepositoryImpl(get(), get()) }")

@@ -3,6 +3,7 @@ package uii.ang.creator.processor
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.ClassName
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
@@ -52,7 +53,7 @@ open class ProcessorHelper(
   )
 
   val roomDaoInterfaceClassName = ClassName(
-    repositoryPackageName,
+    databasePackageName,
     "${classDeclaration.simpleName.getShortName()}Dao"
   )
 

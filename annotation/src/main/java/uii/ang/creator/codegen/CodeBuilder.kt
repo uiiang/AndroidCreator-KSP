@@ -6,7 +6,8 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ksp.toClassName
 
 
-data class CollectCodeDesc(val qualifiedName: CodeBuilder.Companion.QualifiedName, val codeBlock: CodeBlock.Builder)
+data class CollectCodeDesc(val qualifiedName: CodeBuilder.Companion.QualifiedName,
+                           val codeBlock: CodeBlock)
 
 class CodeBuilder private constructor(
   private val builder: FileSpec.Builder,
@@ -26,7 +27,7 @@ class CodeBuilder private constructor(
 //    if (originating != null) this.originating += originating
   }
 
-  fun addType(typeSpecBuilder:TypeSpec.Builder) {
+  fun addType(typeSpecBuilder: TypeSpec.Builder) {
     builder.addType(typeSpecBuilder.build())
   }
 
@@ -48,23 +49,24 @@ class CodeBuilder private constructor(
   companion object {
 
     private val cache = mutableMapOf<QualifiedName, CodeBuilder>()
-    private val collectCache = mutableListOf<CollectCodeDesc>()
+    private val collectKoinCache = mutableListOf<CollectCodeDesc>()
 
-    fun allCollect(): List<CollectCodeDesc> = collectCache
+    fun allCollectKoin(): List<CollectCodeDesc> = collectKoinCache
     fun allBuilder(): Iterable<CodeBuilder> = cache.values
     fun all(): Map<QualifiedName, CodeBuilder> = cache
     fun clear() {
       cache.clear()
-      collectCache.clear()
+      collectKoinCache.clear()
     }
 
-    fun putCollectCodeBlock(packageName: String, fileName: String, collectCode: CodeBlock.Builder,
-                            logger: KSPLogger
+    fun putCollectCodeBlock(
+      packageName: String, fileName: String, collectCode: CodeBlock,
+      logger: KSPLogger
     ) {
       val qualifiedName = QualifiedName(packageName, fileName)
       val collectCodeDesc = CollectCodeDesc(qualifiedName, collectCode)
-      collectCache.add(collectCodeDesc)
-      logger.warn("putCollectCodeBlock ioc ${collectCache.count()}")
+      collectKoinCache.add(collectCodeDesc)
+      logger.warn("putCollectCodeBlock ioc ${collectKoinCache.count()}")
     }
 
     fun getOrCreate(

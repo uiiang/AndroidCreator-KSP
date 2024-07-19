@@ -3,14 +3,18 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.listClassName
+import uii.ang.creator.processor.Const.roomDatabaseClassName
 import uii.ang.creator.processor.Const.roomDeleteClassName
 import uii.ang.creator.processor.Const.roomInsertClassName
 import uii.ang.creator.processor.Const.roomQueryClassName
+import uii.ang.creator.processor.Const.roomRoomDatabaseClassName
 import uii.ang.creator.processor.Const.roomUpdateClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.QueryData
+import uii.ang.creator.tools.firstCharLowerCase
 
 class DaoHelper(
   logger: KSPLogger,
@@ -46,7 +50,20 @@ class DaoHelper(
     return classBuilder
   }
 
-  private fun genDaoQueryFuncCode(): List<FunSpec> {//: FunSpec.Builder {
+  fun genDatabaseClass(): TypeSpec.Builder {
+    val classBuilder = TypeSpec.classBuilder(ClassName(databasePackageName, "ProjDatabase"))
+      .addModifiers(KModifier.INTERNAL, KModifier.ABSTRACT)
+      .superclass(roomRoomDatabaseClassName)
+    return classBuilder
+  }
+
+  fun genInDatabaseCodeBlock(): FunSpec.Builder {
+    return FunSpec.builder(roomDaoInterfaceClassName.simpleName.firstCharLowerCase())
+      .addModifiers(KModifier.ABSTRACT)
+      .returns(roomDaoInterfaceClassName)
+  }
+
+  private fun genDaoQueryFuncCode(): List<FunSpec> {
 //    data.primaryConstructorParameters.forEach {
 //      logger.warn(it.toString())
 //      it.queryData.forEach { query->

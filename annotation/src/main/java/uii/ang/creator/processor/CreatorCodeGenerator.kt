@@ -2,6 +2,9 @@ package uii.ang.creator.processor
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
+import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
@@ -16,11 +19,13 @@ import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
+import uii.ang.creator.processor.Const.roomDatabaseClassName
 import uii.ang.creator.processor.Const.useCasePackageName
 import uii.ang.creator.template.showcase.*
 import uii.ang.creator.tools.firstCharUpperCase
 
 object CreatorCodeGenerator {
+  val entityModelList = mutableListOf<CodeBlock>()
   fun generate(data: CreatorData, resolver: Resolver, logger: KSPLogger) {
 
 //    val processorHelper = ProcessorHelper(logger, data, basePackageName)
@@ -39,7 +44,7 @@ object CreatorCodeGenerator {
     }
     if (data.generateEntityModel) {
       generatorEntityModel(entityModelHelper, data)
-      generatorDao(daoHelper, data)
+      generatorDao(daoHelper, data, logger)
     }
 
     val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
@@ -74,7 +79,7 @@ object CreatorCodeGenerator {
       CodeBuilder.putCollectCodeBlock(
         domainModulePackageName,
         koinDomainModuleGenName,
-        useCaseKoinCodeBlock, logger
+        useCaseKoinCodeBlock.build(), logger
       )
     }
   }
@@ -94,7 +99,7 @@ object CreatorCodeGenerator {
     CodeBuilder.putCollectCodeBlock(
       dataModulePackageName,
       koinDataModuleGenName,
-      retrofitServiceKoinCodeBlock, logger
+      retrofitServiceKoinCodeBlock.build(), logger
     )
   }
 
@@ -124,7 +129,7 @@ object CreatorCodeGenerator {
     CodeBuilder.putCollectCodeBlock(
       dataModulePackageName,
       koinDataModuleGenName,
-      repositoryKoinCodeBlock, logger
+      repositoryKoinCodeBlock.build(), logger
     )
   }
 
@@ -146,23 +151,32 @@ object CreatorCodeGenerator {
     )
   }
 
-  private fun generatorDao(daoHelper: DaoHelper, data: CreatorData) {
+  private fun generatorDao(
+    daoHelper: DaoHelper, data: CreatorData,
+    logger: KSPLogger
+  ) {
     val daoNameStr = daoHelper.roomDaoInterfaceClassName.simpleName
     val dao = daoHelper.genClassBuilder()
     CodeBuilder.getOrCreate(databasePackageName,
       daoNameStr,
-      typeBuilderProvider = {
-        dao
-      }
+      typeBuilderProvider = { dao }
     )
+    val databaseAnno = AnnotationSpec.builder(roomDatabaseClassName)
+      .addMember("entities = []")
+      .addMember("version = 1")
+      .addMember("exportSchema = false")
+    val inDatabaseCode = daoHelper.genInDatabaseCodeBlock()
+    val database = daoHelper.genDatabaseClass()
+      .addAnnotation(databaseAnno.build())
+    logger.warn("entityModelList count ${entityModelList.count()}")
+    CodeBuilder.getOrCreate(databasePackageName, "ProjDatabase",
+      typeBuilderProvider = {database})
+      .addFunction(inDatabaseCode.build(), true)
   }
 
   private fun generatorEntityModel(entityModelHelper: EntityModelHelper, data: CreatorData) {
+    entityModelList.add(CodeBlock.builder().add("%T::class", entityModelHelper.entityModelClassName).build())
     val entityModelNameStr = entityModelHelper.entityModelClassName.simpleName
-//    val toDatabaseAnno = entityModelHelper.getToDatabaseAnno()
-//    toDatabaseAnno.forEach {
-//      val entityModelName = entityModelHelper.genClassBuilder(it)
-//    }
     val entityModelName = entityModelHelper.genClassBuilder()
     val entityModelBuilder = CodeBuilder.getOrCreate(
       entityModelPackageName,

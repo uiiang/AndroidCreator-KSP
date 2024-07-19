@@ -70,7 +70,7 @@ class CreatorProcessor(
       )
     }
 
-    genClassBuilder(CodeBuilder.allCollect(), logger).forEach {
+    genClassBuilder(CodeBuilder.allCollectKoin(), logger).forEach {
       it.writeTo(codeGenerator, aggregating = true)
     }
   }
