@@ -53,6 +53,7 @@ data class Albummatches(
   ]
 )
 data class Album(
+  @Query(queryMethodName = "queryAlbumByName", queryType = queryTypeEquals)
   val name: String,
   val artist: String,
   val url: String,

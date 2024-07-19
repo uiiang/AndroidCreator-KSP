@@ -6,6 +6,7 @@ import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.dataModulePackageName
+import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.domainModulePackageName
 import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.koinDataModuleGenName
@@ -31,12 +32,14 @@ object CreatorCodeGenerator {
     val useCaseHelper = UseCaseHelper(logger, data)
     val queryBodyHelper = RequestQueryBodyHelper(logger, data)
     val entityModelHelper = EntityModelHelper(logger, data)
+    var daoHelper = DaoHelper(logger, data)
     // 生成ApiDomain代码
     if (data.generateApiModel) {
       generatorApiModel(apiModelHelper, data)
     }
     if (data.generateEntityModel) {
       generatorEntityModel(entityModelHelper, data)
+      generatorDao(daoHelper, data)
     }
 
     val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
@@ -140,6 +143,17 @@ object CreatorCodeGenerator {
     val queryBodyClassName = queryBodyHelper.genClassBuilder()
     val queryBodyCodeBuilder = CodeBuilder.getOrCreate(
       requestBodyPackageName, queryBodyObjClassNameStr, typeBuilderProvider = { queryBodyClassName }
+    )
+  }
+
+  private fun generatorDao(daoHelper: DaoHelper, data: CreatorData) {
+    val daoNameStr = daoHelper.roomDaoInterfaceClassName.simpleName
+    val dao = daoHelper.genClassBuilder()
+    CodeBuilder.getOrCreate(databasePackageName,
+      daoNameStr,
+      typeBuilderProvider = {
+        dao
+      }
     )
   }
 

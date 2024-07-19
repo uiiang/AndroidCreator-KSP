@@ -59,3 +59,25 @@ annotation class ParseRoot
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.VALUE_PARAMETER)
 annotation class ToDatabase
+
+/**
+ * 用于注解此字段为数据表主键
+ */
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.VALUE_PARAMETER)
+annotation class PK
+
+const val queryTypeEquals = "equals"
+const val queryTypeLike = "like"
+
+/**
+ * 用于注解此字段为数据表查询字段
+ */
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.VALUE_PARAMETER)
+@Repeatable
+annotation class Query(
+  val queryType: String = queryTypeEquals,
+  // 查询数据库的方法名，多个字段相同方法名拼在一个方法里
+  val queryMethodName: String,
+)

@@ -97,8 +97,10 @@ object Const {
   val roomTypeConverterClassName = ClassName("androidx.room", "TypeConverter")
   val roomDaoClassName = ClassName("androidx.room", "Dao")
   val roomInsertClassName = ClassName("androidx.room", "Insert")
-  val roomOnConflictStrategyClassName = ClassName("androidx.room", "OnConflictStrategy")
+  val roomUpdateClassName = ClassName("androidx.room", "Update")
   val roomQueryClassName = ClassName("androidx.room", "Query")
+  val roomDeleteClassName = ClassName("androidx.room", "Delete")
+  val roomOnConflictStrategyClassName = ClassName("androidx.room", "OnConflictStrategy")
   val roomDatabaseClassName = ClassName("androidx.room", "Database")
   val roomRoomDatabaseClassName = ClassName("androidx.room", "RoomDatabase")
 

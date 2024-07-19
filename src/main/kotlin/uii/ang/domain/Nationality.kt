@@ -27,9 +27,13 @@ data class Nationality(
 )
 data class Nation(
   val cn: String,
+  @Query(queryMethodName = "queryNationByCode", queryType = queryTypeEquals)
   val code: String,
+  @Query(queryMethodName = "queryNationByCode", queryType = queryTypeEquals)
   val code2: String,
   val countrycode: String? = null,
   val en: String,
+  @Query(queryMethodName = "queryNationByFavourite", queryType = queryTypeEquals)
+  @Query(queryMethodName = "queryNationByCode", queryType = queryTypeEquals)
   val favourite: Long? = null
 )

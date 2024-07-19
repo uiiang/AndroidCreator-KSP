@@ -51,6 +51,12 @@ open class ProcessorHelper(
     classDeclaration.simpleName.getShortName()+"EntityModel"
   )
 
+  val roomDaoInterfaceClassName = ClassName(
+    repositoryPackageName,
+    "${classDeclaration.simpleName.getShortName()}Dao"
+  )
+
+
   val retrofitServiceClassName = ClassName(
     retrofitServicePackageName,
     if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}RetrofitService"

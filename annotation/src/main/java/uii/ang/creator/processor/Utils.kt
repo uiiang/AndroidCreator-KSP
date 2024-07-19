@@ -148,12 +148,23 @@ object Utils {
     sourceClassDeclaration: KSClassDeclaration
   ): PropertyDescriptor {
     val resolve = kp.type.resolve()
+    val queryData = kp.annotations.filter { anno ->
+      (anno.annotationType.toTypeName() as? ClassName)?.canonicalName ==
+              Query::class.qualifiedName
+    }.map { anno ->
+      QueryData.AnnotationData.from(anno)
+    }.map { anno ->
+      QueryData(annotationData = anno,
+        typeClassName = resolve.toClassName())
+    }.toList()
     val toTypeName = resolve.toTypeName()
     val apiModelWrapperType = getApiModelWrapperType(kp)
     val entityModelWrapperType = getEntityModelWrapperType(kp)
     val isBaseType = isBaseType(kp)
     val isParseReturn = kp.hasAnnotation<ParseReturn>()
     val isToDatabase = kp.hasAnnotation<ToDatabase>()
+    val isPk = kp.hasAnnotation<PK>()
+    val isQuery = kp.hasAnnotation<Query>()
     return PropertyDescriptor(
       sourceClassName = sourceClassDeclaration.toClassName(),
       typeClassName = resolve.toClassName(),
@@ -171,12 +182,15 @@ object Utils {
       isParseRoot = kp.hasAnnotation<ParseRoot>(),
       isParseReturn = isParseReturn,
       isToDatabase = isToDatabase,
+      isPk = isPk,
+      isQuery = isQuery,
+      queryData = queryData,
       isBaseType = isBaseType,
       resolve = resolve,
     )
   }
 
-  private fun isBaseType(it: KSValueParameter) :Boolean {
+  private fun isBaseType(it: KSValueParameter): Boolean {
     val resolve = it.type.resolve()
     val toTypeName = resolve.toTypeName()
     return toTypeName.isBaseType()

@@ -227,7 +227,6 @@ class EntityModelHelper(
   fun genTypeConverter(propertyDescriptor: PropertyDescriptor): TypeSpec.Builder {
     val typeConverterClassName = getEntityTypeConvertClassName(propertyDescriptor)
     logger.warn("准备生成TypeConverter类， 类名${typeConverterClassName.simpleName}")
-    logger.warn(propertyDescriptor.toString())
     val targetClassName = if (propertyDescriptor.typeClassName.isList()) {
       val entityModelName = "${propertyDescriptor.arguments.first().type}EntityModel"
       ClassName(entityModelPackageName, entityModelName)

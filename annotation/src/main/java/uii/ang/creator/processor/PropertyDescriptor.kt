@@ -72,10 +72,13 @@ data class PropertyDescriptor(
    * ToDatabase注解，被注解的字段生成数据库操作代码
    */
   val isToDatabase: Boolean = false,
+  val isPk: Boolean = false,
+  val isQuery: Boolean = false,
+  val queryData: List<QueryData>,
   /**
    * 是否基本类型
    */
-  val isBaseType:Boolean = false,
+  val isBaseType: Boolean = false,
   val resolve: KSType
 ) {
   override fun toString(): String {
@@ -87,7 +90,10 @@ data class PropertyDescriptor(
             "\tclassName=${className.getShortName()}\n" +
             "\targuments count=${arguments.count()}\n" +
             "\tkDoc=$kDoc\n" +
-            "\tisParseRoot=$isParseRoot\n"+
-            "\tisParseReturn=$isParseReturn\n"
+            "\tisParseRoot=$isParseRoot\n" +
+            "\tisParseReturn=$isParseReturn\n" +
+            "\tisToDatabase=$isToDatabase\n" +
+            "\tisPk=$isPk\n" +
+            "\tisQuery=$isQuery\n"
   }
 }
