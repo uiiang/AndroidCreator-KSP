@@ -40,7 +40,7 @@ class RepositoryImplHelper(
       .addModifiers(KModifier.PRIVATE)
       .initializer(retrofitServiceClassName.simpleName.firstCharLowerCase())
     val classBuilder = TypeSpec.classBuilder(repositoryImplClassName)
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
       .addSuperinterfaces(listOf(repositoryInterfaceClassName))
       .primaryConstructor(flux.build())
       .addProperty(prop.build())

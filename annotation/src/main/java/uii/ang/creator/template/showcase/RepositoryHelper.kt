@@ -25,7 +25,7 @@ class RepositoryHelper(
 
   fun genClassBuilder(): TypeSpec.Builder {
     val classBuilder = TypeSpec.interfaceBuilder(repositoryInterfaceClassName)
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
     return classBuilder
   }
 

@@ -33,7 +33,7 @@ class RetrofitServiceHelper(
 
   fun genClassBuilder(): TypeSpec.Builder {
     val classBuilder = TypeSpec.interfaceBuilder(retrofitServiceClassName)
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
 
     return classBuilder
   }

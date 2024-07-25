@@ -45,14 +45,14 @@ class DaoHelper(
   fun genClassBuilder(): TypeSpec.Builder {
     val queryFuncCode = genDaoQueryFuncCode()
     val classBuilder = TypeSpec.interfaceBuilder(roomDaoInterfaceClassName)
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
       .addFunctions(queryFuncCode)
     return classBuilder
   }
 
   fun genDatabaseClass(): TypeSpec.Builder {
     val classBuilder = TypeSpec.classBuilder(ClassName(databasePackageName, "ProjDatabase"))
-      .addModifiers(KModifier.INTERNAL, KModifier.ABSTRACT)
+      .addModifiers(KModifier.ABSTRACT)
       .superclass(roomRoomDatabaseClassName)
     return classBuilder
   }

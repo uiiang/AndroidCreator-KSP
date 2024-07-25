@@ -59,7 +59,7 @@ class EntityModelHelper(
       roomTypeConvertAnno.addMember("\t${it.simpleName}::class")
     }
     return TypeSpec.classBuilder(entityModelClassName)
-      .addModifiers(KModifier.INTERNAL, KModifier.DATA)
+      .addModifiers(KModifier.DATA)
       .addAnnotation(roomEntityAnno.build())
       .primaryConstructor(constructorParams.build())
       .addProperties(propertyList)
@@ -113,7 +113,7 @@ class EntityModelHelper(
     val roomEntityAnno = AnnotationSpec.builder(roomEntityClassName)
       .addMember("tableName = \"${classDeclaration.simpleName.getShortName()}\"")
     return TypeSpec.classBuilder(entityModelClassName)
-      .addModifiers(KModifier.INTERNAL, KModifier.DATA)
+      .addModifiers(KModifier.DATA)
       .addAnnotation(roomEntityAnno.build())
       .primaryConstructor(constructorParams.build())
       .addProperties(propertyList)
@@ -184,7 +184,7 @@ class EntityModelHelper(
     val toDomainModel = FunSpec.builder("toDomainModel")
       .receiver(ClassName(packageName, className))
       .returns(data.sourceClassDeclaration.toClassName())
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
       .addStatement("")
       .addStatement("return ${data.sourceClassDeclaration.simpleName.asString()} (")
     for (entry in propertyList) {
@@ -240,7 +240,7 @@ class EntityModelHelper(
     val stringToListFunc = genStringToList(targetClassName)
     val listToStringFunc = genListToString(targetClassName)
     return TypeSpec.classBuilder(typeConverterClassName)
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
       .addFunction(stringToListFunc.build())
       .addFunction(listToStringFunc.build())
   }

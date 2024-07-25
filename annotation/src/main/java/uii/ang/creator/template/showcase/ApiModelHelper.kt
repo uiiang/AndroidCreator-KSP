@@ -33,7 +33,7 @@ class ApiModelHelper(
     val propertyList = convertProperty(data.primaryConstructorParameters)
 //    logger.warn("propertyList ${propertyList.count()}")
     return TypeSpec.classBuilder(apiModelClassName)
-      .addModifiers(KModifier.INTERNAL, KModifier.DATA)
+      .addModifiers(KModifier.DATA)
       .addAnnotation(AnnotationSpec.builder(serializableClassName).build())
       .primaryConstructor(constructorParams.build())
       .addProperties(propertyList)
@@ -91,7 +91,7 @@ class ApiModelHelper(
     val toEntityModel = FunSpec.builder("toEntityModel")
       .receiver(ClassName(packageName, className))
       .returns(entityModelClassName)
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
       .addStatement("")
       .addStatement("return %T (", entityModelClassName)
     for (entry in propertyList) {
@@ -133,7 +133,7 @@ class ApiModelHelper(
     val toDomainModel = FunSpec.builder("toDomainModel")
       .receiver(ClassName(packageName, className))
       .returns(data.sourceClassDeclaration.toClassName())
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
       .addStatement("")
       .addStatement("return ${data.sourceClassDeclaration.simpleName.asString()} (")
     for (entry in propertyList) {

@@ -45,7 +45,7 @@ class UseCaseHelper(
     ).addModifiers(KModifier.PRIVATE).initializer(repositoryInterfaceName)
 
     return TypeSpec.classBuilder(userCaseGenClassName)
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
       .primaryConstructor(flux.build())
       .addProperty(prop.build())
   }

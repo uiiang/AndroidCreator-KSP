@@ -21,7 +21,7 @@ class ResponseHelper(
     val propertySpec = genPropertySpec(apiModel, builderPropName)
     val classBuilder = TypeSpec.classBuilder(responseClassName)
       .addModifiers(KModifier.DATA)
-      .addModifiers(KModifier.INTERNAL)
+//      .addModifiers(KModifier.INTERNAL)
       .primaryConstructor(flux.build())
       .addProperty(propertySpec.build())
       // 为生成的Response类添加序列化注解
