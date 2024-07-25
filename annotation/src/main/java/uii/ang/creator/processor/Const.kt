@@ -95,6 +95,7 @@ object Const {
   val roomEntityClassName = ClassName("androidx.room", "Entity")
   val roomPrimaryKeyClassName = ClassName("androidx.room", "PrimaryKey")
   val roomTypeConverterClassName = ClassName("androidx.room", "TypeConverter")
+  val roomTypeConvertersClassName = ClassName("androidx.room", "TypeConverters")
   val roomDaoClassName = ClassName("androidx.room", "Dao")
   val roomInsertClassName = ClassName("androidx.room", "Insert")
   val roomUpdateClassName = ClassName("androidx.room", "Update")

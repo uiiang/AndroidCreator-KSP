@@ -11,6 +11,7 @@ import uii.ang.creator.processor.Const.listClassName
 import uii.ang.creator.processor.Const.roomEntityClassName
 import uii.ang.creator.processor.Const.roomPrimaryKeyClassName
 import uii.ang.creator.processor.Const.roomTypeConverterClassName
+import uii.ang.creator.processor.Const.roomTypeConvertersClassName
 import uii.ang.creator.processor.Const.serialDecodeFromStringMemberName
 import uii.ang.creator.processor.Const.serialEncodeToStringMemberName
 import uii.ang.creator.processor.Const.serializableJsonClassName
@@ -19,6 +20,7 @@ import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.PropertyDescriptor
 import uii.ang.creator.processor.Utils.getListGenericsCreatorAnnotation
+import uii.ang.creator.tools.firstCharUpperCase
 import uii.ang.creator.tools.isBaseType
 import uii.ang.creator.tools.isList
 import uii.ang.creator.tools.primitiveDefaultInit
@@ -52,9 +54,9 @@ class EntityModelHelper(
     val roomEntityAnno = AnnotationSpec.builder(roomEntityClassName)
       .addMember("tableName = \"${classDeclaration.simpleName.getShortName().lowercase()}\"")
     val typeConvertParamClass = genTypeConvertParameterAnnotation(data.primaryConstructorParameters)
-    val roomTypeConvertAnno = AnnotationSpec.builder(roomTypeConverterClassName)
+    val roomTypeConvertAnno = AnnotationSpec.builder(roomTypeConvertersClassName)
     typeConvertParamClass.onEach {
-      roomTypeConvertAnno.addMember("\t${it.simpleName}::class,")
+      roomTypeConvertAnno.addMember("\t${it.simpleName}::class")
     }
     return TypeSpec.classBuilder(entityModelClassName)
       .addModifiers(KModifier.INTERNAL, KModifier.DATA)
@@ -206,7 +208,7 @@ class EntityModelHelper(
           val defValue = if (typeName.isNullable) "?: ${typeName.primitiveDefaultInit()}" else ""
           toDomainModel.addStatement("  $paramName = this.$paramName $defValue,")
         } else {
-          toDomainModel.addStatement("  $paramName = this.$paramName.toDomainModel(),")
+          toDomainModel.addStatement("  $paramName = this.$paramName?.toDomainModel(),")
         }
       }
     }
@@ -245,7 +247,7 @@ class EntityModelHelper(
 
   private fun getEntityTypeConvertClassName(propertyDescriptor: PropertyDescriptor): ClassName {
     val className =
-      "${classDeclaration.simpleName.getShortName()}${propertyDescriptor.typeClassName.simpleName}EntityTypeConverter"
+      "${classDeclaration.simpleName.getShortName()}${propertyDescriptor.className.getShortName().firstCharUpperCase()}${propertyDescriptor.typeClassName.simpleName}EntityTypeConverter"
     val typeConverterClassName = ClassName(entityModelPackageName, className)
     return typeConverterClassName
   }
