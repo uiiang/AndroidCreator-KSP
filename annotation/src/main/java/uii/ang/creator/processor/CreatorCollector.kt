@@ -37,7 +37,7 @@ object CreatorCollector {
             CreatorData(
               annotationData = anno,
               sourceClassDeclaration = ksClassDeclaration,
-//              logger = logger
+              logger = logger
             )
           }
       }.toList()

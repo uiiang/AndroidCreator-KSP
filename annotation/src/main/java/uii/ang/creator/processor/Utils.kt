@@ -145,7 +145,8 @@ object Utils {
 
   fun convertKSValueParameterToPropertyDescriptor(
     kp: KSValueParameter,
-    sourceClassDeclaration: KSClassDeclaration
+    sourceClassDeclaration: KSClassDeclaration,
+    logger: KSPLogger
   ): PropertyDescriptor {
     val resolve = kp.type.resolve()
     val queryData = kp.annotations.filter { anno ->
@@ -154,12 +155,14 @@ object Utils {
     }.map { anno ->
       QueryData.AnnotationData.from(anno)
     }.map { anno ->
-      QueryData(annotationData = anno,
-        typeClassName = resolve.toClassName())
+      QueryData(
+        annotationData = anno,
+        typeClassName = resolve.toClassName()
+      )
     }.toList()
     val toTypeName = resolve.toTypeName()
-    val apiModelWrapperType = getApiModelWrapperType(kp)
-    val entityModelWrapperType = getEntityModelWrapperType(kp)
+    val apiModelWrapperType = getApiModelWrapperType(kp, logger)
+    val entityModelWrapperType = getEntityModelWrapperType(kp, logger)
     val isBaseType = isBaseType(kp)
     val isParseReturn = kp.hasAnnotation<ParseReturn>()
     val isToDatabase = kp.hasAnnotation<ToDatabase>()
@@ -196,7 +199,8 @@ object Utils {
     return toTypeName.isBaseType()
   }
 
-  private fun getEntityModelWrapperType(it: KSValueParameter): TypeName {
+  private fun getEntityModelWrapperType(it: KSValueParameter,
+                                        logger: KSPLogger): TypeName {
     val resolve = it.type.resolve()
     val toTypeName = resolve.toTypeName()
     val wrapperType = if (toTypeName.isBaseType()) {
@@ -218,9 +222,11 @@ object Utils {
       } ?: toTypeName
     } else {
       // 字段属性为data class
+      // 非基本类型且不为list的情况下，找到此字段数据类型并生成EntityModel类名
+      logger.warn("找到字段 名为${it.name!!.getShortName()} 数据类型为 ${it.type}")
       val retClassName = ClassName(
         entityModelPackageName,
-        it.name!!.getShortName().firstCharUpperCase() + "EntityModel"
+        "${it.type}EntityModel"
       )
       //      logger.warn("  convert api model ${retClassName.simpleName}")
       retClassName
@@ -228,12 +234,16 @@ object Utils {
     return wrapperType
   }
 
-  private fun getApiModelWrapperType(it: KSValueParameter): TypeName {
+  private fun getApiModelWrapperType(
+    it: KSValueParameter,
+    logger: KSPLogger
+  ): TypeName {
     val resolve = it.type.resolve()
     val toTypeName = resolve.toTypeName()
     val wrapperType = if (toTypeName.isBaseType()) {
       toTypeName
     } else if (toTypeName.isList()) {
+      logger.warn("开始为${toTypeName}组装 apimodel 包装类")
       // 如果是list，获取list中的泛型类，
       // 如果泛型类是注解Creator的数据类，转换成apimodel
       // 判断当前list的泛型类是否为creator
@@ -242,7 +252,7 @@ object Utils {
       ksNode?.let { node ->
         // 字段属性为List<注解了Create的data class>
         val apiModelName = node.toString() + "ApiModel"
-        //        logger.warn("apiModelName $apiModelName")
+        logger.warn("组装apiModelName类名为 $apiModelName")
         val apiModelClass = ClassName(apiModelPackageName, apiModelName)
         val parameterizedBy = listClassName.parameterizedBy(apiModelClass)
         //        logger.warn("  convert parameterizedBy ${parameterizedBy.toString()}")
@@ -250,9 +260,11 @@ object Utils {
       } ?: toTypeName
     } else {
       // 字段属性为data class
+      // 非基本类型且不为list的情况下，找到此字段数据类型并生成apiModel类名
+      logger.warn("找到字段 名为${it.name!!.getShortName()} 数据类型为 ${it.type}")
       val retClassName = ClassName(
         apiModelPackageName,
-        it.name!!.getShortName().firstCharUpperCase() + "ApiModel"
+        "${it.type}ApiModel"
       )
       //      logger.warn("  convert api model ${retClassName.simpleName}")
       retClassName

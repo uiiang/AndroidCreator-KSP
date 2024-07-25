@@ -44,6 +44,7 @@ class ApiModelHelper(
     val flux = FunSpec.constructorBuilder()
     val parameterSpecList = propertyList.map { entry ->
       val genTypeName = entry.apiModelWrapperTypeName
+      logger.warn("in genConstructor apimodel ${genTypeName}")
       val paramSpec = ParameterSpec.builder(
         entry.className.getShortName(), genTypeName.copy(nullable = entry.isNullable)
       )
@@ -114,7 +115,7 @@ class ApiModelHelper(
           val defValue = if (typeName.isNullable) "?: ${typeName.primitiveDefaultInit()}" else ""
           toEntityModel.addStatement("  $paramName = this.$paramName $defValue,")
         } else {
-          toEntityModel.addStatement("  $paramName = this.$paramName.toEntityModel(),")
+          toEntityModel.addStatement("  $paramName = this.$paramName?.toEntityModel(),")
         }
       }
     }
@@ -156,7 +157,7 @@ class ApiModelHelper(
           val defValue = if (typeName.isNullable) "?: ${typeName.primitiveDefaultInit()}" else ""
           toDomainModel.addStatement("  $paramName = this.$paramName $defValue,")
         } else {
-          toDomainModel.addStatement("  $paramName = this.$paramName.toDomainModel(),")
+          toDomainModel.addStatement("  $paramName = this.$paramName?.toDomainModel(),")
         }
       }
     }

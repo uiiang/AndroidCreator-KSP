@@ -12,7 +12,7 @@ import uii.ang.creator.tools.from
 class CreatorData(
   val annotationData: AnnotationData,
   val sourceClassDeclaration: KSClassDeclaration,
-//  val logger: KSPLogger
+  val logger: KSPLogger
 ) : AnnotatedBaseData {
 
   val generateApiModel: Boolean = annotationData.generateApiModel
@@ -23,7 +23,7 @@ class CreatorData(
   // 使用primaryConstructor来转换构造函数中的参数，可以获得给参数标注的注解
   val primaryConstructorParameters: List<PropertyDescriptor> =
     sourceClassDeclaration.primaryConstructor?.parameters?.map {
-      val propertyDescriptor = convertKSValueParameterToPropertyDescriptor(it, sourceClassDeclaration)
+      val propertyDescriptor = convertKSValueParameterToPropertyDescriptor(it, sourceClassDeclaration, logger)
 //      logger.warn(propertyDescriptor.toString())
       propertyDescriptor
     }?.toList() ?: emptyList()
