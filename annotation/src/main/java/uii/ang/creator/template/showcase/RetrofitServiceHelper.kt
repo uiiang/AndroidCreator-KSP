@@ -56,7 +56,7 @@ class RetrofitServiceHelper(
     val parameterUrl = ParameterSpec.builder("url", stringClassName)
       .addAnnotation(AnnotationSpec.builder(retrofitUrlClassName)
         .build())
-    genFunction.addParameter(parameterUrl.build())
+//    genFunction.addParameter(parameterUrl.build())
     getRequestParamWithoutBody(generateParameters).forEach { param ->
       val paramSpec = ParameterSpec.builder(param.paramName, convertType(param.paramType))
         .addAnnotation(

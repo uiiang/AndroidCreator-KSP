@@ -29,17 +29,19 @@ class RepositoryImplHelper(
 
   fun genClassBuilder(): TypeSpec.Builder {
     val flux = FunSpec.constructorBuilder()
-    val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
-    val daoInterfaceClassName =
-      ClassName(databasePackageName, returnChain.keys.last().getShortName().firstCharUpperCase() + "Dao")
+//    val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
+//    val daoInterfaceClassName =
+//      ClassName(databasePackageName, returnChain.keys.last().getShortName().firstCharUpperCase() + "Dao")
+
+//    logger.warn("获得dao类名， ${roomDaoInterfaceClassName.simpleName}, 拼装类名 ${daoInterfaceClassName.simpleName}")
     flux.addParameter(
       ParameterSpec.builder(
         retrofitServiceClassName.simpleName.firstCharLowerCase(), retrofitServiceClassName
       ).build()
-    ).addParameter(
-      ParameterSpec.builder(
-        "dao", daoInterfaceClassName
-      ).build()
+//    ).addParameter(
+//      ParameterSpec.builder(
+//        "dao", daoInterfaceClassName
+//      ).build()
     ).build()
 
     val retrofitServiceProp = PropertySpec.builder(
@@ -48,18 +50,18 @@ class RepositoryImplHelper(
     )
       .addModifiers(KModifier.PRIVATE)
       .initializer(retrofitServiceClassName.simpleName.firstCharLowerCase())
-    val roomDaoInterfaceProp = PropertySpec.builder(
-      "dao",
-      daoInterfaceClassName
-    )
-      .addModifiers(KModifier.PRIVATE)
-      .initializer("dao")
+//    val roomDaoInterfaceProp = PropertySpec.builder(
+//      "dao",
+//      daoInterfaceClassName
+//    )
+//      .addModifiers(KModifier.PRIVATE)
+//      .initializer("dao")
     val classBuilder = TypeSpec.classBuilder(repositoryImplClassName)
 //      .addModifiers(KModifier.INTERNAL)
       .addSuperinterfaces(listOf(repositoryInterfaceClassName))
       .primaryConstructor(flux.build())
       .addProperty(retrofitServiceProp.build())
-      .addProperty(roomDaoInterfaceProp.build())
+//      .addProperty(roomDaoInterfaceProp.build())
 //      .superclass(repositoryInterfaceClassName)
     return classBuilder
   }
@@ -146,16 +148,16 @@ class RepositoryImplHelper(
     returnChain.forEach { (t, u) ->
       apiResultSuccessCodeBlock.addStatement("\t\t.${t.getShortName().firstCharLowerCase()}")
     }
-    // 如果需要插入数据库，使用.also{ dao.insert }
-//    val albumsEntityModels = albumsApiModels.map { it.toEntityModel() }
-//    albumDao.insertAlbums(albumsEntityModels)
-    apiResultSuccessCodeBlock.addStatement("\t\t.also{ apiModel ->")
-    apiResultSuccessCodeBlock.addStatement(
-      "\t\t\tval entityModels = apiModel.map { it.%M() }",
-      moduleToEntityMemberName
-    )
-    apiResultSuccessCodeBlock.addStatement("\t\t\tdao.insert(entityModels)")
-    apiResultSuccessCodeBlock.addStatement("\t\t}")
+//    // 如果需要插入数据库，使用.also{ dao.insert }
+////    val albumsEntityModels = albumsApiModels.map { it.toEntityModel() }
+////    albumDao.insertAlbums(albumsEntityModels)
+//    apiResultSuccessCodeBlock.addStatement("\t\t.also{ apiModel ->")
+//    apiResultSuccessCodeBlock.addStatement(
+//      "\t\t\tval entityModels = apiModel.map { it.%M() }",
+//      moduleToEntityMemberName
+//    )
+//    apiResultSuccessCodeBlock.addStatement("\t\t\tdao.insert(entityModels)")
+//    apiResultSuccessCodeBlock.addStatement("\t\t}")
 
     // 返回toDomainModel
     if (returnChain.values.last().isList()) {
@@ -202,6 +204,6 @@ class RepositoryImplHelper(
 
   fun genKoinInjectionCode(): CodeBlock.Builder {
     return CodeBlock.builder()
-      .addStatement("\tsingle<%T> { %T(get(), get()) }", repositoryInterfaceClassName, repositoryImplClassName)
+      .addStatement("\tsingle<%T> { %T(get()) }", repositoryInterfaceClassName, repositoryImplClassName)
   }
 }

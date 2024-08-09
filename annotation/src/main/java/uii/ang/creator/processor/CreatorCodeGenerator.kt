@@ -155,6 +155,7 @@ object CreatorCodeGenerator {
     logger: KSPLogger
   ) {
     val daoNameStr = daoHelper.roomDaoInterfaceClassName.simpleName
+    logger.warn("generatorDao -> $daoNameStr")
     val dao = daoHelper.genClassBuilder()
     CodeBuilder.getOrCreate(databasePackageName,
       daoNameStr,
@@ -169,7 +170,7 @@ object CreatorCodeGenerator {
       .addAnnotation(databaseAnno.build())
 //    logger.warn("entityModelList count ${entityModelList.count()}")
     CodeBuilder.getOrCreate(databasePackageName, "ProjDatabase",
-      typeBuilderProvider = {database})
+      typeBuilderProvider = { database })
       .addFunction(inDatabaseCode.build(), true)
   }
 
@@ -184,6 +185,11 @@ object CreatorCodeGenerator {
         entityModelName
       }
     )
+    val toEntityModel = entityModelHelper.toEntityModel(
+      entityModelNameStr,
+      entityModelPackageName,
+      data
+    )
     val toDomainModel = entityModelHelper.toDomainModel(
       entityModelNameStr,
       entityModelPackageName,
@@ -197,6 +203,7 @@ object CreatorCodeGenerator {
         entityModelBuilder.addType(it)
       }
     entityModelBuilder.addFunction(toDomainModel, false)
+    entityModelBuilder.addFunction(toEntityModel, false)
   }
 
   private fun generatorApiModel(apiModelHelper: ApiModelHelper, data: CreatorData) {
