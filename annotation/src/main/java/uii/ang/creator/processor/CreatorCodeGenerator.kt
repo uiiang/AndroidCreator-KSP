@@ -3,7 +3,6 @@ package uii.ang.creator.processor
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.codegen.CodeBuilder
@@ -168,7 +167,7 @@ object CreatorCodeGenerator {
     val inDatabaseCode = daoHelper.genInDatabaseCodeBlock()
     val database = daoHelper.genDatabaseClass()
       .addAnnotation(databaseAnno.build())
-    logger.warn("entityModelList count ${entityModelList.count()}")
+//    logger.warn("entityModelList count ${entityModelList.count()}")
     CodeBuilder.getOrCreate(databasePackageName, "ProjDatabase",
       typeBuilderProvider = {database})
       .addFunction(inDatabaseCode.build(), true)

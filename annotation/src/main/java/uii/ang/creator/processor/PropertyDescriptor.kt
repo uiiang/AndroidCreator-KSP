@@ -6,7 +6,6 @@ import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSTypeArgument
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.TypeName
-import uii.ang.creator.annotation.ToDatabase
 
 //  typeClassName=String
 //	typeName=kotlin.String // kotlin.collections.List<uii.ang.domain.Album>
@@ -57,6 +56,11 @@ data class PropertyDescriptor(
   val mandatoryForConstructor: Boolean,
   val kDoc: String,
   /**
+   * 是否有SerialName注解，如果有，使用注解中的字段名做解析
+   * 有时json字段是大写，生成data class时会变成小写
+   */
+  val isSerialName: Boolean = false,
+  /**
    * 是否标有@ParseRoot注解，在生成Response时做为参数传入
    */
   val isParseRoot: Boolean = false, // 是否标有@ParseRoot注解，在生成Response时做为参数传入
@@ -90,6 +94,7 @@ data class PropertyDescriptor(
             "\tclassName=${className.getShortName()}\n" +
             "\targuments count=${arguments.count()}\n" +
             "\tkDoc=$kDoc\n" +
+            "\tisSerialName=$isSerialName\n" +
             "\tisParseRoot=$isParseRoot\n" +
             "\tisParseReturn=$isParseReturn\n" +
             "\tisToDatabase=$isToDatabase\n" +

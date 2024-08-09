@@ -24,7 +24,7 @@ class CreatorData(
   val primaryConstructorParameters: List<PropertyDescriptor> =
     sourceClassDeclaration.primaryConstructor?.parameters?.map {
       val propertyDescriptor = convertKSValueParameterToPropertyDescriptor(it, sourceClassDeclaration, logger)
-//      logger.warn(propertyDescriptor.toString())
+      logger.warn(propertyDescriptor.toString())
       propertyDescriptor
     }?.toList() ?: emptyList()
 

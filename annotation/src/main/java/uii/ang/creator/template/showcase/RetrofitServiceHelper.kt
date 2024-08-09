@@ -3,18 +3,13 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import uii.ang.creator.annotation.*
+import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.processor.Const.baseRetrofitApiResultClassName
-import uii.ang.creator.processor.Const.hashMapClassName
 import uii.ang.creator.processor.Const.requestBodyPackageName
-import uii.ang.creator.processor.Const.retrofitBodyClassName
 import uii.ang.creator.processor.Const.retrofitClassName
-import uii.ang.creator.processor.Const.retrofitFieldClassName
 import uii.ang.creator.processor.Const.retrofitFormUrlEncodedClassName
-import uii.ang.creator.processor.Const.retrofitGetClassName
-import uii.ang.creator.processor.Const.retrofitPathClassName
-import uii.ang.creator.processor.Const.retrofitPostClassName
-import uii.ang.creator.processor.Const.retrofitQueryClassName
+import uii.ang.creator.processor.Const.retrofitUrlClassName
+import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
@@ -23,7 +18,6 @@ import uii.ang.creator.processor.Utils.getRequestParameterSpecBodyWithMap
 import uii.ang.creator.processor.Utils.getRetrofitClassName
 import uii.ang.creator.processor.Utils.requestParamHasBody
 import uii.ang.creator.processor.Utils.requestParamHasMap
-import uii.ang.creator.tools.firstCharLowerCase
 import uii.ang.creator.tools.firstCharUpperCase
 
 class RetrofitServiceHelper(
@@ -59,7 +53,10 @@ class RetrofitServiceHelper(
 
     val genFunction = FunSpec.builder(methodName + "Async")
       .addModifiers(KModifier.ABSTRACT, KModifier.SUSPEND)
-
+    val parameterUrl = ParameterSpec.builder("url", stringClassName)
+      .addAnnotation(AnnotationSpec.builder(retrofitUrlClassName)
+        .build())
+    genFunction.addParameter(parameterUrl.build())
     getRequestParamWithoutBody(generateParameters).forEach { param ->
       val paramSpec = ParameterSpec.builder(param.paramName, convertType(param.paramType))
         .addAnnotation(

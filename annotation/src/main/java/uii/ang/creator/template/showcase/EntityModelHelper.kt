@@ -1,7 +1,6 @@
 package uii.ang.creator.template.showcase
 
 import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.symbol.KSTypeArgument
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
@@ -12,7 +11,6 @@ import uii.ang.creator.processor.Const.roomEntityClassName
 import uii.ang.creator.processor.Const.roomPrimaryKeyClassName
 import uii.ang.creator.processor.Const.roomTypeConverterClassName
 import uii.ang.creator.processor.Const.roomTypeConvertersClassName
-import uii.ang.creator.processor.Const.serialDecodeFromStringMemberName
 import uii.ang.creator.processor.Const.serialEncodeToStringMemberName
 import uii.ang.creator.processor.Const.serializableJsonClassName
 import uii.ang.creator.processor.Const.stringClassName

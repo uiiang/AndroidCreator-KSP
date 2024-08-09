@@ -5,7 +5,6 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.listClassName
-import uii.ang.creator.processor.Const.roomDatabaseClassName
 import uii.ang.creator.processor.Const.roomDeleteClassName
 import uii.ang.creator.processor.Const.roomInsertClassName
 import uii.ang.creator.processor.Const.roomQueryClassName
@@ -99,31 +98,31 @@ class DaoHelper(
   private fun buildSqlUpdateAndInsertFunction(buildType: String): FunSpec {
     val classNameStr = data.sourceClassDeclaration.simpleName.getShortName()
     val funcSpec = when (buildType) {
-      buildFuncTypeUpdate -> FunSpec.builder("update$classNameStr")
+      buildFuncTypeUpdate -> FunSpec.builder("update")
         .addParameter(classNameStr.lowercase(), entityModelClassName)
         .addAnnotation(AnnotationSpec.builder(roomUpdateClassName).build())
 
-      buildFuncTypeUpdateAll -> FunSpec.builder("update${classNameStr}s")
-        .addParameter(classNameStr.lowercase(), listClassName.parameterizedBy(entityModelClassName))
+      buildFuncTypeUpdateAll -> FunSpec.builder("update")
+        .addParameter(classNameStr.lowercase() + "List", listClassName.parameterizedBy(entityModelClassName))
         .addAnnotation(AnnotationSpec.builder(roomUpdateClassName).build())
 
-      buildFuncTypeInsert -> FunSpec.builder("insert$classNameStr")
+      buildFuncTypeInsert -> FunSpec.builder("insert")
         .addParameter(classNameStr.lowercase(), entityModelClassName)
         .addAnnotation(AnnotationSpec.builder(roomInsertClassName).build())
 
-      buildFuncTypeInsertAll -> FunSpec.builder("insert${classNameStr}s")
-        .addParameter(classNameStr.lowercase(), listClassName.parameterizedBy(entityModelClassName))
+      buildFuncTypeInsertAll -> FunSpec.builder("insert")
+        .addParameter(classNameStr.lowercase() + "List", listClassName.parameterizedBy(entityModelClassName))
         .addAnnotation(AnnotationSpec.builder(roomInsertClassName).build())
 
-      buildFuncTypeDelete -> FunSpec.builder("delete$classNameStr")
+      buildFuncTypeDelete -> FunSpec.builder("delete")
         .addParameter(classNameStr.lowercase(), entityModelClassName)
         .addAnnotation(AnnotationSpec.builder(roomDeleteClassName).build())
 
-      buildFuncTypeDeleteAll -> FunSpec.builder("delete${classNameStr}s")
-        .addParameter(classNameStr.lowercase(), listClassName.parameterizedBy(entityModelClassName))
+      buildFuncTypeDeleteAll -> FunSpec.builder("delete")
+        .addParameter(classNameStr.lowercase() + "List", listClassName.parameterizedBy(entityModelClassName))
         .addAnnotation(AnnotationSpec.builder(roomDeleteClassName).build())
 
-      else -> FunSpec.builder("insert$classNameStr")
+      else -> FunSpec.builder("insert")
         .addParameter(classNameStr.lowercase(), listClassName.parameterizedBy(entityModelClassName))
         .addAnnotation(AnnotationSpec.builder(roomInsertClassName).build())
     }

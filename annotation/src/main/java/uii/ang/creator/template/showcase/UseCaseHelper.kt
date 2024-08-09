@@ -3,7 +3,6 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.processor.Const.baseDomainResultClassName
 import uii.ang.creator.processor.Const.baseDomainResultMemberName
 import uii.ang.creator.processor.Const.koinSingleOfMemberName
@@ -11,7 +10,6 @@ import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.timberClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
-import uii.ang.creator.processor.Utils.convertType
 import uii.ang.creator.processor.Utils.findParseReturnChain
 import uii.ang.creator.processor.Utils.getRequestHashMapClassName
 import uii.ang.creator.processor.Utils.getRequestParamWithBody

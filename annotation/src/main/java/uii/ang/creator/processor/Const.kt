@@ -31,6 +31,7 @@ object Const {
   val baseDomainResultPackageName = "$basePackageName.base.domain.result"
 
   val moduleToDomainMemberName = MemberName(apiModelPackageName, "toDomainModel")
+  val moduleToEntityMemberName = MemberName(apiModelPackageName, "toEntityModel")
 
   // base模块包含的类
   val baseRetrofitApiResultClassName = ClassName(baseRetrofitPackageName, "ApiResult")
@@ -62,6 +63,7 @@ object Const {
   val retrofitClassName = ClassName(retrofitBasePackageName, "Retrofit")
   val retrofitFormUrlEncodedClassName = ClassName(retrofitPackageName, "FormUrlEncoded")
   val retrofitPostClassName = ClassName(retrofitPackageName, "POST")
+  val retrofitUrlClassName = ClassName(retrofitPackageName, "Url")
   val retrofitGetClassName = ClassName(retrofitPackageName, "GET")
 
   //search?userId={userId}
@@ -82,6 +84,12 @@ object Const {
   val serializableJsonClassName = ClassName("kotlinx.serialization.json", "Json")
   val serialEncodeToStringMemberName = MemberName("kotlinx.serialization", "encodeToString")
   val serialDecodeFromStringMemberName = MemberName("kotlinx.serialization", "decodeFromString")
+
+  // flow
+  val kotlinFlowFlowOnMemberName = MemberName("kotlinx.coroutines.flow","flowOn")
+  val kotlinFlowFlowMemberName = MemberName("kotlinx.coroutines.flow","flow")
+  val kotlinFlowCatchMemberName = MemberName("kotlinx.coroutines.flow","catch")
+  val kotlinFlowFlowClassName = MemberName("kotlinx.coroutines.flow","Flow")
 
   // Timber
   val timberClassName = ClassName("timber.log", "Timber")

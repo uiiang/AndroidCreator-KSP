@@ -5,11 +5,12 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import uii.ang.creator.processor.Const.baseDomainResultClassName
 import uii.ang.creator.processor.Const.baseRetrofitApiResultClassName
+import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.moduleToDomainMemberName
+import uii.ang.creator.processor.Const.moduleToEntityMemberName
 import uii.ang.creator.processor.Const.timberClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
-import uii.ang.creator.processor.Utils.convertType
 import uii.ang.creator.processor.Utils.findParseReturnChain
 import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
 import uii.ang.creator.processor.Utils.getRequestParameterSpecBody
@@ -18,6 +19,7 @@ import uii.ang.creator.processor.Utils.getRequestParameterSpecList
 import uii.ang.creator.processor.Utils.requestParamHasBody
 import uii.ang.creator.processor.Utils.requestParamHasMap
 import uii.ang.creator.tools.firstCharLowerCase
+import uii.ang.creator.tools.firstCharUpperCase
 import uii.ang.creator.tools.isList
 
 class RepositoryImplHelper(
@@ -27,23 +29,37 @@ class RepositoryImplHelper(
 
   fun genClassBuilder(): TypeSpec.Builder {
     val flux = FunSpec.constructorBuilder()
+    val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
+    val daoInterfaceClassName =
+      ClassName(databasePackageName, returnChain.keys.last().getShortName().firstCharUpperCase() + "Dao")
     flux.addParameter(
       ParameterSpec.builder(
         retrofitServiceClassName.simpleName.firstCharLowerCase(), retrofitServiceClassName
       ).build()
+    ).addParameter(
+      ParameterSpec.builder(
+        "dao", daoInterfaceClassName
+      ).build()
     ).build()
 
-    val prop = PropertySpec.builder(
+    val retrofitServiceProp = PropertySpec.builder(
       retrofitServiceClassName.simpleName.firstCharLowerCase(),
       retrofitServiceClassName
     )
       .addModifiers(KModifier.PRIVATE)
       .initializer(retrofitServiceClassName.simpleName.firstCharLowerCase())
+    val roomDaoInterfaceProp = PropertySpec.builder(
+      "dao",
+      daoInterfaceClassName
+    )
+      .addModifiers(KModifier.PRIVATE)
+      .initializer("dao")
     val classBuilder = TypeSpec.classBuilder(repositoryImplClassName)
 //      .addModifiers(KModifier.INTERNAL)
       .addSuperinterfaces(listOf(repositoryInterfaceClassName))
       .primaryConstructor(flux.build())
-      .addProperty(prop.build())
+      .addProperty(retrofitServiceProp.build())
+      .addProperty(roomDaoInterfaceProp.build())
 //      .superclass(repositoryInterfaceClassName)
     return classBuilder
   }
@@ -123,12 +139,25 @@ class RepositoryImplHelper(
             "${retrofitServiceClassName.simpleName.firstCharLowerCase()}.${methodName}Async($paramList))"
 
     // is ApiResult.Success
+    // 成功case时，使用反射链一直调用到需要return的字段
     val apiResultSuccessCodeBlock = CodeBlock.builder()
       .addStatement("is %T.Success -> {", baseRetrofitApiResultClassName)
       .addStatement("\tval result = apiResult.data")
     returnChain.forEach { (t, u) ->
       apiResultSuccessCodeBlock.addStatement("\t\t.${t.getShortName().firstCharLowerCase()}")
     }
+    // 如果需要插入数据库，使用.also{ dao.insert }
+//    val albumsEntityModels = albumsApiModels.map { it.toEntityModel() }
+//    albumDao.insertAlbums(albumsEntityModels)
+    apiResultSuccessCodeBlock.addStatement("\t\t.also{ apiModel ->")
+    apiResultSuccessCodeBlock.addStatement(
+      "\t\t\tval entityModels = apiModel.map { it.%M() }",
+      moduleToEntityMemberName
+    )
+    apiResultSuccessCodeBlock.addStatement("\t\t\tdao.insert(entityModels)")
+    apiResultSuccessCodeBlock.addStatement("\t\t}")
+
+    // 返回toDomainModel
     if (returnChain.values.last().isList()) {
       apiResultSuccessCodeBlock.addStatement("\t\t.map { it.%M() }", moduleToDomainMemberName)
     } else {
@@ -150,9 +179,9 @@ class RepositoryImplHelper(
       .addStatement("\t%T.e(apiResult.throwable)", timberClassName)
 
     if (returnChain.values.last().isList()) {
-      apiResultExceptionCodeBlock.addStatement("\t%T.Success(emptyList())", baseDomainResultClassName)
+      apiResultExceptionCodeBlock.addStatement("\t%T.Failure()", baseDomainResultClassName)
     } else {
-      apiResultExceptionCodeBlock.addStatement("\t%T.Success(null)", baseDomainResultClassName)
+      apiResultExceptionCodeBlock.addStatement("\t%T.Failure()", baseDomainResultClassName)
     }
     apiResultExceptionCodeBlock.addStatement("}")
 
@@ -173,6 +202,6 @@ class RepositoryImplHelper(
 
   fun genKoinInjectionCode(): CodeBlock.Builder {
     return CodeBlock.builder()
-      .addStatement("\tsingle<%T> { %T(get()) }", repositoryInterfaceClassName, repositoryImplClassName)
+      .addStatement("\tsingle<%T> { %T(get(), get()) }", repositoryInterfaceClassName, repositoryImplClassName)
   }
 }

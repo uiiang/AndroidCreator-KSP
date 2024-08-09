@@ -20,6 +20,7 @@ import uii.ang.creator.processor.Const.retrofitGetClassName
 import uii.ang.creator.processor.Const.retrofitPathClassName
 import uii.ang.creator.processor.Const.retrofitPostClassName
 import uii.ang.creator.processor.Const.retrofitQueryClassName
+import uii.ang.creator.processor.Const.serializableSerialNameClassName
 import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.tools.*
 
@@ -148,6 +149,11 @@ object Utils {
     sourceClassDeclaration: KSClassDeclaration,
     logger: KSPLogger
   ): PropertyDescriptor {
+    logger.warn("解析字段${kp.name!!.getShortName()} 注解数量${kp.annotations.count()}")
+
+    kp.annotations.forEach {
+      logger.warn("\t找到注解2 ${it.annotationType.resolve().declaration.qualifiedName?.asString()}")
+    }
     val resolve = kp.type.resolve()
     val queryData = kp.annotations.filter { anno ->
       (anno.annotationType.toTypeName() as? ClassName)?.canonicalName ==
@@ -182,6 +188,7 @@ object Utils {
       arguments = resolve.arguments,
       mandatoryForConstructor = true,
       kDoc = "",
+      isSerialName = kp.hasAnnotation(serializableSerialNameClassName),
       isParseRoot = kp.hasAnnotation<ParseRoot>(),
       isParseReturn = isParseReturn,
       isToDatabase = isToDatabase,
