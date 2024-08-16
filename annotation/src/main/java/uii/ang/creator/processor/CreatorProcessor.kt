@@ -10,6 +10,7 @@ import uii.ang.creator.*
 import uii.ang.creator.annotation.Creator
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.CollectCodeHelper.genClassBuilder
+import uii.ang.creator.template.showcase.CreatorCodeGenerator
 
 class CreatorProcessor(
   private val environment: SymbolProcessorEnvironment,

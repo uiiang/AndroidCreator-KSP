@@ -1,8 +1,7 @@
-package uii.ang.creator.processor
+package uii.ang.creator.template.showcase
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
-import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.CodeBlock
 import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.codegen.CodeBuilder
@@ -18,11 +17,9 @@ import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.responsePackageName
 import uii.ang.creator.processor.Const.retrofitServicePackageName
-import uii.ang.creator.processor.Const.roomDatabaseClassName
 import uii.ang.creator.processor.Const.useCasePackageName
-import uii.ang.creator.template.showcase.*
+import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.tools.firstCharUpperCase
-import kotlin.math.log
 
 object CreatorCodeGenerator {
   val entityModelList = mutableListOf<CodeBlock>()
