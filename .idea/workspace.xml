@@ -4,12 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="增加在生成代码RepositoryImpl中插入数据库">
+    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="增加从对象转换到EntityModel的扩展方法">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/PrinterTemplate.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCodeGenerator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCodeGenerator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/EntityModelHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/EntityModelHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorProcessor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorProcessor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Utils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/DaoHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/DaoHelper.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryImplHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryImplHelper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RetrofitServiceHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RetrofitServiceHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ResponseHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ResponseHelper.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,44 +105,44 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [init].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [jar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [:annotation:Creator.main()].executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [:annotation:CreatorProcessor.main()].executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [buildDependents].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [jar].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build AndroidCreatorKsp.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build TestKsp.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.CreateTest.create generate ApiModel.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.TestKsp [:MainKt.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Kotlin.MainKt.executor&quot;: &quot;Coverage&quot;,
-    &quot;Maven.upload_jar.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/code/github/kotlin/kotlin-data-compat&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;D:/code/mycodes/yeoman/AndroidCreatorKsp/processor/src/main/java/uii/ang/creator/plugin/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Gradle.AndroidCreatorKsp [build].executor": "Run",
+    "Gradle.AndroidCreatorKsp [clean].executor": "Run",
+    "Gradle.AndroidCreatorKsp [init].executor": "Run",
+    "Gradle.AndroidCreatorKsp [jar].executor": "Run",
+    "Gradle.AndroidCreatorKsp [publishToMavenLocal].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [:annotation:Creator.main()].executor": "Debug",
+    "Gradle.AndroidCreatorKsp:annotation [:annotation:CreatorProcessor.main()].executor": "Debug",
+    "Gradle.AndroidCreatorKsp:annotation [buildDependents].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [build].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [clean].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [jar].executor": "Run",
+    "Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal].executor": "Run",
+    "Gradle.Build AndroidCreatorKsp.executor": "Run",
+    "Gradle.Build TestKsp.executor": "Run",
+    "Gradle.CreateTest.create generate ApiModel.executor": "Run",
+    "Gradle.TestKsp [:MainKt.main()].executor": "Run",
+    "Kotlin.MainKt.executor": "Coverage",
+    "Maven.upload_jar.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/code/mycodes/yeoman/AndroidCreatorKsp/src/main/kotlin/uii/ang/domain",
+    "onboarding.tips.debug.path": "D:/code/mycodes/yeoman/AndroidCreatorKsp/processor/src/main/java/uii/ang/creator/plugin/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;kotlin-gradle-user-dirs&quot;: [
-      &quot;D:\\code\\conf\\gradle\\.gradle&quot;
+  "keyToStringList": {
+    "kotlin-gradle-user-dirs": [
+      "D:\\code\\conf\\gradle\\.gradle"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\src\main\kotlin\uii\ang\domain" />
@@ -331,8 +335,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal]" />
         <item itemvalue="Gradle.CreateTest.create generate ApiModel" />
+        <item itemvalue="Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal]" />
         <item itemvalue="Gradle.AndroidCreatorKsp:annotation [jar]" />
         <item itemvalue="Gradle.AndroidCreatorKsp [publishToMavenLocal]" />
         <item itemvalue="Gradle.AndroidCreatorKsp [init]" />
@@ -636,7 +640,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723175986401</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="增加从对象转换到EntityModel的扩展方法">
+      <option name="closed" value="true" />
+      <created>1723184068637</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1723184068637</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -665,7 +677,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="删除无用代码" />
     <MESSAGE value="生成代码到其它目录" />
     <MESSAGE value="发布本地仓库脚本" />
     <MESSAGE value="判断默认数据类型和可空字段赋默认值" />
@@ -690,7 +701,8 @@
     <MESSAGE value="解决生成entityModel的BUG" />
     <MESSAGE value="取消生成代码中的KModifier.INTERNAL标识" />
     <MESSAGE value="增加在生成代码RepositoryImpl中插入数据库" />
-    <option name="LAST_COMMIT_MESSAGE" value="增加在生成代码RepositoryImpl中插入数据库" />
+    <MESSAGE value="增加从对象转换到EntityModel的扩展方法" />
+    <option name="LAST_COMMIT_MESSAGE" value="增加从对象转换到EntityModel的扩展方法" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

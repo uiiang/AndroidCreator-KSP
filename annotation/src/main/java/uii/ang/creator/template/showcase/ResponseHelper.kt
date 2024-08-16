@@ -15,8 +15,9 @@ class ResponseHelper(
   fun genClassBuilder(): TypeSpec.Builder {
     val parseRootProperty = data.primaryConstructorParameters.firstOrNull { it.isParseRoot }
     val apiModel = parseRootProperty?.apiModelWrapperTypeName ?: apiModelClassName
-
-    val builderPropName = parseRootProperty?.className?.getShortName() ?: dataClassName.firstCharLowerCase()
+    logger.warn("ResponseHelper parseRootProperty.className =${parseRootProperty?.className?.getShortName()}")
+    logger.warn("ResponseHelper dataClassName=${dataClassName}")
+    val builderPropName = parseRootProperty?.className?.getShortName() ?: dataClassName
     val flux = genConstructor(apiModel, builderPropName)
     val propertySpec = genPropertySpec(apiModel, builderPropName)
     val classBuilder = TypeSpec.classBuilder(responseClassName)
@@ -40,7 +41,8 @@ class ResponseHelper(
   fun genConstructor(apiModelClassName: TypeName, builderPropName: String): FunSpec.Builder {
     val parameterSpec = ParameterSpec
     val builder =
-      parameterSpec.builder(builderPropName, apiModelClassName).addAnnotation(
+      parameterSpec.builder(builderPropName, apiModelClassName)
+        .addAnnotation(
         AnnotationSpec.builder(
           serializableSerialNameClassName
         ).addMember("\"${builderPropName}\"").build()

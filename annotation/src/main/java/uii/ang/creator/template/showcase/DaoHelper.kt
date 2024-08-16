@@ -50,6 +50,7 @@ class DaoHelper(
   }
 
   fun genDatabaseClass(): TypeSpec.Builder {
+    logger.warn("=================genDatabaseClass================")
     val classBuilder = TypeSpec.classBuilder(ClassName(databasePackageName, "ProjDatabase"))
       .addModifiers(KModifier.ABSTRACT)
       .superclass(roomRoomDatabaseClassName)
@@ -60,6 +61,9 @@ class DaoHelper(
     return FunSpec.builder(roomDaoInterfaceClassName.simpleName.firstCharLowerCase())
       .addModifiers(KModifier.ABSTRACT)
       .returns(roomDaoInterfaceClassName)
+  }
+  fun genRoomAnnotationDatabaseEntitiesClassName():ClassName{
+    return roomDaoInterfaceClassName
   }
 
   private fun genDaoQueryFuncCode(): List<FunSpec> {

@@ -146,7 +146,7 @@ class RepositoryImplHelper(
       .addStatement("is %T.Success -> {", baseRetrofitApiResultClassName)
       .addStatement("\tval result = apiResult.data")
     returnChain.forEach { (t, u) ->
-      apiResultSuccessCodeBlock.addStatement("\t\t.${t.getShortName().firstCharLowerCase()}")
+      apiResultSuccessCodeBlock.addStatement("\t\t.${t.getShortName()}")
     }
 //    // 如果需要插入数据库，使用.also{ dao.insert }
 ////    val albumsEntityModels = albumsApiModels.map { it.toEntityModel() }

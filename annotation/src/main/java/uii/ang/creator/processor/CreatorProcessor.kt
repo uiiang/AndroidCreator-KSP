@@ -76,10 +76,20 @@ class CreatorProcessor(
   }
 
   private fun generateMappingCode(resolver: Resolver, converterData: List<AnnotatedBaseData>) {
-    converterData.forEach {
-      when (it) {
-        is CreatorData -> CreatorCodeGenerator.generate(it, resolver, logger)
+    converterData.forEachIndexed { index, annotatedBaseData ->
+      when (annotatedBaseData) {
+        is CreatorData -> CreatorCodeGenerator.generate(annotatedBaseData, resolver, logger, index, converterData.count())
       }
     }
   }
 }
+
+
+
+
+
+
+
+
+
+

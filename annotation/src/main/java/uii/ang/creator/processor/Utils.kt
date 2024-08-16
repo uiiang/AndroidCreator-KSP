@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import uii.ang.creator.annotation.*
+import uii.ang.creator.processor.Const.anyClassName
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.hashMapClassName
@@ -58,7 +59,7 @@ object Utils {
     )
   }
 
-  fun getRequestHashMapClassName() = hashMapClassName.parameterizedBy(listOf(stringClassName, stringClassName))
+  fun getRequestHashMapClassName() = hashMapClassName.parameterizedBy(listOf(stringClassName, anyClassName))
   fun getRequestParameterSpecBodyWithMap(): ParameterSpec.Builder {
     return ParameterSpec.builder(
       "paramMap",
