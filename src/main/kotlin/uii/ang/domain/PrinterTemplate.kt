@@ -9,47 +9,52 @@ import uii.ang.creator.annotation.*
 
 //@Serializable
 @Creator(
-    generateApiModel = true,
-    generateResponse = true,
-    generateRetrofitService = true,
-    url = "/s_api/GetStorage",
-    method = requestMethodPost,
-    methodName = "getPrinterTemplate",
-    parameters = [
-        Parameter(
-            paramName = "msgType",
-            paramType = "String",
-            paramQueryType = "Map",
-            paramDefault = "GetStorage"
-        ),
-        Parameter(
-            paramName = "Type",
-            paramType = "Int",
-            paramQueryType = "Map",
-            paramDefault = "22"
-        ),
-    ]
+  generateApiType = apiTypeKtor,
+  generateApiService = true,
+  generateApiModel = true,
+  generateResponse = true,
+  generateRetrofitService = true,
+  url = "/s_api/GetStorage",
+  method = requestMethodPost,
+  methodName = "getPrinterTemplate",
+  parameters = [
+    Parameter(
+      paramName = "msgType",
+      paramType = "String",
+      paramQueryType = requestParamTypeBody,
+      paramDefault = "GetStorage"
+    ),
+    Parameter(
+      paramName = "Type",
+      paramType = "Int",
+      paramQueryType = requestParamTypeBody,
+      paramDefault = "22"
+    ),
+  ]
 )
-data class PrinterTemplate (
-    val requestID: String? = null,
+data class PrinterTemplate(
+  val requestID: String? = null,
 
-    @ParseRoot
-    @ParseReturn
-    val Storges: List<Storges>? = null,
+  @ParseRoot
+  @ParseReturn
+  val Storges: List<Storges>? = null,
 
-    val error: Long? = null
+  val error: Long? = null
 )
 
-@Creator(generateApiModel = true,
-    generatorEntityModel = true,)
-data class Storges (
-    val imageData: String? = null,
+@Creator(
+  generateApiType = apiTypeKtor,
+  generateApiModel = true,
+  generatorEntityModel = true,
+)
+data class Storges(
+  val imageData: String? = null,
 
-    val key: String? = null,
+  val key: String? = null,
 
-    val storageID: Long? = null,
+  val storageID: Long? = null,
 
-    val type: Long? = null,
+  val type: Long? = null,
 
-    val value: String? = null
+  val value: String? = null
 )

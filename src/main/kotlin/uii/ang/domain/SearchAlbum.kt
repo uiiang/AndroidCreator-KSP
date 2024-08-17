@@ -3,6 +3,7 @@ package uii.ang.domain
 import uii.ang.creator.annotation.*
 
 @Creator(
+  generateApiType = apiTypeKtor,
   generateApiModel = true,
   generateResponse = true,
   generateRetrofitService = true,
@@ -20,7 +21,9 @@ data class SearchAlbum(
   val results: Results
 )
 
-@Creator(generateApiModel = true)
+@Creator(
+  generateApiType = apiTypeKtor, generateApiModel = true
+)
 data class Results(
   val opensearchQuery: OpensearchQuery,
   val opensearchTotalResults: String,
@@ -30,7 +33,9 @@ data class Results(
   val attr: Attr
 )
 
-@Creator(generateApiModel = true)
+@Creator(
+  generateApiType = apiTypeKtor, generateApiModel = true
+)
 data class Albummatches(
   @ParseReturn
 //  @ToDatabase
@@ -38,6 +43,7 @@ data class Albummatches(
 )
 
 @Creator(
+  generateApiType = apiTypeKtor,
   generateApiModel = true,
   generateResponse = true,
   generateRetrofitService = true,
@@ -48,7 +54,12 @@ data class Albummatches(
   url = "./?method=album.getInfo",
   parameters = [
     Parameter(paramName = "artist", paramType = requestParamDataTypeString, paramQueryType = requestParamTypeField),
-    Parameter(paramName = "album", paramType = requestParamDataTypeInt, paramQueryType = requestParamTypeMap, paramDefault = "0"),
+    Parameter(
+      paramName = "album",
+      paramType = requestParamDataTypeInt,
+      paramQueryType = requestParamTypeMap,
+      paramDefault = "0"
+    ),
     Parameter(paramName = "mbid", paramType = requestParamDataTypeString, paramQueryType = requestParamTypeMap)
   ]
 )
@@ -62,19 +73,25 @@ data class Album(
   val mbid: String
 )
 
-@Creator(generateApiModel = true,
-  generatorEntityModel = true,)
+@Creator(
+  generateApiType = apiTypeKtor, generateApiModel = true,
+  generatorEntityModel = true,
+)
 data class Image(
   val text: String,
   val size: String
 )
 
-@Creator(generateApiModel = true)
+@Creator(
+  generateApiType = apiTypeKtor, generateApiModel = true
+)
 data class Attr(
   val attrFor: String
 )
 
-@Creator(generateApiModel = true)
+@Creator(
+  generateApiType = apiTypeKtor, generateApiModel = true
+)
 data class OpensearchQuery(
   val text: String,
   val role: String,

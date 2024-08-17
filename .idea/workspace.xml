@@ -5,8 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="增加从对象转换到EntityModel的扩展方法">
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorCodeGenerator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/CreatorCodeGenerator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorProcessor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorProcessor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiServiceHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorImplHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/UseCaseKtorHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/CallFailure.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/ErrorModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/NetworkCallResult.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Const.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Const.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Utils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/CreatorCodeGenerator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/CreatorCodeGenerator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RequestQueryBodyHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RequestQueryBodyHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Branchs.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Branchs.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/PrinterTemplate.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/PrinterTemplate.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +70,18 @@
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="publishing" type="c8890929:TasksNode$1" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
+                <item name="annotation" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
+                <item name="annotation" type="2d1252cf:ModuleNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -72,7 +102,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="3a36f4da05eee84f1495132fd92f5bb082b024e3" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -98,51 +128,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Gradle.AndroidCreatorKsp [build].executor": "Run",
-    "Gradle.AndroidCreatorKsp [clean].executor": "Run",
-    "Gradle.AndroidCreatorKsp [init].executor": "Run",
-    "Gradle.AndroidCreatorKsp [jar].executor": "Run",
-    "Gradle.AndroidCreatorKsp [publishToMavenLocal].executor": "Run",
-    "Gradle.AndroidCreatorKsp:annotation [:annotation:Creator.main()].executor": "Debug",
-    "Gradle.AndroidCreatorKsp:annotation [:annotation:CreatorProcessor.main()].executor": "Debug",
-    "Gradle.AndroidCreatorKsp:annotation [buildDependents].executor": "Run",
-    "Gradle.AndroidCreatorKsp:annotation [build].executor": "Run",
-    "Gradle.AndroidCreatorKsp:annotation [clean].executor": "Run",
-    "Gradle.AndroidCreatorKsp:annotation [jar].executor": "Run",
-    "Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal].executor": "Run",
-    "Gradle.Build AndroidCreatorKsp.executor": "Run",
-    "Gradle.Build TestKsp.executor": "Run",
-    "Gradle.CreateTest.create generate ApiModel.executor": "Run",
-    "Gradle.TestKsp [:MainKt.main()].executor": "Run",
-    "Kotlin.MainKt.executor": "Coverage",
-    "Maven.upload_jar.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/code/mycodes/yeoman/AndroidCreatorKsp/src/main/kotlin/uii/ang/domain",
-    "onboarding.tips.debug.path": "D:/code/mycodes/yeoman/AndroidCreatorKsp/processor/src/main/java/uii/ang/creator/plugin/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp [init].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp [jar].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp:annotation [:annotation:Creator.main()].executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.AndroidCreatorKsp:annotation [:annotation:CreatorProcessor.main()].executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.AndroidCreatorKsp:annotation [buildDependents].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp:annotation [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp:annotation [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp:annotation [jar].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build AndroidCreatorKsp.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build TestKsp.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.CreateTest.create generate ApiModel.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.TestKsp [:MainKt.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.MainKt.executor&quot;: &quot;Coverage&quot;,
+    &quot;Maven.upload_jar.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;支持ktor版本&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/code/mycodes/yeoman/AndroidCreatorKsp/src/main/kotlin/uii/ang/base/data/ktor&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;D:/code/mycodes/yeoman/AndroidCreatorKsp/processor/src/main/java/uii/ang/creator/plugin/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;
   },
-  "keyToStringList": {
-    "kotlin-gradle-user-dirs": [
-      "D:\\code\\conf\\gradle\\.gradle"
+  &quot;keyToStringList&quot;: {
+    &quot;kotlin-gradle-user-dirs&quot;: [
+      &quot;D:\\code\\conf\\gradle\\.gradle&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\src\main\kotlin\uii\ang\base\data\ktor" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\src\main\kotlin\uii\ang\domain" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\src\testFixtures\kotlin\uii\ang\creator" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\src\main\java\uii\ang\creator\processor" />
-      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\processor\src\test\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\src\main\kotlin\uii\ang\domain" />
@@ -328,8 +358,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.CreateTest.create generate ApiModel" />
         <item itemvalue="Gradle.AndroidCreatorKsp:annotation [publishToMavenLocal]" />
+        <item itemvalue="Gradle.CreateTest.create generate ApiModel" />
         <item itemvalue="Gradle.AndroidCreatorKsp:annotation [jar]" />
         <item itemvalue="Gradle.AndroidCreatorKsp [publishToMavenLocal]" />
         <item itemvalue="Gradle.AndroidCreatorKsp [init]" />
@@ -649,7 +679,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723784228177</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="增加从对象转换到EntityModel的扩展方法">
+      <option name="closed" value="true" />
+      <created>1723784654213</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1723784654213</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

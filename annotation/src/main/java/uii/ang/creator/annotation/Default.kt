@@ -32,7 +32,7 @@ package uii.ang.creator.annotation
  * 会自动找到 results 下指向image的调用链并调用toDomainModel方法
  */
 @Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.VALUE_PARAMETER)
+@Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.CLASS)
 annotation class ParseReturn
 
 

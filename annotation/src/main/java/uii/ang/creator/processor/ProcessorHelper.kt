@@ -3,6 +3,7 @@ package uii.ang.creator.processor
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.ClassName
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.apiServicePackageName
 import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
@@ -77,6 +78,11 @@ open class ProcessorHelper(
     else "${data.annotationData.retrofitServiceClassName}RepositoryImpl"
   )
 
+  val requestBodyClassName = ClassName(
+    requestBodyPackageName,
+    "${classDeclaration.simpleName.getShortName()}RequestBody"
+  )
+
   val userCaseClassName = ClassName(useCasePackageName,
     "${ data.annotationData.methodName.firstCharUpperCase() }UseCase")
   val userCaseGenClassName = ClassName(useCasePackageName,
@@ -85,4 +91,21 @@ open class ProcessorHelper(
   val dataModuleClassName = ClassName(
     dataClassPackageName, "DataModule"
   )
+
+  val apiServiceClassName = ClassName(
+    apiServicePackageName,
+    classDeclaration.simpleName.getShortName() + "ApiService"
+  )
 }
+
+
+
+
+
+
+
+
+
+
+
+

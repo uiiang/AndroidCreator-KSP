@@ -20,7 +20,7 @@ class RequestQueryBodyHelper(
     logger.warn("开始生成RequestQuery类名=${data.annotationData.methodName}")
     val constructorParams = genConstructor(data.annotationData.parameters)
     val propertyList = convertProperty(data.annotationData.parameters)
-    return TypeSpec.classBuilder("${data.annotationData.methodName.firstCharUpperCase()}QueryBody")
+    return TypeSpec.classBuilder(requestBodyClassName)
       .addModifiers(KModifier.DATA)
       .addAnnotation(AnnotationSpec.builder(serializableClassName).build())
       .primaryConstructor(constructorParams.build())

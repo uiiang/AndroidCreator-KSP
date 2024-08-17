@@ -7,6 +7,9 @@ enum class AnnotationRetrofitService {
 const val requestMethodPost = "POST"
 const val requestMethodGet = "GET"
 
+const val apiTypeKtor = "ktor"
+const val apiTypeRetrofit = "retrofit"
+
 const val requestParamTypePath = "Path"
 const val requestParamTypeQuery = "Query"
 const val requestParamTypeField = "Field"
@@ -21,7 +24,17 @@ const val requestParamDataTypeInt = "Int"
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 annotation class Creator(
-  // 是否生成apiModel类
+  /**
+   * 网络框架使用ktor/retrofit
+   */
+  val generateApiType: String,
+  /**
+   * 是否生成apiService类
+   */
+  val generateApiService: Boolean = false,
+  /**
+   * 是否生成apiModel类
+   */
   val generateApiModel: Boolean = false,
   /**
   是否生成Response类

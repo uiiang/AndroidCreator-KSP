@@ -5,6 +5,7 @@ import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import uii.ang.creator.annotation.Creator
 import uii.ang.creator.annotation.Parameter
+import uii.ang.creator.annotation.apiTypeRetrofit
 import uii.ang.creator.annotation.requestMethodGet
 import uii.ang.creator.processor.Utils.convertKSValueParameterToPropertyDescriptor
 import uii.ang.creator.tools.from
@@ -14,7 +15,8 @@ class CreatorData(
   val sourceClassDeclaration: KSClassDeclaration,
   val logger: KSPLogger
 ) : AnnotatedBaseData {
-
+  val generateApiType: String = annotationData.generateApiType
+  val generateApiService: Boolean = annotationData.generateApiService
   val generateApiModel: Boolean = annotationData.generateApiModel
   val generateResponse: Boolean = annotationData.generateResponse
   val generateRetrofitService: Boolean = annotationData.generateRetrofitService
@@ -30,9 +32,17 @@ class CreatorData(
 
   data class AnnotationData(
     /**
+     * 网络框架使用ktor/retrofit
+     */
+    val generateApiType: String,
+    /**
      * 是否生成apiModel类
      */
     val generateApiModel: Boolean,
+    /**
+     * 是否生成apiService类
+     */
+    val generateApiService: Boolean,
     /**
     是否生成Response类
      */
@@ -77,10 +87,12 @@ class CreatorData(
     companion object {
       fun from(annotation: KSAnnotation): AnnotationData {
         return AnnotationData(
+          generateApiType = annotation.arguments.first { it.name?.asString() == Creator::generateApiType.name }.value as String,
           generateApiModel = annotation.arguments.first { it.name?.asString() == Creator::generateApiModel.name }.value as Boolean,
+          generateApiService = annotation.arguments.first { it.name?.asString() == Creator::generateApiService.name }.value as Boolean,
           generateResponse = annotation.arguments.first { it.name?.asString() == Creator::generateResponse.name }.value as Boolean,
           generateRetrofitService = annotation.arguments.first { it.name?.asString() == Creator::generateRetrofitService.name }.value as Boolean,
-          generatorEntityModel = annotation.arguments.first{ it.name?.asString() == Creator::generatorEntityModel.name }.value as Boolean,
+          generatorEntityModel = annotation.arguments.first { it.name?.asString() == Creator::generatorEntityModel.name }.value as Boolean,
           responseClassName = annotation.arguments.first { it.name?.asString() == Creator::responseClassName.name }.value as String,
           retrofitServiceClassName = annotation.arguments.first { it.name?.asString() == Creator::retrofitServiceClassName.name }.value as String,
           method = annotation.arguments.first { it.name?.asString() == Creator::method.name }.value as String,

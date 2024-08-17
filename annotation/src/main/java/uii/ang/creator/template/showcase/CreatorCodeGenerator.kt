@@ -3,13 +3,17 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.squareup.kotlinpoet.CodeBlock
+import uii.ang.creator.annotation.apiTypeKtor
+import uii.ang.creator.annotation.apiTypeRetrofit
 import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.apiServicePackageName
 import uii.ang.creator.processor.Const.dataModulePackageName
 import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.domainModulePackageName
 import uii.ang.creator.processor.Const.entityModelPackageName
+import uii.ang.creator.processor.Const.koinApiServiceModuleGenName
 import uii.ang.creator.processor.Const.koinDataModuleGenName
 import uii.ang.creator.processor.Const.koinDomainModuleGenName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
@@ -28,43 +32,136 @@ object CreatorCodeGenerator {
     data: CreatorData, resolver: Resolver, logger: KSPLogger,
     index: Int, allSize: Int
   ) {
-
+    if (data.generateApiType == apiTypeRetrofit) {
 //    val processorHelper = ProcessorHelper(logger, data, basePackageName)
-    val apiModelHelper = ApiModelHelper(logger, data)
-    val responseHelper = ResponseHelper(logger, data)
-    val retrofitServiceHelper = RetrofitServiceHelper(logger, data)
-    val repositoryHelper = RepositoryHelper(logger, data)
-    val repositoryImplHelper = RepositoryImplHelper(logger, data)
-    val useCaseHelper = UseCaseHelper(logger, data)
+      val apiModelHelper = ApiModelHelper(logger, data)
+      val responseHelper = ResponseHelper(logger, data)
+      val retrofitServiceHelper = RetrofitServiceHelper(logger, data)
+      val repositoryHelper = RepositoryHelper(logger, data)
+      val repositoryImplHelper = RepositoryImplHelper(logger, data)
+      val useCaseHelper = UseCaseHelper(logger, data)
+      val entityModelHelper = EntityModelHelper(logger, data)
+      var daoHelper = DaoHelper(logger, data)
+      // 生成ApiDomain代码
+      if (data.generateApiModel) {
+        generatorApiModel(logger, data)
+      }
+      if (data.generateEntityModel) {
+        generatorEntityModel(entityModelHelper, data)
+        generatorDao(daoHelper, data, logger, index, allSize)
+      }
+
+//      val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
+//      if (hasBody) {
+//        generatorQueryBodyObj(queryBodyHelper, data)
+//      }
+
+      // 生成Response代码
+      if (data.generateResponse) {
+        generatorResponse(logger, data)
+      }
+
+      // 生成Retrofit代码
+      if (data.generateRetrofitService) {
+        generatorRetrofitService(retrofitServiceHelper, logger)
+        generatorRepository(repositoryHelper, repositoryImplHelper, logger)
+      }
+
+      generatorUseCase(useCaseHelper, logger)
+    } else if (data.generateApiType == apiTypeKtor) {
+      val generateApiService = data.generateApiService
+      if (generateApiService) {
+        generatorApiModel(logger, data)
+        generatorApiService(logger, data)
+        generatorRepositoryKtor(logger, data)
+        generatorRepositoryImplKtor(logger, data)
+        generatorUseCaseKtor(logger, data)
+        generatorQueryBodyObj(logger, data)
+        generatorResponse(logger, data)
+      }
+//      if (data.generateApiModel) {
+//        val apiModelHelper = ApiModelHelper(logger, data)
+//        generatorApiModel(apiModelHelper, data)
+//      }
+    }
+  }
+
+  private fun generatorQueryBodyObj(logger: KSPLogger, data: CreatorData) {
     val queryBodyHelper = RequestQueryBodyHelper(logger, data)
-    val entityModelHelper = EntityModelHelper(logger, data)
-    var daoHelper = DaoHelper(logger, data)
-    // 生成ApiDomain代码
-    if (data.generateApiModel) {
-      generatorApiModel(apiModelHelper, data)
-    }
-    if (data.generateEntityModel) {
-      generatorEntityModel(entityModelHelper, data)
-      generatorDao(daoHelper, data, logger, index, allSize)
-    }
+    data.annotationData.methodName
+    val queryBodyObjClassNameStr = queryBodyHelper.requestBodyClassName.simpleName
+    val queryBodyClassName = queryBodyHelper.genClassBuilder()
+    val queryBodyCodeBuilder = CodeBuilder.getOrCreate(
+      requestBodyPackageName, queryBodyObjClassNameStr, typeBuilderProvider = { queryBodyClassName }
+    )
+  }
 
-    val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
-    if (hasBody) {
-      generatorQueryBodyObj(queryBodyHelper, data)
-    }
+  private fun generatorUseCaseKtor(logger: KSPLogger, data: CreatorData) {
+    val useCaseHelper = UseCaseKtorHelper(logger, data)
+    if (useCaseHelper.data.annotationData.methodName.isNotEmpty()) {
+      val useCaseClassNameStr = useCaseHelper.userCaseGenClassName.simpleName
+      val useCaseClassBuilder = useCaseHelper.genClassBuilder()
+      CodeBuilder.getOrCreate(useCasePackageName, useCaseClassNameStr,
+        typeBuilderProvider = { useCaseClassBuilder })
 
-    // 生成Response代码
-    if (data.generateResponse) {
-      generatorResponse(responseHelper)
+      val useCaseKoinCodeBlock = useCaseHelper.genKoinInjectionCode()
+      CodeBuilder.putCollectCodeBlock(
+        domainModulePackageName,
+        koinDomainModuleGenName,
+        useCaseKoinCodeBlock.build(), logger
+      )
     }
+  }
 
-    // 生成Retrofit代码
-    if (data.generateRetrofitService) {
-      generatorRetrofitService(retrofitServiceHelper, logger)
-      generatorRepository(repositoryHelper, repositoryImplHelper, logger)
-    }
+  private fun generatorRepositoryImplKtor(
+    logger: KSPLogger, data: CreatorData
+  ) {
+    val repositoryImplHelper = RepositoryKtorImplHelper(logger, data)
+    val repositoryImplClassNameStr = repositoryImplHelper.repositoryImplClassName.simpleName
+    val repositoryImplClassName = repositoryImplHelper.genClassBuilder()
+    CodeBuilder.getOrCreate(repositoryImplPackageName,
+      repositoryImplClassNameStr,
+      typeBuilderProvider = { repositoryImplClassName }
+    )
 
-    generatorUseCase(useCaseHelper, logger)
+    val repositoryKoinCodeBlock = repositoryImplHelper.genKoinInjectionCode()
+    CodeBuilder.putCollectCodeBlock(
+      dataModulePackageName,
+      koinDataModuleGenName,
+      repositoryKoinCodeBlock.build(), logger
+    )
+  }
+
+  private fun generatorRepositoryKtor(
+    logger: KSPLogger,
+    data: CreatorData
+  ) {
+    val repositoryHelper = RepositoryKtorHelper(logger, data)
+    val repositoryInterfaceClassNameStr = repositoryHelper.repositoryInterfaceClassName.simpleName
+
+    CodeBuilder.getOrCreate(repositoryPackageName,
+      repositoryInterfaceClassNameStr,
+      typeBuilderProvider = { repositoryHelper.genClassBuilder() }
+    )
+  }
+
+  private fun generatorApiService(
+    logger: KSPLogger,
+    data: CreatorData
+  ) {
+    val apiServiceHelper = ApiServiceHelper(logger, data)
+    CodeBuilder.getOrCreate(
+      apiServicePackageName,
+      apiServiceHelper.apiServiceClassName.simpleName,
+      typeBuilderProvider = { apiServiceHelper.genClassBuilder() }
+    )
+
+    val repositoryKoinCodeBlock = apiServiceHelper.genKoinInjectionCode()
+    CodeBuilder.putCollectCodeBlock(
+      apiServicePackageName,
+      koinApiServiceModuleGenName,
+      repositoryKoinCodeBlock.build(), logger
+    )
   }
 
   private fun generatorUseCase(useCaseHelper: UseCaseHelper, logger: KSPLogger) {
@@ -134,7 +231,8 @@ object CreatorCodeGenerator {
     )
   }
 
-  private fun generatorResponse(responseHelper: ResponseHelper) {
+  private fun generatorResponse(logger: KSPLogger, data: CreatorData) {
+    val responseHelper = ResponseHelper(logger, data)
     val responseClassNameStr = responseHelper.responseClassName.simpleName
     val responseClassName = responseHelper.genClassBuilder()
     CodeBuilder.getOrCreate(responsePackageName,
@@ -143,14 +241,6 @@ object CreatorCodeGenerator {
     )
   }
 
-  private fun generatorQueryBodyObj(queryBodyHelper: RequestQueryBodyHelper, data: CreatorData) {
-    data.annotationData.methodName
-    val queryBodyObjClassNameStr = "${data.annotationData.methodName.firstCharUpperCase()}QueryBody"
-    val queryBodyClassName = queryBodyHelper.genClassBuilder()
-    val queryBodyCodeBuilder = CodeBuilder.getOrCreate(
-      requestBodyPackageName, queryBodyObjClassNameStr, typeBuilderProvider = { queryBodyClassName }
-    )
-  }
 
   private fun generatorDao(
     daoHelper: DaoHelper, data: CreatorData,
@@ -231,7 +321,8 @@ object CreatorCodeGenerator {
     entityModelBuilder.addFunction(toEntityModel, false)
   }
 
-  private fun generatorApiModel(apiModelHelper: ApiModelHelper, data: CreatorData) {
+  private fun generatorApiModel(logger: KSPLogger, data: CreatorData) {
+    val apiModelHelper = ApiModelHelper(logger, data)
     val apiModelClassNameStr = apiModelHelper.apiModelClassName.simpleName
     val apiModelClassName = apiModelHelper.genClassBuilder()
     val apiModelCodeBuilder = CodeBuilder.getOrCreate(

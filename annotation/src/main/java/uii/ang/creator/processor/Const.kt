@@ -11,24 +11,31 @@ object Const {
   // 模块包相关路径
   val dataModulePackageName = "$basePackageName.$modulePackageName.data"
   val apiModelPackageName = "$basePackageName.$modulePackageName.data.datasource.api.model"
-  val responsePackageName = "$basePackageName.$modulePackageName.data.datasource.api.response"
-  val requestBodyPackageName = "$basePackageName.$modulePackageName.data.datasource.api.querybody"
+  val responsePackageName = "$basePackageName.$modulePackageName.data.response"
+  val requestBodyPackageName = "$basePackageName.$modulePackageName.domain.request"
   val retrofitServicePackageName = "$basePackageName.$modulePackageName.data.datasource.api.service"
   val entityModelPackageName = "$basePackageName.$modulePackageName.data.datasource.database.model"
   val databasePackageName = "$basePackageName.$modulePackageName.data.datasource.database"
 
   val repositoryImplPackageName = "$basePackageName.$modulePackageName.data.repository"
   val koinDataModuleGenName = "DataModuleGen"
+  val koinApiServiceModuleGenName = "ApiServiceModule"
 
   val domainModulePackageName = "$basePackageName.$modulePackageName.domain"
   val repositoryPackageName = "$basePackageName.$modulePackageName.domain.repository"
   val useCasePackageName = "$basePackageName.$modulePackageName.domain.usecase"
   val koinDomainModuleGenName = "DomainModuleGen"
 
+  val repositoryFlowImplPackageName = "$basePackageName.$modulePackageName.data.repository"
+  val repositoryFlowPackageName = "$basePackageName.$modulePackageName.domain.repository"
+
+  // apiservice
+  val apiServicePackageName = "$basePackageName.$modulePackageName.service"
 
   // base模块相关路径
   val baseRetrofitPackageName = "$basePackageName.base.data.retrofit"
   val baseDomainResultPackageName = "$basePackageName.base.domain.result"
+  val baseKtorPackageName = "$basePackageName.base.data.ktor"
 
   val moduleToDomainMemberName = MemberName(apiModelPackageName, "toDomainModel")
   val moduleToEntityMemberName = MemberName(apiModelPackageName, "toEntityModel")
@@ -42,6 +49,10 @@ object Const {
   val baseRetrofitApiResultExceptionMemberName =
     ClassName(baseRetrofitPackageName + "." + baseRetrofitApiResultClassName.simpleName, "Exception")
 
+  val baseRemoteResponseClassName = ClassName(baseKtorPackageName, "RemoteResponse")
+  val baseNetworkCallResultClassName = ClassName(baseKtorPackageName, "NetworkCallResult")
+  val baseCallFailureClassName = ClassName(baseKtorPackageName, "CallFailure")
+  val baseErrorModelClassName = ClassName(baseKtorPackageName, "ErrorModel")
   val baseDomainResultClassName = ClassName(baseDomainResultPackageName, "Result")
   val baseDomainResultSuccessMemberName =
     ClassName(baseDomainResultPackageName + "." + baseDomainResultClassName.simpleName, "Success")
@@ -87,9 +98,11 @@ object Const {
 
   // flow
   val kotlinFlowFlowOnMemberName = MemberName("kotlinx.coroutines.flow","flowOn")
-  val kotlinFlowFlowMemberName = MemberName("kotlinx.coroutines.flow","flow")
+  val kotlinFlowFlowMemberName = ClassName("kotlinx.coroutines.flow","flow")
   val kotlinFlowCatchMemberName = MemberName("kotlinx.coroutines.flow","catch")
-  val kotlinFlowFlowClassName = MemberName("kotlinx.coroutines.flow","Flow")
+  val kotlinFlowFlowClassName = ClassName("kotlinx.coroutines.flow","Flow")
+  val kotlinxCoroutineDispatcherClassName = ClassName("kotlinx.coroutines", "CoroutineDispatcher")
+  val kotlinxWithContextClassName = MemberName("kotlinx.coroutines", "withContext")
 
   // Timber
   val timberClassName = ClassName("timber.log", "Timber")
@@ -97,6 +110,7 @@ object Const {
 
   val koinModuleFunClassName = ClassName("org.koin.dsl", "module")
   val koinModuleClassName = ClassName("org.koin.core.module", "Module")
+  val koinNamedClassName = MemberName("org.koin.core.qualifier", "named")
   val koinSingleOfMemberName = MemberName("org.koin.core.module.dsl", "singleOf")
 
   // Room数据库操作
@@ -113,6 +127,16 @@ object Const {
   val roomDatabaseClassName = ClassName("androidx.room", "Database")
   val roomRoomDatabaseClassName = ClassName("androidx.room", "RoomDatabase")
 
+  // ktor
+  val ktorBasePackageName = "io.ktor.client"
+  val ktorCallBasePackageName = "${ktorBasePackageName}.call"
+  val ktorRequestBasePackageName = "${ktorBasePackageName}.request"
+  val ktorHttpClient = ClassName(ktorBasePackageName, "HttpClient")
+  val ktorBody = MemberName(ktorCallBasePackageName, "body")
+  val ktorGet = MemberName(ktorRequestBasePackageName, "get")
+  val ktorParameter = MemberName(ktorRequestBasePackageName, "parameter")
+  val ktorPost = MemberName(ktorRequestBasePackageName, "post")
+  val ktorSetBody = MemberName(ktorRequestBasePackageName, "setBody")
 }
 
 

@@ -5,9 +5,11 @@ import kotlinx.serialization.*
 import uii.ang.creator.annotation.*
 
 @Creator(
+  generateApiType = apiTypeKtor,
+  generateApiService = true,
   generateApiModel = true,
   generateResponse = true,
-  generateRetrofitService = true,
+//  generateRetrofitService = true,
   url = "/s_api/GetBranch",
   method = requestMethodPost,
   methodName = "getBranch",
@@ -15,7 +17,7 @@ import uii.ang.creator.annotation.*
     Parameter(
       paramName = "msgType",
       paramType = "String",
-      paramQueryType = "Map",
+      paramQueryType = requestParamTypeBody,
       paramDefault = "GetBranch"
     ),
   ]
@@ -34,6 +36,7 @@ data class Branchs(
 )
 
 @Creator(
+  generateApiType = apiTypeKtor,
   generateApiModel = true,
   generatorEntityModel = true,
 )
@@ -94,6 +97,7 @@ data class Branch(
 
 
 @Creator(
+  generateApiType = apiTypeKtor,
   generateApiModel = true,
   generatorEntityModel = true,
 )
@@ -114,6 +118,7 @@ data class DefaultHost(
 
 
 @Creator(
+  generateApiType = apiTypeKtor,
   generateApiModel = true,
   generatorEntityModel = true,
 )
@@ -143,6 +148,7 @@ data class Floor(
 
 
 @Creator(
+  generateApiType = apiTypeKtor,
   generateApiModel = true,
   generatorEntityModel = true,
 )
@@ -169,6 +175,7 @@ data class MailSuffix(
 
 
 @Creator(
+  generateApiType = apiTypeKtor,
   generateApiModel = true,
   generatorEntityModel = true,
 )
@@ -184,6 +191,7 @@ data class BranchNation(
 
 
 @Creator(
+  generateApiType = apiTypeKtor,
   generateApiModel = true,
   generatorEntityModel = true,
 )
