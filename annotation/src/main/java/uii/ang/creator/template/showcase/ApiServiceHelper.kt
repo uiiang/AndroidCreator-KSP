@@ -84,16 +84,23 @@ class ApiServiceHelper(
       .addModifiers(KModifier.SUSPEND, KModifier.OPERATOR)
     genFunction.addParameter(
       ParameterSpec
+        .builder("serverUrl", stringClassName)
+        .defaultValue("\"\"")
+        .build()
+    ).addParameter(
+      ParameterSpec
         .builder("bodyStr", stringClassName).build()
     )
     genFunction
       .returns(
-        baseRemoteResponseClassName
-          .parameterizedBy(data.sourceClassDeclaration.toClassName())
+//        baseRemoteResponseClassName
+//          .parameterizedBy(data.sourceClassDeclaration.toClassName())
+        data.sourceClassDeclaration.toClassName()
       )
+//    return client.post(FETCH_S_API_GETBRANCH) {
     val fetchCode = CodeBlock.builder()
       .addStatement("")
-      .addStatement("return client.%M($fetchUrl) {", requestMethod)
+      .addStatement("return client.%M(serverUrl) {", requestMethod)
     if (anno.method == requestMethodPost) {
       fetchCode.addStatement("\t%M(bodyStr)", ktorSetBody)
     }

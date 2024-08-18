@@ -14,6 +14,7 @@ import uii.ang.creator.processor.Const.kotlinFlowFlowOnMemberName
 import uii.ang.creator.processor.Const.kotlinxCoroutineDispatcherClassName
 import uii.ang.creator.processor.Const.serialEncodeToStringMemberName
 import uii.ang.creator.processor.Const.serializableJsonClassName
+import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
@@ -72,7 +73,13 @@ class RepositoryKtorImplHelper(
 //      .addTypeVariable(TypeVariableName("T"))
 //    val parameterSpecList = getRequestParameterSpecList(noBodyParamList, true)
 //    genFunction.addParameters(parameterSpecList)
-    genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
+    genFunction
+      .addParameter(
+        ParameterSpec
+          .builder("serverUrl", stringClassName)
+          .build()
+      )
+      .addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
 
 //    if (hasBody) {
 //      val bodyParamSpec = getRequestParameterSpecBody(methodName)
@@ -96,7 +103,7 @@ class RepositoryKtorImplHelper(
         serialEncodeToStringMemberName
       )
       val callApiService = CodeBlock.builder()
-      callApiService.addStatement("\tval result = apiService(jsonStr)")
+      callApiService.addStatement("\tval result = apiService(serverUrl, jsonStr)")
 
       val toModelCode = CodeBlock.builder()
       returnChain.forEach { (t, u) ->
@@ -107,27 +114,29 @@ class RepositoryKtorImplHelper(
         .addStatement("return %T {", kotlinFlowFlowMemberName.parameterizedBy(retCallResult))
         .add(convertJsonCode.build())
         .add(callApiService.build())
-        .addStatement("\tresult.results?.let {")
+        .addStatement("\tresult.error?.let {")
+        .addStatement("\tif (it == 0L) {")
         .addStatement("\t\temit(")
         .addStatement("\t\t\t%T(", baseNetworkCallResultClassName)
-        .addStatement("\t\t\t\tvalue = it")
+        .addStatement("\t\t\t\tvalue = result")
         .add(toModelCode.build())
         .addStatement("")
         .addStatement("\t\t\t)")
         .addStatement("\t\t)")
-        .addStatement("\t} ?: run {")
+        .addStatement("\t} else {")
 //        .addStatement("} ?: run {")
         .addStatement("\t\temit(")
         .addStatement("\t\t\t%T(", baseNetworkCallResultClassName)
         .addStatement("\t\t\t\terror = %T(", baseCallFailureClassName)
         .addStatement("\t\t\t\t\t%T(", baseErrorModelClassName)
-        .addStatement("\t\t\t\t\t\tcode = result.statusCode ?: -1,")
-        .addStatement("\t\t\t\t\t\terrorMessage = result.statusMessage ?: \"\"")
+        .addStatement("\t\t\t\t\t\tcode = it,")
+        .addStatement("\t\t\t\t\t\terrorMessage = \"ApiServer error\"")
         .addStatement("\t\t\t\t\t)")
         .addStatement("\t\t\t\t)")
         .addStatement("\t\t\t)")
         .addStatement("\t\t)")
         .addStatement("\t}")
+        .addStatement("}")
         .addStatement(
           "}.%M(dispatcher)",
           kotlinFlowFlowOnMemberName

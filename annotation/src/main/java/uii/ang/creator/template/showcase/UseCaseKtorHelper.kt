@@ -10,7 +10,9 @@ import uii.ang.creator.processor.Const.koinSingleOfMemberName
 import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
 import uii.ang.creator.processor.Const.kotlinxCoroutineDispatcherClassName
 import uii.ang.creator.processor.Const.kotlinxWithContextClassName
+import uii.ang.creator.processor.Const.localCfgRepositoryClassName
 import uii.ang.creator.processor.Const.requestBodyPackageName
+import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.Const.timberClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
@@ -40,12 +42,25 @@ class UseCaseKtorHelper(
       ParameterSpec.builder(
         "repository", repositoryInterfaceClassName
       ).build()
+//    ).addParameter(
+//      ParameterSpec.builder(
+//        "localCfgRepository", localCfgRepositoryClassName
+//      ).build()
     ).addParameter(
       ParameterSpec.builder(
-        "dispatcher",
-        kotlinxCoroutineDispatcherClassName
+        "protocol", stringClassName
       ).build()
-    ).build()
+    ).addParameter(
+      ParameterSpec.builder(
+        "url", stringClassName
+      ).build()
+    )
+      .addParameter(
+        ParameterSpec.builder(
+          "dispatcher",
+          kotlinxCoroutineDispatcherClassName
+        ).build()
+      ).build()
     val repositoryProp = PropertySpec.builder(
       "repository",
       repositoryInterfaceClassName
@@ -53,7 +68,15 @@ class UseCaseKtorHelper(
 //      .addTypeVariable(TypeVariableName("T"))
       .initializer("repository")
 
-
+    val localCfgRepositoryProp = PropertySpec.builder(
+      "localCfgRepository", localCfgRepositoryClassName
+    ).addModifiers(KModifier.PRIVATE).initializer("localCfgRepository")
+    val protocolProp = PropertySpec.builder(
+      "protocol", stringClassName
+    ).addModifiers(KModifier.PRIVATE).initializer("protocol")
+    val urlProp = PropertySpec.builder(
+      "url", stringClassName
+    ).addModifiers(KModifier.PRIVATE).initializer("url")
     val dispatcherProp = PropertySpec.builder(
       "dispatcher",
       kotlinxCoroutineDispatcherClassName
@@ -62,6 +85,9 @@ class UseCaseKtorHelper(
 //      .addTypeVariable(TypeVariableName("T"))
       .primaryConstructor(flux.build())
       .addProperty(repositoryProp.build())
+//      .addProperty(localCfgRepositoryProp.build())
+      .addProperty(protocolProp.build())
+      .addProperty(urlProp.build())
       .addProperty(dispatcherProp.build())
       .addFunction(genUseCaseFunCode().build())
   }
@@ -76,7 +102,7 @@ class UseCaseKtorHelper(
 //      .addTypeVariable(TypeVariableName("T"))
 //    val parameterSpecList = getRequestParameterSpecList(generateParameters, true)
 //    genFunction.addParameters(parameterSpecList)
-
+    genFunction.addParameter(ParameterSpec.builder("url", stringClassName).build())
     genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
 
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
@@ -84,7 +110,9 @@ class UseCaseKtorHelper(
     if (returnChain.values.isNotEmpty()) {
 //      val repositoryInterfaceName = repositoryInterfaceClassName.simpleName.firstCharLowerCase()
       val funCodeBlock = CodeBlock.builder()
-
+//      val url = "${localCfgRepository.getServerProtocol()}://${localCfgRepository.getBaseServerUrl()}"
+//      funCodeBlock.addStatement("val url = \"\${localCfgRepository.getServerProtocol()}://\${localCfgRepository.getBaseServerUrl()}\"")
+//      funCodeBlock.addStatement("val url = \"\${protocol}://\${url}\"")
       val hasBody = requestParamHasBody(generateParameters)
       val hasMap = requestParamHasMap(generateParameters)
 //      val noBodyParamList = getRequestParamWithoutBody(generateParameters)
@@ -134,7 +162,7 @@ class UseCaseKtorHelper(
 
       funCodeBlock.addStatement("").addStatement("return %M(dispatcher) {", kotlinxWithContextClassName)
 
-        .addStatement("\trepository(body)")
+        .addStatement("\trepository(\"\", body)")
         .addStatement("}")
       genFunction.addCode(funCodeBlock.build())
       val retCallResult = baseNetworkCallResultClassName
@@ -148,9 +176,9 @@ class UseCaseKtorHelper(
 
   fun genKoinInjectionCode(): CodeBlock.Builder {
     return CodeBlock.builder().addStatement(
-      "\tsingle { %T(get(), get(%M(\"ioDispatcher\"))) }",
+      "\tsingle { %T(get(), get(%M(\"HTTP_PROTOCOL\")), get(%M(\"HTTP_URL\")), get(%M(\"ioDispatcher\"))) }",
       userCaseGenClassName,
-      koinNamedClassName
+      koinNamedClassName, koinNamedClassName, koinNamedClassName
     )
   }
 }

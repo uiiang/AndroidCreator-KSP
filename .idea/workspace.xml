@@ -4,27 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="增加从对象转换到EntityModel的扩展方法">
-      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiServiceHelper.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorHelper.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorImplHelper.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/UseCaseKtorHelper.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/CallFailure.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/ErrorModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/NetworkCallResult.kt" afterDir="false" />
+    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="使用ktor+flow方式生成请求http代码">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Default.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Const.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Const.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Utils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiServiceHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiServiceHelper.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/CreatorCodeGenerator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/CreatorCodeGenerator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RequestQueryBodyHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RequestQueryBodyHelper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Branchs.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Branchs.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/PrinterTemplate.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/PrinterTemplate.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorImplHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorImplHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/UseCaseKtorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/UseCaseKtorHelper.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +62,20 @@
                 <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
                 <item name="annotation" type="2d1252cf:ModuleNode" />
                 <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
+                <item name="annotation" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="testCompileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AndroidCreatorKsp" type="f1a62948:ProjectNode" />
+                <item name="annotation" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="testRuntimeClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -687,7 +688,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723784654213</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="使用ktor+flow方式生成请求http代码">
+      <option name="closed" value="true" />
+      <created>1723895906589</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1723895906589</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -716,7 +725,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="生成代码到其它目录" />
     <MESSAGE value="发布本地仓库脚本" />
     <MESSAGE value="判断默认数据类型和可空字段赋默认值" />
     <MESSAGE value="fix" />
@@ -741,7 +749,8 @@
     <MESSAGE value="取消生成代码中的KModifier.INTERNAL标识" />
     <MESSAGE value="增加在生成代码RepositoryImpl中插入数据库" />
     <MESSAGE value="增加从对象转换到EntityModel的扩展方法" />
-    <option name="LAST_COMMIT_MESSAGE" value="增加从对象转换到EntityModel的扩展方法" />
+    <MESSAGE value="使用ktor+flow方式生成请求http代码" />
+    <option name="LAST_COMMIT_MESSAGE" value="使用ktor+flow方式生成请求http代码" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

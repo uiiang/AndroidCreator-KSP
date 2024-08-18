@@ -10,7 +10,8 @@ object Const {
 
   // 模块包相关路径
   val dataModulePackageName = "$basePackageName.$modulePackageName.data"
-  val apiModelPackageName = "$basePackageName.$modulePackageName.data.datasource.api.model"
+  val localCfgRepositoryPackageName = "$basePackageName.$modulePackageName.data.repository"
+  val apiModelPackageName = "$basePackageName.$modulePackageName.data.model"
   val responsePackageName = "$basePackageName.$modulePackageName.data.response"
   val requestBodyPackageName = "$basePackageName.$modulePackageName.domain.request"
   val retrofitServicePackageName = "$basePackageName.$modulePackageName.data.datasource.api.service"
@@ -39,6 +40,7 @@ object Const {
 
   val moduleToDomainMemberName = MemberName(apiModelPackageName, "toDomainModel")
   val moduleToEntityMemberName = MemberName(apiModelPackageName, "toEntityModel")
+  val localCfgRepositoryClassName = ClassName(localCfgRepositoryPackageName, "LocalCfgRepository")
 
   // base模块包含的类
   val baseRetrofitApiResultClassName = ClassName(baseRetrofitPackageName, "ApiResult")

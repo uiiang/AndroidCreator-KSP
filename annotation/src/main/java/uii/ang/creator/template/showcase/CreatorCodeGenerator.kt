@@ -71,13 +71,13 @@ object CreatorCodeGenerator {
     } else if (data.generateApiType == apiTypeKtor) {
       val generateApiService = data.generateApiService
       if (generateApiService) {
-        generatorApiModel(logger, data)
+//        generatorApiModel(logger, data)
         generatorApiService(logger, data)
         generatorRepositoryKtor(logger, data)
         generatorRepositoryImplKtor(logger, data)
         generatorUseCaseKtor(logger, data)
         generatorQueryBodyObj(logger, data)
-        generatorResponse(logger, data)
+//        generatorResponse(logger, data)
       }
 //      if (data.generateApiModel) {
 //        val apiModelHelper = ApiModelHelper(logger, data)

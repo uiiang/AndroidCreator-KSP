@@ -9,6 +9,7 @@ import uii.ang.creator.processor.Const.baseDomainResultClassName
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
 import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
 import uii.ang.creator.processor.Const.kotlinFlowFlowMemberName
+import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
@@ -50,7 +51,14 @@ class RepositoryKtorHelper(
 //      .addTypeVariable(TypeVariableName("T"))
 //    val parameterSpecList = getRequestParameterSpecList(noBodyParamList, true)
 //    genFunction.addParameters(parameterSpecList)
-    genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
+    genFunction
+      .addParameter(
+        ParameterSpec
+          .builder("serverUrl", stringClassName)
+          .defaultValue("\"\"")
+          .build()
+      )
+      .addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
 
 //    if (hasBody) {
 //      val bodyParamSpec = getRequestParameterSpecBody(methodName)
