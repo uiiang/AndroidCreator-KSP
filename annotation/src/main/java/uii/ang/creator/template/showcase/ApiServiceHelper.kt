@@ -100,7 +100,7 @@ class ApiServiceHelper(
 //    return client.post(FETCH_S_API_GETBRANCH) {
     val fetchCode = CodeBlock.builder()
       .addStatement("")
-      .addStatement("return client.%M(serverUrl) {", requestMethod)
+      .addStatement("return client.%M(\"\$serverUrl\$${fetchUrl}\") {", requestMethod)
     if (anno.method == requestMethodPost) {
       fetchCode.addStatement("\t%M(bodyStr)", ktorSetBody)
     }

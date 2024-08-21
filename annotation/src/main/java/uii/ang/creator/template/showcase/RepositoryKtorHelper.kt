@@ -3,6 +3,7 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.ksp.toClassName
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.baseCallFailureClassName
 import uii.ang.creator.processor.Const.baseDomainResultClassName
@@ -69,11 +70,14 @@ class RepositoryKtorHelper(
 //      genFunction.addParameter(bodyParamSpec.build())
 //    }
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
-    if (returnChain.values.isNotEmpty()) {
-      val retCallResult = baseNetworkCallResultClassName
+    val retCallResult = if (returnChain.values.isNotEmpty()) {
+       baseNetworkCallResultClassName
         .parameterizedBy(listOf(returnChain.values.last(), baseCallFailureClassName))
-      genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
+    } else {
+      baseNetworkCallResultClassName
+        .parameterizedBy(listOf(data.sourceClassDeclaration.toClassName(), baseCallFailureClassName))
     }
+    genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
     return genFunction
   }
 }

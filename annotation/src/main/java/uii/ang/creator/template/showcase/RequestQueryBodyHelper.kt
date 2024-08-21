@@ -4,8 +4,12 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import uii.ang.creator.annotation.Parameter
 import uii.ang.creator.annotation.requestParamTypeBody
+import uii.ang.creator.processor.Const.baseRequestBodyClassName
+import uii.ang.creator.processor.Const.baseRequestBodyUserClassName
 import uii.ang.creator.processor.Const.serializableClassName
 import uii.ang.creator.processor.Const.serializableSerialNameClassName
+import uii.ang.creator.processor.Const.serializableTransientClassName
+import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
@@ -25,6 +29,7 @@ class RequestQueryBodyHelper(
       .addAnnotation(AnnotationSpec.builder(serializableClassName).build())
       .primaryConstructor(constructorParams.build())
       .addProperties(propertyList)
+      .addSuperinterface(baseRequestBodyClassName)
   }
 
   // 生成构造函数里的参数
@@ -45,7 +50,28 @@ class RequestQueryBodyHelper(
         }
         paramSpec.build()
       }
+    val userParamSpec = ParameterSpec.builder(
+      "_user", baseRequestBodyUserClassName
+    )
+          .addModifiers(KModifier.OVERRIDE)
+      .addAnnotation(AnnotationSpec.builder(serializableSerialNameClassName)
+      .addMember("\"_user\"").build())
+      .defaultValue(CodeBlock.builder()
+        .addStatement("%T(uName, uTypeID)", baseRequestBodyUserClassName)
+        .build())
+    val uNameParamSpec = ParameterSpec.builder(
+      "uName", stringClassName
+    ).defaultValue("\"\"")//.addModifiers(KModifier.PRIVATE)
+      .build()
+    val uTypeIDParamSpec = ParameterSpec.builder(
+      "uTypeID", stringClassName
+    ).defaultValue("\"\"")//.addModifiers(KModifier.PRIVATE)
+      .build()
+
     flux.addParameters(parameterSpecList)
+//    flux.addParameter(userParamSpec.build())
+    flux.addParameter(uNameParamSpec)
+    flux.addParameter(uTypeIDParamSpec)
     return flux
   }
 
@@ -54,8 +80,13 @@ class RequestQueryBodyHelper(
           List<PropertySpec> {
     val propertySpecSpecList = parameters.filter { param -> param.paramQueryType == requestParamTypeBody }
       .map { param ->
-        val propSpec = PropertySpec.builder(param.paramName,// convertType(param.paramType),
-          convertType(param.paramType).asTypeName().copy(nullable = param.paramDefault.isEmpty()))
+        val propSpec = PropertySpec.builder(
+          param.paramName,// convertType(param.paramType),
+          convertType(param.paramType).asTypeName().copy(nullable = param.paramDefault.isEmpty())
+        )
+        if (param.paramName == "msgType") {
+          propSpec.addModifiers(KModifier.OVERRIDE).mutable()
+        }
         if (param.paramDefault.isNotEmpty()) {
           propSpec.initializer(param.paramName)
         } else {
@@ -67,8 +98,35 @@ class RequestQueryBodyHelper(
               .addMember("\"${param.paramName}\"").build()
           )
         propSpec.build()
-      }.toList()
+      }.toMutableList()
 
+    val userPropSpec = PropertySpec.builder(
+      "_user",// convertType(param.paramType),
+      baseRequestBodyUserClassName
+    ).addModifiers(KModifier.OVERRIDE)
+    userPropSpec.mutable()
+    userPropSpec
+      .addAnnotation(
+        AnnotationSpec.builder(serializableSerialNameClassName)
+          .addMember("\"_user\"").build()
+      )
+      .initializer(CodeBlock.builder()
+        .addStatement("%T(uName, uTypeID)", baseRequestBodyUserClassName)
+        .build()
+      )
+    val uNamePropSpec = PropertySpec.builder(
+      "uName", stringClassName
+    ).addModifiers(KModifier.PRIVATE)
+      .addAnnotation(AnnotationSpec.builder(serializableTransientClassName).build())
+      .initializer("uName")
+    val uTypePropSpec = PropertySpec.builder(
+      "uTypeID", stringClassName
+    ).addModifiers(KModifier.PRIVATE)
+      .addAnnotation(AnnotationSpec.builder(serializableTransientClassName).build())
+      .initializer("uTypeID")
+    propertySpecSpecList.add(userPropSpec.build())
+    propertySpecSpecList.add(uNamePropSpec.build())
+    propertySpecSpecList.add(uTypePropSpec.build())
     return propertySpecSpecList.ifEmpty { emptyList() }
   }
 }

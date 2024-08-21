@@ -3,6 +3,7 @@ package uii.ang.creator.template.showcase
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.ksp.toClassName
 import uii.ang.creator.processor.Const.baseCallFailureClassName
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
 import uii.ang.creator.processor.Const.koinNamedClassName
@@ -102,19 +103,19 @@ class UseCaseKtorHelper(
 //      .addTypeVariable(TypeVariableName("T"))
 //    val parameterSpecList = getRequestParameterSpecList(generateParameters, true)
 //    genFunction.addParameters(parameterSpecList)
-    genFunction.addParameter(ParameterSpec.builder("url", stringClassName).build())
+//    genFunction.addParameter(ParameterSpec.builder("url", stringClassName).build())
     genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
 
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
-
-    if (returnChain.values.isNotEmpty()) {
+    val funCodeBlock = CodeBlock.builder()
+    val retCallResult = if (returnChain.values.isNotEmpty()) {
 //      val repositoryInterfaceName = repositoryInterfaceClassName.simpleName.firstCharLowerCase()
-      val funCodeBlock = CodeBlock.builder()
+
 //      val url = "${localCfgRepository.getServerProtocol()}://${localCfgRepository.getBaseServerUrl()}"
 //      funCodeBlock.addStatement("val url = \"\${localCfgRepository.getServerProtocol()}://\${localCfgRepository.getBaseServerUrl()}\"")
 //      funCodeBlock.addStatement("val url = \"\${protocol}://\${url}\"")
-      val hasBody = requestParamHasBody(generateParameters)
-      val hasMap = requestParamHasMap(generateParameters)
+//      val hasBody = requestParamHasBody(generateParameters)
+//      val hasMap = requestParamHasMap(generateParameters)
 //      val noBodyParamList = getRequestParamWithoutBody(generateParameters)
 //      var paramList = noBodyParamList.joinToString(", ") { param ->
 //        param.paramName
@@ -160,17 +161,24 @@ class UseCaseKtorHelper(
 //      }
 //      paramList += "paramMap"
 
-      funCodeBlock.addStatement("").addStatement("return %M(dispatcher) {", kotlinxWithContextClassName)
-
-        .addStatement("\trepository(\"\", body)")
-        .addStatement("}")
-      genFunction.addCode(funCodeBlock.build())
-      val retCallResult = baseNetworkCallResultClassName
+      baseNetworkCallResultClassName
         .parameterizedBy(listOf(returnChain.values.last(), baseCallFailureClassName))
-      genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
+
 //      }
+    } else {
+      baseNetworkCallResultClassName.parameterizedBy(
+        listOf(
+          data.sourceClassDeclaration.toClassName(),
+          baseCallFailureClassName
+        )
+      )
     }
 
+    funCodeBlock.addStatement("").addStatement("return %M(dispatcher) {", kotlinxWithContextClassName)
+      .addStatement("\trepository(\"\$protocol://\$url\", body)")
+      .addStatement("}")
+    genFunction.addCode(funCodeBlock.build())
+    genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
     return genFunction
   }
 

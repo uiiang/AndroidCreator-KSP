@@ -38,6 +38,8 @@ object Const {
   val baseDomainResultPackageName = "$basePackageName.base.domain.result"
   val baseKtorPackageName = "$basePackageName.base.data.ktor"
 
+  val baseRequestBodyClassName = ClassName(baseKtorPackageName, "BaseRequestBody")
+  val baseRequestBodyUserClassName = ClassName(baseKtorPackageName, "BaseRequestBodyUser")
   val moduleToDomainMemberName = MemberName(apiModelPackageName, "toDomainModel")
   val moduleToEntityMemberName = MemberName(apiModelPackageName, "toEntityModel")
   val localCfgRepositoryClassName = ClassName(localCfgRepositoryPackageName, "LocalCfgRepository")
@@ -95,6 +97,7 @@ object Const {
   val serializableClassName = ClassName("kotlinx.serialization", "Serializable")
   val serializableSerialNameClassName = ClassName("kotlinx.serialization", "SerialName")
   val serializableJsonClassName = ClassName("kotlinx.serialization.json", "Json")
+  val serializableTransientClassName = ClassName("kotlinx.serialization", "Transient")
   val serialEncodeToStringMemberName = MemberName("kotlinx.serialization", "encodeToString")
   val serialDecodeFromStringMemberName = MemberName("kotlinx.serialization", "decodeFromString")
 
