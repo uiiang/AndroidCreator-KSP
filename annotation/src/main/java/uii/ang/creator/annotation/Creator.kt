@@ -77,6 +77,19 @@ annotation class Creator(
    * 发送请求中包含的参数
    */
   val parameters: Array<Parameter> = [],
+
+  /**
+   * 数据对象的基类的package和类名import地址
+   */
+  val baseObjClassName: String = "",
+  /**
+   * 判断返回数据是否错误的方法import地址
+   */
+  val checkResponseSuccessFuncPath: String = "",
+  /**
+   * 包装错误类的方法import地址
+   */
+  val getCallFailureFuncPath: String = "",
 )
 
 

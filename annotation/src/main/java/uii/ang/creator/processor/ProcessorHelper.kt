@@ -2,8 +2,10 @@ package uii.ang.creator.processor
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.MemberName
 import uii.ang.creator.processor.Const.apiModelPackageName
 import uii.ang.creator.processor.Const.apiServicePackageName
+import uii.ang.creator.processor.Const.baseKtorPackageName
 import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
@@ -38,8 +40,9 @@ open class ProcessorHelper(
     classDeclaration.simpleName.getShortName() + "ApiModel"
   )
   val queryQueryBodyClassName = ClassName(
-    requestBodyPackageName, classDeclaration.simpleName.getShortName()+"QueryBody"
+    requestBodyPackageName, classDeclaration.simpleName.getShortName() + "QueryBody"
   )
+
   // Response对象
   val responseClassName = ClassName(
     responsePackageName,
@@ -50,7 +53,7 @@ open class ProcessorHelper(
   // EntityModel对象
   val entityModelClassName = ClassName(
     entityModelPackageName,
-    classDeclaration.simpleName.getShortName()+"EntityModel"
+    classDeclaration.simpleName.getShortName() + "EntityModel"
   )
 
   val roomDaoInterfaceClassName = ClassName(
@@ -83,10 +86,14 @@ open class ProcessorHelper(
     "${classDeclaration.simpleName.getShortName()}RequestBody"
   )
 
-  val userCaseClassName = ClassName(useCasePackageName,
-    "${ data.annotationData.methodName.firstCharUpperCase() }UseCase")
-  val userCaseGenClassName = ClassName(useCasePackageName,
-    "${ data.annotationData.methodName.firstCharUpperCase() }UseCaseGen")
+  val userCaseClassName = ClassName(
+    useCasePackageName,
+    "${data.annotationData.methodName.firstCharUpperCase()}UseCase"
+  )
+  val userCaseGenClassName = ClassName(
+    useCasePackageName,
+    "${data.annotationData.methodName.firstCharUpperCase()}UseCaseGen"
+  )
 
   val dataModuleClassName = ClassName(
     dataClassPackageName, "DataModule"
@@ -96,6 +103,18 @@ open class ProcessorHelper(
     apiServicePackageName,
     classDeclaration.simpleName.getShortName() + "ApiService"
   )
+
+  val baseObjClass = if (data.baseObjClassName.isNotEmpty()) {
+    ClassName(baseKtorPackageName, data.baseObjClassName)
+  } else {
+    null
+  }
+  val checkResponseSuccessFunc = if (data.checkResponseSuccessFuncPath.isNotEmpty()) {
+    MemberName(baseKtorPackageName, data.checkResponseSuccessFuncPath)
+  } else null
+  val getCallFailureFunc = if (data.getCallFailureFuncPath.isNotEmpty()) {
+    MemberName(baseKtorPackageName, data.getCallFailureFuncPath)
+  } else null
 }
 
 

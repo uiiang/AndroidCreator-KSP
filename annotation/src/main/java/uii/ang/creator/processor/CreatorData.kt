@@ -22,6 +22,21 @@ class CreatorData(
   val generateRetrofitService: Boolean = annotationData.generateRetrofitService
   val generateEntityModel: Boolean = annotationData.generatorEntityModel
 
+  /**
+   * 数据对象的基类的package和类名import地址
+   */
+  val baseObjClassName: String = annotationData.baseObjClassName
+
+  /**
+   * 判断返回数据是否错误的方法import地址
+   */
+  val checkResponseSuccessFuncPath: String = annotationData.checkResponseSuccessFuncPath
+
+  /**
+   * 包装错误类的方法import地址
+   */
+  val getCallFailureFuncPath: String = annotationData.getCallFailureFuncPath
+
   // 使用primaryConstructor来转换构造函数中的参数，可以获得给参数标注的注解
   val primaryConstructorParameters: List<PropertyDescriptor> =
     sourceClassDeclaration.primaryConstructor?.parameters?.map {
@@ -83,6 +98,18 @@ class CreatorData(
      * 发送请求中包含的参数
      */
     val parameters: List<Parameter>,
+    /**
+     * 数据对象的基类的package和类名import地址
+     */
+    val baseObjClassName: String,
+    /**
+     * 判断返回数据是否错误的方法import地址
+     */
+    val checkResponseSuccessFuncPath: String,
+    /**
+     * 包装错误类的方法import地址
+     */
+    val getCallFailureFuncPath: String,
   ) {
     companion object {
       fun from(annotation: KSAnnotation): AnnotationData {
@@ -102,6 +129,9 @@ class CreatorData(
           parameters = (annotation.arguments.first { it.name?.asString() == Creator::parameters.name }.value as List<*>)
             .filterIsInstance<KSAnnotation>()
             .map { Parameter.from(it) },
+          baseObjClassName = annotation.arguments.first { it.name?.asString() == Creator::baseObjClassName.name }.value as String,
+          checkResponseSuccessFuncPath = annotation.arguments.first { it.name?.asString() == Creator::checkResponseSuccessFuncPath.name }.value as String,
+          getCallFailureFuncPath = annotation.arguments.first { it.name?.asString() == Creator::getCallFailureFuncPath.name }.value as String,
         )
       }
     }
