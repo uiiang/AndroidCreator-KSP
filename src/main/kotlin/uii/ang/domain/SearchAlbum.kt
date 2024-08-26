@@ -1,6 +1,7 @@
 package uii.ang.domain
 
 import uii.ang.creator.annotation.*
+import kotlinx.serialization.Serializable
 
 @Creator(
   generateApiType = apiTypeKtor,
@@ -14,16 +15,16 @@ import uii.ang.creator.annotation.*
   parameters = [
     Parameter(paramName = "album", paramType = "String", paramQueryType = "Query"),
     Parameter(paramName = "limit", paramType = "Int", paramQueryType = "Query", paramDefault = "60")
-  ]
+  ],
+  getCallFailureFuncPath = "getCallFailure",
+  checkResponseSuccessFuncPath = "checkResponseSuccess"
 )
 data class SearchAlbum(
   @ParseRoot
   val results: Results
 )
 
-@Creator(
-  generateApiType = apiTypeKtor, generateApiModel = true
-)
+@Serializable
 data class Results(
   val opensearchQuery: OpensearchQuery,
   val opensearchTotalResults: String,
@@ -33,9 +34,7 @@ data class Results(
   val attr: Attr
 )
 
-@Creator(
-  generateApiType = apiTypeKtor, generateApiModel = true
-)
+@Serializable
 data class Albummatches(
   @ParseReturn
 //  @ToDatabase
@@ -61,8 +60,11 @@ data class Albummatches(
       paramDefault = "0"
     ),
     Parameter(paramName = "mbid", paramType = requestParamDataTypeString, paramQueryType = requestParamTypeMap)
-  ]
+  ],
+  getCallFailureFuncPath = "getCallFailure",
+  checkResponseSuccessFuncPath = "checkResponseSuccess"
 )
+@Serializable
 data class Album(
   @Query(queryMethodName = "queryAlbumByName", queryType = queryTypeEquals)
   val name: String,
@@ -73,25 +75,18 @@ data class Album(
   val mbid: String
 )
 
-@Creator(
-  generateApiType = apiTypeKtor, generateApiModel = true,
-  generatorEntityModel = true,
-)
+@Serializable
 data class Image(
   val text: String,
   val size: String
 )
 
-@Creator(
-  generateApiType = apiTypeKtor, generateApiModel = true
-)
+@Serializable
 data class Attr(
   val attrFor: String
 )
 
-@Creator(
-  generateApiType = apiTypeKtor, generateApiModel = true
-)
+@Serializable
 data class OpensearchQuery(
   val text: String,
   val role: String,

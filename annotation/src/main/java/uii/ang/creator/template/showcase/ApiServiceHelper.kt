@@ -6,9 +6,12 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import uii.ang.creator.annotation.requestMethodGet
 import uii.ang.creator.annotation.requestMethodPost
+import uii.ang.creator.annotation.requestParamTypePath
 import uii.ang.creator.processor.Const
+import uii.ang.creator.processor.Const.appendPathSegments
 import uii.ang.creator.processor.Const.baseKtorPackageName
 import uii.ang.creator.processor.Const.baseRemoteResponseClassName
+import uii.ang.creator.processor.Const.intClassName
 import uii.ang.creator.processor.Const.koinSingleOfMemberName
 import uii.ang.creator.processor.Const.ktorBody
 import uii.ang.creator.processor.Const.ktorGet
@@ -82,15 +85,32 @@ class ApiServiceHelper(
     val generateParameters = anno.parameters
     val genFunction = FunSpec.builder("invoke")
       .addModifiers(KModifier.SUSPEND, KModifier.OPERATOR)
-    genFunction.addParameter(
-      ParameterSpec
-        .builder("serverUrl", stringClassName)
-        .defaultValue("\"\"")
-        .build()
-    ).addParameter(
-      ParameterSpec
-        .builder("bodyStr", stringClassName).build()
-    )
+    if (anno.isDynamicBaseUrl) {
+      genFunction.addParameter(
+        ParameterSpec
+          .builder("serverUrl", stringClassName)
+          .defaultValue("\"\"")
+          .build()
+      )
+    }
+    if (anno.method == requestMethodPost) {
+      genFunction.addParameter(
+        ParameterSpec
+          .builder("bodyStr", stringClassName).build()
+      )
+    }
+    if (anno.method == requestMethodGet) {
+      generateParameters.onEach { para ->
+        val paramTypeClassName = when (para.paramType) {
+          "String" -> stringClassName
+          "Int" -> intClassName
+          else -> stringClassName
+        }
+        genFunction.addParameter(
+          ParameterSpec.builder(para.paramName, paramTypeClassName).build()
+        )
+      }
+    }
     genFunction
       .returns(
 //        baseRemoteResponseClassName
@@ -98,11 +118,30 @@ class ApiServiceHelper(
         data.sourceClassDeclaration.toClassName()
       )
 //    return client.post(FETCH_S_API_GETBRANCH) {
+    val serverUrlCode = if (anno.isDynamicBaseUrl) {
+      "serverUrl + "
+    } else ""
     val fetchCode = CodeBlock.builder()
       .addStatement("")
-      .addStatement("return client.%M(\"\$serverUrl\$${fetchUrl}\") {", requestMethod)
+      .addStatement("return client.%M($serverUrlCode$fetchUrl) {", requestMethod)
     if (anno.method == requestMethodPost) {
       fetchCode.addStatement("\t%M(bodyStr)", ktorSetBody)
+    }
+    if (anno.method == requestMethodGet) {
+      fetchCode.addStatement("\turl {")
+      generateParameters.onEach { para ->
+        when (para.paramQueryType) {
+          requestParamTypePath-> {
+            appendPathSegments
+            fetchCode.addStatement("\t\t%M(\"${para.paramName}\", ${para.paramName})", appendPathSegments)
+          }
+          else -> {
+            fetchCode.addStatement("\t\tparameters.append(\"${para.paramName}\", ${para.paramName})")
+          }
+        }
+      }
+
+      fetchCode.addStatement("\t}")
     }
     fetchCode.addStatement("}.%M()", ktorBody)
     genFunction.addCode(fetchCode.build())

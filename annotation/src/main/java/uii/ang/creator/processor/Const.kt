@@ -68,6 +68,7 @@ object Const {
   val listClassName = List::class.asClassName()
   val hashMapClassName = HashMap::class.asClassName()
   val stringClassName = String::class.asClassName()
+  val intClassName = Int::class.asClassName()
   val anyClassName = Any::class.asClassName()
 
 
@@ -133,15 +134,18 @@ object Const {
   val roomRoomDatabaseClassName = ClassName("androidx.room", "RoomDatabase")
 
   // ktor
-  val ktorBasePackageName = "io.ktor.client"
-  val ktorCallBasePackageName = "${ktorBasePackageName}.call"
-  val ktorRequestBasePackageName = "${ktorBasePackageName}.request"
-  val ktorHttpClient = ClassName(ktorBasePackageName, "HttpClient")
+  val ktorClientBasePackageName = "io.ktor.client"
+  val ktorHttpBasePackageName = "io.ktor.http"
+  val ktorCallBasePackageName = "${ktorClientBasePackageName}.call"
+  val ktorRequestBasePackageName = "${ktorClientBasePackageName}.request"
+  val ktorHttpClient = ClassName(ktorClientBasePackageName, "HttpClient")
   val ktorBody = MemberName(ktorCallBasePackageName, "body")
   val ktorGet = MemberName(ktorRequestBasePackageName, "get")
   val ktorParameter = MemberName(ktorRequestBasePackageName, "parameter")
   val ktorPost = MemberName(ktorRequestBasePackageName, "post")
   val ktorSetBody = MemberName(ktorRequestBasePackageName, "setBody")
+
+  val appendPathSegments = MemberName(ktorHttpBasePackageName, "appendPathSegments")
 }
 
 

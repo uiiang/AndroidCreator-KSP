@@ -13,7 +13,6 @@ import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
-import uii.ang.creator.tools.firstCharUpperCase
 
 class RequestQueryBodyHelper(
   logger: KSPLogger,

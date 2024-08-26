@@ -5,6 +5,7 @@ import com.google.devtools.ksp.processing.Resolver
 import com.squareup.kotlinpoet.CodeBlock
 import uii.ang.creator.annotation.apiTypeKtor
 import uii.ang.creator.annotation.apiTypeRetrofit
+import uii.ang.creator.annotation.requestMethodPost
 import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.apiModelPackageName
@@ -76,7 +77,9 @@ object CreatorCodeGenerator {
         generatorRepositoryKtor(logger, data)
         generatorRepositoryImplKtor(logger, data)
         generatorUseCaseKtor(logger, data)
-        generatorQueryBodyObj(logger, data)
+        if (data.annotationData.method == requestMethodPost) {
+          generatorQueryBodyObj(logger, data)
+        }
 //        generatorResponse(logger, data)
       }
 //      if (data.generateApiModel) {
@@ -105,6 +108,7 @@ object CreatorCodeGenerator {
         typeBuilderProvider = { useCaseClassBuilder })
 
       val useCaseKoinCodeBlock = useCaseHelper.genKoinInjectionCode()
+      logger.warn("generatorUseCaseKtor koin")
       CodeBuilder.putCollectCodeBlock(
         domainModulePackageName,
         koinDomainModuleGenName,
@@ -125,6 +129,7 @@ object CreatorCodeGenerator {
     )
 
     val repositoryKoinCodeBlock = repositoryImplHelper.genKoinInjectionCode()
+    logger.warn("generatorRepositoryImplKtor koin")
     CodeBuilder.putCollectCodeBlock(
       dataModulePackageName,
       koinDataModuleGenName,
@@ -157,6 +162,7 @@ object CreatorCodeGenerator {
     )
 
     val repositoryKoinCodeBlock = apiServiceHelper.genKoinInjectionCode()
+    logger.warn("generatorApiService koin")
     CodeBuilder.putCollectCodeBlock(
       apiServicePackageName,
       koinApiServiceModuleGenName,
@@ -174,6 +180,7 @@ object CreatorCodeGenerator {
       useCaseClassBuilder.addFunction(genFun.build())
 
       val useCaseKoinCodeBlock = useCaseHelper.genKoinInjectionCode()
+      logger.warn("generatorUseCase koin")
       CodeBuilder.putCollectCodeBlock(
         domainModulePackageName,
         koinDomainModuleGenName,
@@ -194,6 +201,7 @@ object CreatorCodeGenerator {
     val genFun = retrofitServiceHelper.genRetrofitServiceFuncCode()
     retrofitServiceCodeBuilder.addFunction(genFun.build(), true)
 
+    logger.warn("generatorRetrofitService koin")
     CodeBuilder.putCollectCodeBlock(
       dataModulePackageName,
       koinDataModuleGenName,
@@ -224,6 +232,7 @@ object CreatorCodeGenerator {
     val genImplFun = repositoryImplHelper.genRepositoryFuncCode()
     repositoryImplCodeBuilder.addFunction(genImplFun.build(), true)
 
+    logger.warn("generatorRepository koin")
     CodeBuilder.putCollectCodeBlock(
       dataModulePackageName,
       koinDataModuleGenName,

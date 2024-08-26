@@ -36,6 +36,13 @@ class CreatorData(
    * 包装错误类的方法import地址
    */
   val getCallFailureFuncPath: String = annotationData.getCallFailureFuncPath
+  /**
+   * 是否动态baseUrl
+   *
+   * 如果是动态baseUrl，在useCase,Repository,apiServer的方法中，会增加url的传入参数
+   * 如果不是，不会传入参数，直接使用ktor配置的地址
+   */
+  val isDynamicBaseUrl: Boolean = false
 
   // 使用primaryConstructor来转换构造函数中的参数，可以获得给参数标注的注解
   val primaryConstructorParameters: List<PropertyDescriptor> =
@@ -110,6 +117,13 @@ class CreatorData(
      * 包装错误类的方法import地址
      */
     val getCallFailureFuncPath: String,
+    /**
+     * 是否动态baseUrl
+     *
+     * 如果是动态baseUrl，在useCase,Repository,apiServer的方法中，会增加url的传入参数
+     * 如果不是，不会传入参数，直接使用ktor配置的地址
+     */
+    val isDynamicBaseUrl: Boolean = false,
   ) {
     companion object {
       fun from(annotation: KSAnnotation): AnnotationData {
@@ -132,6 +146,8 @@ class CreatorData(
           baseObjClassName = annotation.arguments.first { it.name?.asString() == Creator::baseObjClassName.name }.value as String,
           checkResponseSuccessFuncPath = annotation.arguments.first { it.name?.asString() == Creator::checkResponseSuccessFuncPath.name }.value as String,
           getCallFailureFuncPath = annotation.arguments.first { it.name?.asString() == Creator::getCallFailureFuncPath.name }.value as String,
+          isDynamicBaseUrl = annotation.arguments.first { it.name?.asString() == Creator::isDynamicBaseUrl.name }.value as Boolean,
+
         )
       }
     }

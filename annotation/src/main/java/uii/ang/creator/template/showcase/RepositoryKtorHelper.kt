@@ -4,10 +4,13 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
+import uii.ang.creator.annotation.requestMethodGet
+import uii.ang.creator.annotation.requestMethodPost
 import uii.ang.creator.codegen.CodeBuilder
 import uii.ang.creator.processor.Const.baseCallFailureClassName
 import uii.ang.creator.processor.Const.baseDomainResultClassName
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
+import uii.ang.creator.processor.Const.intClassName
 import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
 import uii.ang.creator.processor.Const.kotlinFlowFlowMemberName
 import uii.ang.creator.processor.Const.stringClassName
@@ -52,14 +55,32 @@ class RepositoryKtorHelper(
 //      .addTypeVariable(TypeVariableName("T"))
 //    val parameterSpecList = getRequestParameterSpecList(noBodyParamList, true)
 //    genFunction.addParameters(parameterSpecList)
-    genFunction
-      .addParameter(
-        ParameterSpec
-          .builder("serverUrl", stringClassName)
-          .defaultValue("\"\"")
-          .build()
-      )
-      .addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
+
+    if (anno.isDynamicBaseUrl) {
+      genFunction
+        .addParameter(
+          ParameterSpec
+            .builder("serverUrl", stringClassName)
+            .defaultValue("\"\"")
+            .build()
+        )
+    }
+
+    if (anno.method == requestMethodPost) {
+      genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
+    }
+    if (anno.method == requestMethodGet) {
+      generateParameters.onEach { para ->
+        val paramTypeClassName = when (para.paramType) {
+          "String" -> stringClassName
+          "Int" -> intClassName
+          else -> stringClassName
+        }
+        genFunction.addParameter(
+          ParameterSpec.builder(para.paramName, paramTypeClassName).build()
+        )
+      }
+    }
 
 //    if (hasBody) {
 //      val bodyParamSpec = getRequestParameterSpecBody(methodName)

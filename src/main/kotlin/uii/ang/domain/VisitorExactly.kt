@@ -9,38 +9,34 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
-import uii.ang.creator.annotation.Creator
-import uii.ang.creator.annotation.Parameter
-import uii.ang.creator.annotation.ParseReturn
-import uii.ang.creator.annotation.ParseRoot
-import uii.ang.creator.annotation.apiTypeKtor
-import uii.ang.creator.annotation.requestMethodPost
-import uii.ang.creator.annotation.requestParamTypeBody
+import uii.ang.creator.annotation.*
 
 @Creator(
     generateApiType = apiTypeKtor,
     generateApiService = true,
     url = "/s_api/GetVisitorExactly",
-    method = requestMethodPost,
+    method = requestMethodGet,
     methodName = "getVisitorExactly",
     parameters = [
         Parameter(
             paramName = "msgType",
             paramType = "String",
-            paramQueryType = requestParamTypeBody,
+            paramQueryType = requestParamTypePath,
             paramDefault = "GetVisitorExactly"
         ),
         Parameter(
             paramName = "Vphone",
             paramType = "String",
-            paramQueryType = requestParamTypeBody,
+            paramQueryType = requestParamTypePath,
         ),
         Parameter(
             paramName = "Vcountrycode",
             paramType = "String",
-            paramQueryType = requestParamTypeBody,
+            paramQueryType = requestParamTypeQuery,
         ),
-    ]
+    ],
+    getCallFailureFuncPath = "getCallFailure",
+    checkResponseSuccessFuncPath = "checkResponseSuccess"
     )
 //@ParseRoot
 @ParseReturn

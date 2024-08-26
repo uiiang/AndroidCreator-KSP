@@ -4,12 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="没有注解@ParseRoot@ParseReturn时，直接返回顶层对象">
+    <list default="true" id="765cbda9-9502-4a6a-9a0b-63e28885cf14" name="Changes" comment="网络请求增加base类，可通过方法配置判断请求错误和处理方式">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/BaseResponseObj.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/annotation/Creator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Const.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/Const.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/CreatorData.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/processor/ProcessorHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiServiceHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/ApiServiceHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/CreatorCodeGenerator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/CreatorCodeGenerator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorHelper.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorImplHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RepositoryKtorImplHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RequestQueryBodyHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/RequestQueryBodyHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/UseCaseKtorHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/annotation/src/main/java/uii/ang/creator/template/showcase/UseCaseKtorHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/CallFailure.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/base/data/ktor/CallFailure.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Branchs.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/Branchs.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/PrinterTemplate.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/PrinterTemplate.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/SearchAlbum.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/VisitorExactly.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/uii/ang/domain/VisitorExactly.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,7 +163,7 @@
     &quot;git-widget-placeholder&quot;: &quot;支持ktor版本&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/code/mycodes/yeoman/AndroidCreatorKsp/src/main/kotlin/uii/ang/domain&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/code/mycodes/yeoman/AndroidCreatorKsp/src/main/kotlin/uii/ang/base/data/ktor&quot;,
     &quot;onboarding.tips.debug.path&quot;: &quot;D:/code/mycodes/yeoman/AndroidCreatorKsp/processor/src/main/java/uii/ang/creator/plugin/Main.java&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
@@ -167,8 +178,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\src\main\kotlin\uii\ang\domain" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\src\main\kotlin\uii\ang\base\data\ktor" />
+      <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\src\main\kotlin\uii\ang\domain" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\src\testFixtures\kotlin\uii\ang\creator" />
       <recent name="D:\code\mycodes\yeoman\AndroidCreatorKsp\annotation\src\main\java\uii\ang\creator\processor" />
@@ -702,7 +713,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724225557840</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="网络请求增加base类，可通过方法配置判断请求错误和处理方式">
+      <option name="closed" value="true" />
+      <created>1724570299564</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1724570299564</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -731,7 +750,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="判断默认数据类型和可空字段赋默认值" />
     <MESSAGE value="fix" />
     <MESSAGE value="自动修改生成文件的包名" />
     <MESSAGE value="增加ParseRoot,指定dataclass中的字段做为response的根apiModel元素" />
@@ -756,7 +774,8 @@
     <MESSAGE value="增加从对象转换到EntityModel的扩展方法" />
     <MESSAGE value="使用ktor+flow方式生成请求http代码" />
     <MESSAGE value="没有注解@ParseRoot@ParseReturn时，直接返回顶层对象" />
-    <option name="LAST_COMMIT_MESSAGE" value="没有注解@ParseRoot@ParseReturn时，直接返回顶层对象" />
+    <MESSAGE value="网络请求增加base类，可通过方法配置判断请求错误和处理方式" />
+    <option name="LAST_COMMIT_MESSAGE" value="网络请求增加base类，可通过方法配置判断请求错误和处理方式" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -5,9 +5,10 @@
 
 package uii.ang.domain
 
+import kotlinx.serialization.Serializable
 import uii.ang.creator.annotation.*
 
-//@Serializable
+@Serializable
 @Creator(
   generateApiType = apiTypeKtor,
   generateApiService = true,
@@ -30,7 +31,9 @@ import uii.ang.creator.annotation.*
       paramQueryType = requestParamTypeBody,
       paramDefault = "22"
     ),
-  ]
+  ],
+  getCallFailureFuncPath = "getCallFailure",
+  checkResponseSuccessFuncPath = "checkResponseSuccess"
 )
 data class PrinterTemplate(
   val requestID: String? = null,
@@ -42,11 +45,7 @@ data class PrinterTemplate(
   val error: Long? = null
 )
 
-@Creator(
-  generateApiType = apiTypeKtor,
-  generateApiModel = true,
-  generatorEntityModel = true,
-)
+@Serializable
 data class Storges(
   val imageData: String? = null,
 

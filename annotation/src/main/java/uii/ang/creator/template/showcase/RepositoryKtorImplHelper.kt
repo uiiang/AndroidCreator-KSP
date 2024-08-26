@@ -4,9 +4,12 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
+import uii.ang.creator.annotation.requestMethodGet
+import uii.ang.creator.annotation.requestMethodPost
 import uii.ang.creator.processor.Const.baseCallFailureClassName
 import uii.ang.creator.processor.Const.baseErrorModelClassName
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
+import uii.ang.creator.processor.Const.intClassName
 import uii.ang.creator.processor.Const.koinNamedClassName
 import uii.ang.creator.processor.Const.kotlinFlowCatchMemberName
 import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
@@ -20,12 +23,8 @@ import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
 import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
-import uii.ang.creator.processor.Utils.getRequestParameterSpecBody
-import uii.ang.creator.processor.Utils.getRequestParameterSpecBodyWithMap
-import uii.ang.creator.processor.Utils.getRequestParameterSpecList
 import uii.ang.creator.processor.Utils.requestParamHasBody
 import uii.ang.creator.processor.Utils.requestParamHasMap
-import uii.ang.creator.tools.firstCharLowerCase
 
 class RepositoryKtorImplHelper(
   logger: KSPLogger,
@@ -57,6 +56,7 @@ class RepositoryKtorImplHelper(
   }
 
   fun genRepositoryFuncCode(): FunSpec.Builder {
+    logger.warn("开始生成 RepositoryImpl方法")
     val anno = data.annotationData
     val methodName = anno.methodName
     val generateParameters = anno.parameters
@@ -74,13 +74,36 @@ class RepositoryKtorImplHelper(
 //      .addTypeVariable(TypeVariableName("T"))
 //    val parameterSpecList = getRequestParameterSpecList(noBodyParamList, true)
 //    genFunction.addParameters(parameterSpecList)
-    genFunction
-      .addParameter(
-        ParameterSpec
-          .builder("serverUrl", stringClassName)
-          .build()
-      )
-      .addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
+
+    if (anno.isDynamicBaseUrl) {
+      genFunction
+        .addParameter(
+          ParameterSpec
+            .builder("serverUrl", stringClassName)
+            .build()
+        )
+    }
+
+    logger.warn("开始生成方法传入参数")
+    if (anno.method == requestMethodPost) {
+      logger.warn(" 当前为post请求，生成body")
+      genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
+    }
+    if (anno.method == requestMethodGet) {
+      logger.warn(" 当前为get请求，生成参数列表")
+      generateParameters.onEach { para ->
+
+        logger.warn("  ${para.paramName}: ${para.paramType}")
+        val paramTypeClassName = when (para.paramType) {
+          "String" -> stringClassName
+          "Int" -> intClassName
+          else -> stringClassName
+        }
+        genFunction.addParameter(
+          ParameterSpec.builder(para.paramName, paramTypeClassName).build()
+        )
+      }
+    }
 //    if (hasBody) {
 //      val bodyParamSpec = getRequestParameterSpecBody(methodName)
 //      genFunction.addParameter(bodyParamSpec.build())
@@ -95,8 +118,10 @@ class RepositoryKtorImplHelper(
         .parameterizedBy(listOf(returnChain.values.last(), baseCallFailureClassName))
     } else {
       baseNetworkCallResultClassName.parameterizedBy(
-        listOf( data.sourceClassDeclaration.toClassName(),
-        baseCallFailureClassName)
+        listOf(
+          data.sourceClassDeclaration.toClassName(),
+          baseCallFailureClassName
+        )
       )
     }
     genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
@@ -109,7 +134,17 @@ class RepositoryKtorImplHelper(
       serialEncodeToStringMemberName
     )
     val callApiService = CodeBlock.builder()
-    callApiService.addStatement("\tval result = apiService(serverUrl, jsonStr)")
+
+    val paramStr = when (anno.method) {
+      requestMethodPost -> "jsonStr"
+      else -> {
+        generateParameters.joinToString(", ") { it.paramName }
+      }
+    }
+    val serverUrlCode = if (anno.isDynamicBaseUrl) {
+      "serverUrl, "
+    }else ""
+    callApiService.addStatement("\tval result = apiService($serverUrlCode$paramStr)")
 
     val toModelCode = CodeBlock.builder()
     returnChain.forEach { (t, u) ->
@@ -117,27 +152,30 @@ class RepositoryKtorImplHelper(
     }
     val retCode = CodeBlock.builder()
       .addStatement("")
-      .addStatement("return %T {", kotlinFlowFlowMemberName.parameterizedBy(retCallResult))
-      .add(convertJsonCode.build())
-      .add(callApiService.build())
+    retCode.addStatement("return %T {", kotlinFlowFlowMemberName.parameterizedBy(retCallResult))
+
+    if (anno.method == requestMethodPost) {
+      retCode.add(convertJsonCode.build())
+    }
+    retCode.add(callApiService.build())
       .addStatement("\tresult.let {")
-      .addStatement("\tif (%M(it)) {", checkResponseSuccessFunc)
-      .addStatement("\t\temit(")
-      .addStatement("\t\t\t%T(", baseNetworkCallResultClassName)
-      .addStatement("\t\t\t\tvalue = result")
+      .addStatement("\t\tif (%M(it)) {", checkResponseSuccessFunc)
+      .addStatement("\t\t\temit(")
+      .addStatement("\t\t\t\t%T(", baseNetworkCallResultClassName)
+      .addStatement("\t\t\t\t\tvalue = result")
       .add(toModelCode.build())
       .addStatement("")
+      .addStatement("\t\t\t\t)")
       .addStatement("\t\t\t)")
-      .addStatement("\t\t)")
-      .addStatement("\t} else {")
+      .addStatement("\t\t} else {")
 //        .addStatement("} ?: run {")
-      .addStatement("\t\temit(")
-      .addStatement("\t\t\t%T(", baseNetworkCallResultClassName)
-      .addStatement("\t\t\t\terror = %M(it)", getCallFailureFunc)
+      .addStatement("\t\t\temit(")
+      .addStatement("\t\t\t\t%T(", baseNetworkCallResultClassName)
+      .addStatement("\t\t\t\t\terror = %M(it)", getCallFailureFunc)
+      .addStatement("\t\t\t\t)")
       .addStatement("\t\t\t)")
-      .addStatement("\t\t)")
+      .addStatement("\t\t}")
       .addStatement("\t}")
-      .addStatement("}")
       .addStatement(
         "}.%M(dispatcher)",
         kotlinFlowFlowOnMemberName

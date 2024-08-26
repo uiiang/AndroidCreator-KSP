@@ -90,6 +90,13 @@ annotation class Creator(
    * 包装错误类的方法import地址
    */
   val getCallFailureFuncPath: String = "",
+  /**
+   * 是否动态baseUrl
+   *
+   * 如果是动态baseUrl，在useCase,Repository,apiServer的方法中，会增加url的传入参数
+   * 如果不是，不会传入参数，直接使用ktor配置的地址
+   */
+  val isDynamicBaseUrl: Boolean = false,
 )
 
 

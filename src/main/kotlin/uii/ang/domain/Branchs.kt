@@ -11,16 +11,18 @@ import uii.ang.creator.annotation.*
   generateResponse = true,
 //  generateRetrofitService = true,
   url = "/s_api/GetBranch",
-  method = requestMethodPost,
+  method = requestMethodGet,
   methodName = "getBranch",
   parameters = [
     Parameter(
       paramName = "msgType",
       paramType = "String",
-      paramQueryType = requestParamTypeBody,
+      paramQueryType = requestParamTypeQuery,
       paramDefault = "GetBranch"
     ),
-  ]
+  ],
+  getCallFailureFuncPath = "getCallFailure",
+  checkResponseSuccessFuncPath = "checkResponseSuccess"
 )
 @Serializable
 data class Branchs(
@@ -35,11 +37,6 @@ data class Branchs(
   val error: Long
 )
 
-@Creator(
-  generateApiType = apiTypeKtor,
-  generateApiModel = true,
-  generatorEntityModel = true,
-)
 @Serializable
 data class Branch(
   @SerialName("AdminEmails")
@@ -95,12 +92,6 @@ data class Branch(
   val defaultHost: DefaultHost? = null
 )
 
-
-@Creator(
-  generateApiType = apiTypeKtor,
-  generateApiModel = true,
-  generatorEntityModel = true,
-)
 @Serializable
 data class DefaultHost(
   @SerialName("EHID")
@@ -116,12 +107,6 @@ data class DefaultHost(
   val name: String
 )
 
-
-@Creator(
-  generateApiType = apiTypeKtor,
-  generateApiModel = true,
-  generatorEntityModel = true,
-)
 @Serializable
 data class Floor(
   @SerialName("BranchCode")
@@ -146,12 +131,6 @@ data class Floor(
   val floorUnit: String
 )
 
-
-@Creator(
-  generateApiType = apiTypeKtor,
-  generateApiModel = true,
-  generatorEntityModel = true,
-)
 @Serializable
 data class MailSuffix(
   @SerialName("AddUTime")
@@ -173,12 +152,6 @@ data class MailSuffix(
   val status: Long
 )
 
-
-@Creator(
-  generateApiType = apiTypeKtor,
-  generateApiModel = true,
-  generatorEntityModel = true,
-)
 @Serializable
 data class BranchNation(
   val cn: String,
@@ -189,12 +162,6 @@ data class BranchNation(
   val favourite: Long
 )
 
-
-@Creator(
-  generateApiType = apiTypeKtor,
-  generateApiModel = true,
-  generatorEntityModel = true,
-)
 @Serializable
 data class TimeZone(
   @SerialName("TimeZoneDes")

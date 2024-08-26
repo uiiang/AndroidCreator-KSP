@@ -4,29 +4,21 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
+import uii.ang.creator.annotation.requestMethodGet
+import uii.ang.creator.annotation.requestMethodPost
 import uii.ang.creator.processor.Const.baseCallFailureClassName
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
+import uii.ang.creator.processor.Const.intClassName
 import uii.ang.creator.processor.Const.koinNamedClassName
-import uii.ang.creator.processor.Const.koinSingleOfMemberName
 import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
 import uii.ang.creator.processor.Const.kotlinxCoroutineDispatcherClassName
 import uii.ang.creator.processor.Const.kotlinxWithContextClassName
 import uii.ang.creator.processor.Const.localCfgRepositoryClassName
-import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.stringClassName
-import uii.ang.creator.processor.Const.timberClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
-import uii.ang.creator.processor.Utils.getRequestHashMapClassName
-import uii.ang.creator.processor.Utils.getRequestParamWithBody
-import uii.ang.creator.processor.Utils.getRequestParamWithMap
-import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
-import uii.ang.creator.processor.Utils.getRequestParameterSpecList
-import uii.ang.creator.processor.Utils.requestParamHasBody
-import uii.ang.creator.processor.Utils.requestParamHasMap
 import uii.ang.creator.tools.firstCharLowerCase
-import uii.ang.creator.tools.firstCharUpperCase
 
 class UseCaseKtorHelper(
   logger: KSPLogger,
@@ -38,6 +30,7 @@ class UseCaseKtorHelper(
       "准备生成基于 ${repositoryInterfaceClassName.simpleName.firstCharLowerCase()} 的UseCase" +
               " 类名 ${userCaseClassName.simpleName} 生成于方法名 ${data.annotationData.methodName}"
     )
+    val anno = data.annotationData
     val flux = FunSpec.constructorBuilder()
     flux.addParameter(
       ParameterSpec.builder(
@@ -47,21 +40,17 @@ class UseCaseKtorHelper(
 //      ParameterSpec.builder(
 //        "localCfgRepository", localCfgRepositoryClassName
 //      ).build()
-    ).addParameter(
-      ParameterSpec.builder(
-        "protocol", stringClassName
-      ).build()
-    ).addParameter(
-      ParameterSpec.builder(
-        "url", stringClassName
-      ).build()
     )
-      .addParameter(
-        ParameterSpec.builder(
-          "dispatcher",
-          kotlinxCoroutineDispatcherClassName
-        ).build()
+    if (anno.isDynamicBaseUrl) {
+      flux.addParameter(ParameterSpec.builder("protocol", stringClassName).build())
+        .addParameter(ParameterSpec.builder("url", stringClassName).build())
+    }
+    flux.addParameter(
+      ParameterSpec.builder(
+        "dispatcher",
+        kotlinxCoroutineDispatcherClassName
       ).build()
+    ).build()
     val repositoryProp = PropertySpec.builder(
       "repository",
       repositoryInterfaceClassName
@@ -82,15 +71,18 @@ class UseCaseKtorHelper(
       "dispatcher",
       kotlinxCoroutineDispatcherClassName
     ).addModifiers(KModifier.PRIVATE).initializer("dispatcher")
-    return TypeSpec.classBuilder(userCaseGenClassName)
+    val typeSpec = TypeSpec.classBuilder(userCaseGenClassName)
 //      .addTypeVariable(TypeVariableName("T"))
       .primaryConstructor(flux.build())
       .addProperty(repositoryProp.build())
 //      .addProperty(localCfgRepositoryProp.build())
-      .addProperty(protocolProp.build())
-      .addProperty(urlProp.build())
-      .addProperty(dispatcherProp.build())
+    if (anno.isDynamicBaseUrl) {
+      typeSpec.addProperty(protocolProp.build())
+      typeSpec.addProperty(urlProp.build())
+    }
+    typeSpec.addProperty(dispatcherProp.build())
       .addFunction(genUseCaseFunCode().build())
+    return typeSpec
   }
 
 
@@ -104,7 +96,22 @@ class UseCaseKtorHelper(
 //    val parameterSpecList = getRequestParameterSpecList(generateParameters, true)
 //    genFunction.addParameters(parameterSpecList)
 //    genFunction.addParameter(ParameterSpec.builder("url", stringClassName).build())
-    genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
+
+    if (anno.method == requestMethodPost) {
+      genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
+    }
+    if (anno.method == requestMethodGet) {
+      generateParameters.onEach { para ->
+        val paramTypeClassName = when (para.paramType) {
+          "String" -> stringClassName
+          "Int" -> intClassName
+          else -> stringClassName
+        }
+        genFunction.addParameter(
+          ParameterSpec.builder(para.paramName, paramTypeClassName).build()
+        )
+      }
+    }
 
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
     val funCodeBlock = CodeBlock.builder()
@@ -163,7 +170,6 @@ class UseCaseKtorHelper(
 
       baseNetworkCallResultClassName
         .parameterizedBy(listOf(returnChain.values.last(), baseCallFailureClassName))
-
 //      }
     } else {
       baseNetworkCallResultClassName.parameterizedBy(
@@ -175,18 +181,38 @@ class UseCaseKtorHelper(
     }
 
     funCodeBlock.addStatement("").addStatement("return %M(dispatcher) {", kotlinxWithContextClassName)
-      .addStatement("\trepository(\"\$protocol://\$url\", body)")
-      .addStatement("}")
+    val paramStr = when (anno.method) {
+      requestMethodPost -> "body"
+      else -> {
+        generateParameters.joinToString(", ") { it.paramName }
+      }
+    }
+
+    val serverUrlCode = if (anno.isDynamicBaseUrl) {
+      "\"\$protocol://\$url\", "
+    } else ""
+    funCodeBlock.addStatement("\trepository($serverUrlCode$paramStr)")
+    funCodeBlock.addStatement("}")
     genFunction.addCode(funCodeBlock.build())
     genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
     return genFunction
   }
 
   fun genKoinInjectionCode(): CodeBlock.Builder {
-    return CodeBlock.builder().addStatement(
-      "\tsingle { %T(get(), get(%M(\"HTTP_PROTOCOL\")), get(%M(\"HTTP_URL\")), get(%M(\"ioDispatcher\"))) }",
-      userCaseGenClassName,
-      koinNamedClassName, koinNamedClassName, koinNamedClassName
-    )
+    logger.warn("准备生成基于 ${repositoryInterfaceClassName.simpleName.firstCharLowerCase()} 的usecase 的koin代码")
+    val anno = data.annotationData
+    return if (anno.isDynamicBaseUrl) {
+      CodeBlock.builder().addStatement(
+        "\tsingle { %T(get(), get(%M(\"HTTP_PROTOCOL\")), get(%M(\"HTTP_URL\")), get(%M(\"ioDispatcher\"))) }",
+        userCaseGenClassName,
+        koinNamedClassName, koinNamedClassName, koinNamedClassName
+      )
+    } else {
+      CodeBlock.builder().addStatement(
+        "\tsingle { %T(get(), get(%M(\"ioDispatcher\"))) }",
+        userCaseGenClassName, koinNamedClassName
+      )
+    }
+
   }
 }
