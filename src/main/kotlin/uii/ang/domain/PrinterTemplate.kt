@@ -12,9 +12,9 @@ import uii.ang.creator.annotation.*
 @Creator(
   generateApiType = apiTypeKtor,
   generateApiService = true,
-  generateApiModel = true,
-  generateResponse = true,
-  generateRetrofitService = true,
+//  generateApiModel = true,
+//  generateResponse = true,
+//  generateRetrofitService = true,
   url = "/s_api/GetStorage",
   method = requestMethodPost,
   methodName = "getPrinterTemplate",
@@ -31,6 +31,16 @@ import uii.ang.creator.annotation.*
       paramQueryType = requestParamTypeBody,
       paramDefault = "22"
     ),
+//    Parameter(
+//      paramName = "uName",
+//      paramType = "String",
+//      paramQueryType = "BaseRequestBodyUser",
+//    ),
+//    Parameter(
+//      paramName = "uTypeID",
+//      paramType = "String",
+//      paramQueryType = "BaseRequestBodyUser",
+//    ),
   ],
   getCallFailureFuncPath = "getCallFailure",
   checkResponseSuccessFuncPath = "checkResponseSuccess"

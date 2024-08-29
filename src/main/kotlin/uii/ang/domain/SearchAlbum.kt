@@ -44,9 +44,9 @@ data class Albummatches(
 @Creator(
   generateApiType = apiTypeKtor,
   generateApiModel = true,
-  generateResponse = true,
-  generateRetrofitService = true,
-  generatorEntityModel = true,
+//  generateResponse = true,
+//  generateRetrofitService = true,
+//  generatorEntityModel = true,
   retrofitServiceClassName = "Album",
   method = requestMethodPost,
   methodName = "getAlbum",

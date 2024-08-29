@@ -7,18 +7,30 @@ import uii.ang.creator.annotation.*
 @Creator(
   generateApiType = apiTypeKtor,
   generateApiService = true,
-  generateApiModel = true,
-  generateResponse = true,
+//  generateApiModel = true,
+//  generateResponse = true,
 //  generateRetrofitService = true,
   url = "/s_api/GetBranch",
-  method = requestMethodGet,
+  method = requestMethodPost,
   methodName = "getBranch",
   parameters = [
     Parameter(
       paramName = "msgType",
       paramType = "String",
-      paramQueryType = requestParamTypeQuery,
+      paramQueryType = requestParamTypeBody,
       paramDefault = "GetBranch"
+    ),
+    Parameter(
+      paramName = "uName",
+      paramType = "String",
+      paramQueryType = requestParamTypeBody,
+      paramPostObjName = "date"
+    ),
+    Parameter(
+      paramName = "uTypeID",
+      paramType = "String",
+      paramQueryType = requestParamTypeBody,
+      paramPostObjName = "_user"
     ),
   ],
   getCallFailureFuncPath = "getCallFailure",

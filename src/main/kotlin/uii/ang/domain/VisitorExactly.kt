@@ -34,6 +34,16 @@ import uii.ang.creator.annotation.*
             paramType = "String",
             paramQueryType = requestParamTypeQuery,
         ),
+        Parameter(
+            paramName = "uName",
+            paramType = "String",
+            paramQueryType = "BaseRequestBodyUser",
+        ),
+        Parameter(
+            paramName = "uTypeID",
+            paramType = "String",
+            paramQueryType = "BaseRequestBodyUser",
+        ),
     ],
     getCallFailureFuncPath = "getCallFailure",
     checkResponseSuccessFuncPath = "checkResponseSuccess"

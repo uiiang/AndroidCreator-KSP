@@ -119,6 +119,7 @@ fun Parameter.Companion.from(annotation: KSAnnotation) = Parameter(
   paramType = annotation.arguments.first { it.name?.asString() == Parameter::paramType.name }.value as String,
   paramDefault = annotation.arguments.first { it.name?.asString() == Parameter::paramDefault.name }.value as String,
   paramQueryType = annotation.arguments.first { it.name?.asString() == Parameter::paramQueryType.name }.value as String,
+  paramPostObjName = annotation.arguments.first { it.name?.asString() == Parameter::paramPostObjName.name }.value as String,
 )
 
 fun KSValueParameter.typeClassDeclaration(): KSClassDeclaration? = this.type.resolve().classDeclaration()

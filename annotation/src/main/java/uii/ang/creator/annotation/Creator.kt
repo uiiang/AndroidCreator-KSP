@@ -16,6 +16,9 @@ const val requestParamTypeField = "Field"
 const val requestParamTypeBody = "Body"
 const val requestParamTypeMap = "Map"
 
+const val requestParamPostObjTypeObject = "Object"
+const val requestParamPostObjTypeArray = "Array"
+
 
 const val requestParamDataTypeString = "String"
 const val requestParamDataTypeInt = "Int"
@@ -105,7 +108,9 @@ annotation class Parameter(
   val paramName: String,
   val paramType: String = requestParamDataTypeString,
   val paramDefault: String = "",
-  val paramQueryType: String = requestParamTypePath
+  val paramQueryType: String = requestParamTypePath,
+  val paramPostObjName: String = "",
+  val paramPostObjType: String = requestParamPostObjTypeObject
 ) {
   companion object
 }

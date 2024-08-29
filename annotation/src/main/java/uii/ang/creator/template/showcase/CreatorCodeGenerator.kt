@@ -95,8 +95,13 @@ object CreatorCodeGenerator {
     val queryBodyObjClassNameStr = queryBodyHelper.requestBodyClassName.simpleName
     val queryBodyClassName = queryBodyHelper.genClassBuilder()
     val queryBodyCodeBuilder = CodeBuilder.getOrCreate(
-      requestBodyPackageName, queryBodyObjClassNameStr, typeBuilderProvider = { queryBodyClassName }
+      requestBodyPackageName, queryBodyObjClassNameStr,
+      typeBuilderProvider = { queryBodyClassName }
     )
+    val paramBodyList = queryBodyHelper.createRequestParamBody()
+    paramBodyList.onEach {
+      queryBodyCodeBuilder.addType(it)
+    }
   }
 
   private fun generatorUseCaseKtor(logger: KSPLogger, data: CreatorData) {

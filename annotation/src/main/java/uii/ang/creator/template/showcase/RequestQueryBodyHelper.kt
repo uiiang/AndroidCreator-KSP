@@ -5,11 +5,10 @@ import com.squareup.kotlinpoet.*
 import uii.ang.creator.annotation.Parameter
 import uii.ang.creator.annotation.requestParamTypeBody
 import uii.ang.creator.processor.Const.baseRequestBodyClassName
-import uii.ang.creator.processor.Const.baseRequestBodyUserClassName
+import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.serializableClassName
 import uii.ang.creator.processor.Const.serializableSerialNameClassName
 import uii.ang.creator.processor.Const.serializableTransientClassName
-import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.convertType
@@ -28,104 +27,127 @@ class RequestQueryBodyHelper(
       .addAnnotation(AnnotationSpec.builder(serializableClassName).build())
       .primaryConstructor(constructorParams.build())
       .addProperties(propertyList)
-      .addSuperinterface(baseRequestBodyClassName)
+//      .addSuperinterface(baseRequestBodyClassName)
   }
 
   // 生成构造函数里的参数
-  fun genConstructor(parameters: List<Parameter>): FunSpec.Builder {
+  private fun genConstructor(parameters: List<Parameter>): FunSpec.Builder {
     val flux = FunSpec.constructorBuilder()
-    val parameterSpecList = parameters.filter { param -> param.paramQueryType == requestParamTypeBody }
+    val parameterSpecList = parameters
+      .filter { param -> param.paramQueryType == requestParamTypeBody }
       .map { param ->
         val paramSpec = ParameterSpec.builder(
           param.paramName, convertType(param.paramType).asTypeName().copy(nullable = param.paramDefault.isEmpty())
         )
         if (param.paramDefault.isNotEmpty()) {
-//          paramSpec.defaultValue("\"${param.paramDefault}\"${convertToType(param.paramType)}")
           if (param.paramType == "String") {
             paramSpec.defaultValue("\"${param.paramDefault}\"")
           } else {
             paramSpec.defaultValue(param.paramDefault)
           }
+        }else {
+          if (param.paramPostObjName.isNotEmpty()) {
+            if (param.paramType == "Int") {
+              paramSpec.defaultValue("0")
+            } else {
+              paramSpec.defaultValue("\"\"")
+            }
+          }
         }
         paramSpec.build()
       }
-    val userParamSpec = ParameterSpec.builder(
-      "_user", baseRequestBodyUserClassName
-    )
-          .addModifiers(KModifier.OVERRIDE)
-      .addAnnotation(AnnotationSpec.builder(serializableSerialNameClassName)
-      .addMember("\"_user\"").build())
-      .defaultValue(CodeBlock.builder()
-        .addStatement("%T(uName, uTypeID)", baseRequestBodyUserClassName)
-        .build())
-    val uNameParamSpec = ParameterSpec.builder(
-      "uName", stringClassName
-    ).defaultValue("\"\"")//.addModifiers(KModifier.PRIVATE)
-      .build()
-    val uTypeIDParamSpec = ParameterSpec.builder(
-      "uTypeID", stringClassName
-    ).defaultValue("\"\"")//.addModifiers(KModifier.PRIVATE)
-      .build()
 
     flux.addParameters(parameterSpecList)
-//    flux.addParameter(userParamSpec.build())
-    flux.addParameter(uNameParamSpec)
-    flux.addParameter(uTypeIDParamSpec)
     return flux
   }
 
   // 生成构造函数中的属性列表
-  private fun convertProperty(parameters: List<Parameter>):
+  private fun convertProperty(parameters: List<Parameter>, isParamObj: Boolean = false):
           List<PropertySpec> {
-    val propertySpecSpecList = parameters.filter { param -> param.paramQueryType == requestParamTypeBody }
+    val propertySpecSpecList = parameters
+      .filter { param -> param.paramQueryType == requestParamTypeBody }
       .map { param ->
         val propSpec = PropertySpec.builder(
           param.paramName,// convertType(param.paramType),
           convertType(param.paramType).asTypeName().copy(nullable = param.paramDefault.isEmpty())
         )
-        if (param.paramName == "msgType") {
-          propSpec.addModifiers(KModifier.OVERRIDE).mutable()
-        }
+//        if (param.paramName == "msgType") {
+//          propSpec.addModifiers(KModifier.OVERRIDE).mutable()
+//        }
         if (param.paramDefault.isNotEmpty()) {
           propSpec.initializer(param.paramName)
         } else {
           propSpec.initializer(param.paramName, null)
         }
-        propSpec
-          .addAnnotation(
-            AnnotationSpec.builder(serializableSerialNameClassName)
-              .addMember("\"${param.paramName}\"").build()
-          )
+        logger.warn("param.paramPostObjName == ${param.paramPostObjName}")
+        if (param.paramPostObjName.isNotEmpty() && !isParamObj) {
+          propSpec.addModifiers(KModifier.PRIVATE)
+            .addAnnotation(AnnotationSpec.builder(serializableTransientClassName).build())
+            .initializer(param.paramName)
+        } else {
+          propSpec
+            .addAnnotation(
+              AnnotationSpec.builder(serializableSerialNameClassName)
+                .addMember("\"${param.paramName}\"").build()
+            )
+        }
         propSpec.build()
       }.toMutableList()
 
-    val userPropSpec = PropertySpec.builder(
-      "_user",// convertType(param.paramType),
-      baseRequestBodyUserClassName
-    ).addModifiers(KModifier.OVERRIDE)
-    userPropSpec.mutable()
-    userPropSpec
-      .addAnnotation(
-        AnnotationSpec.builder(serializableSerialNameClassName)
-          .addMember("\"_user\"").build()
-      )
-      .initializer(CodeBlock.builder()
-        .addStatement("%T(uName, uTypeID)", baseRequestBodyUserClassName)
-        .build()
-      )
-    val uNamePropSpec = PropertySpec.builder(
-      "uName", stringClassName
-    ).addModifiers(KModifier.PRIVATE)
-      .addAnnotation(AnnotationSpec.builder(serializableTransientClassName).build())
-      .initializer("uName")
-    val uTypePropSpec = PropertySpec.builder(
-      "uTypeID", stringClassName
-    ).addModifiers(KModifier.PRIVATE)
-      .addAnnotation(AnnotationSpec.builder(serializableTransientClassName).build())
-      .initializer("uTypeID")
-    propertySpecSpecList.add(userPropSpec.build())
-    propertySpecSpecList.add(uNamePropSpec.build())
-    propertySpecSpecList.add(uTypePropSpec.build())
+    // 生成调用自定义子对象的代码
+    if (!isParamObj) {
+      parameters
+        .filter { param -> param.paramQueryType == requestParamTypeBody }
+        .filter { param -> param.paramPostObjName.isNotEmpty() }
+        .groupBy { param -> param.paramPostObjName }
+        .onEach { (t, u) ->
+          val paramBodyClassName = ClassName(
+            requestBodyPackageName,
+            "${classDeclaration.simpleName.getShortName()}RequestBody$t"
+          )
+          val paramBody = PropertySpec.builder(
+            t,// convertType(param.paramType),
+            paramBodyClassName
+          )
+          paramBody.mutable()
+          paramBody.addAnnotation(
+            AnnotationSpec.builder(serializableSerialNameClassName)
+              .addMember("\"$t\"").build()
+          )
+          val paramsStr = u.joinToString { param -> param.paramName }
+          paramBody.initializer(
+            CodeBlock.builder()
+              .addStatement("%T($paramsStr)", paramBodyClassName)
+              .build()
+          )
+          propertySpecSpecList.add(paramBody.build())
+        }
+    }
     return propertySpecSpecList.ifEmpty { emptyList() }
+  }
+
+
+  // 创建body参数体内的对象
+  fun createRequestParamBody(): List<TypeSpec.Builder> {
+    val parameters = data.annotationData.parameters
+    val paramBodyList = parameters
+      .filter { param -> param.paramQueryType == requestParamTypeBody }
+      .filter { param -> param.paramPostObjName.isNotEmpty() }
+      .groupBy { param -> param.paramPostObjName }
+      .map { (t, u) ->
+
+        val paramBodyClassName = ClassName(
+          requestBodyPackageName,
+          "${classDeclaration.simpleName.getShortName()}RequestBody$t"
+        )
+        val constructorParams = genConstructor(u)
+        val propertyList = convertProperty(u, true)
+        TypeSpec.classBuilder(paramBodyClassName)
+          .addModifiers(KModifier.DATA)
+          .addAnnotation(AnnotationSpec.builder(serializableClassName).build())
+          .primaryConstructor(constructorParams.build())
+          .addProperties(propertyList)
+      }
+    return paramBodyList
   }
 }
