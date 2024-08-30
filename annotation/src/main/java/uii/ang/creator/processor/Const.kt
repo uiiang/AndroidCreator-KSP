@@ -65,6 +65,7 @@ object Const {
 
   val baseDomainResultMemberName = MemberName(baseDomainResultPackageName, "mapSuccess")
 
+  val arrayListClassName = ArrayList::class.asClassName()
   val listClassName = List::class.asClassName()
   val hashMapClassName = HashMap::class.asClassName()
   val stringClassName = String::class.asClassName()

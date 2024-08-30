@@ -2,9 +2,11 @@ package uii.ang.creator.template.showcase
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import uii.ang.creator.annotation.Parameter
+import uii.ang.creator.annotation.requestParamPostObjTypeArray
 import uii.ang.creator.annotation.requestParamTypeBody
-import uii.ang.creator.processor.Const.baseRequestBodyClassName
+import uii.ang.creator.processor.Const.arrayListClassName
 import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.serializableClassName
 import uii.ang.creator.processor.Const.serializableSerialNameClassName
@@ -45,13 +47,15 @@ class RequestQueryBodyHelper(
           } else {
             paramSpec.defaultValue(param.paramDefault)
           }
-        }else {
+        } else {
           if (param.paramPostObjName.isNotEmpty()) {
             if (param.paramType == "Int") {
               paramSpec.defaultValue("0")
             } else {
               paramSpec.defaultValue("\"\"")
             }
+          } else {
+            paramSpec.defaultValue("null")
           }
         }
         paramSpec.build()
@@ -74,12 +78,10 @@ class RequestQueryBodyHelper(
 //        if (param.paramName == "msgType") {
 //          propSpec.addModifiers(KModifier.OVERRIDE).mutable()
 //        }
-        if (param.paramDefault.isNotEmpty()) {
+//        if (param.paramDefault.isNotEmpty()) {
           propSpec.initializer(param.paramName)
-        } else {
-          propSpec.initializer(param.paramName, null)
-        }
-        logger.warn("param.paramPostObjName == ${param.paramPostObjName}")
+//        }
+//        logger.warn("param.paramPostObjName == ${param.paramPostObjName}")
         if (param.paramPostObjName.isNotEmpty() && !isParamObj) {
           propSpec.addModifiers(KModifier.PRIVATE)
             .addAnnotation(AnnotationSpec.builder(serializableTransientClassName).build())
@@ -105,23 +107,34 @@ class RequestQueryBodyHelper(
             requestBodyPackageName,
             "${classDeclaration.simpleName.getShortName()}RequestBody$t"
           )
-          val paramBody = PropertySpec.builder(
-            t,// convertType(param.paramType),
-            paramBodyClassName
-          )
+          val paramBody =
+            if (u.any { it.paramPostObjType == requestParamPostObjTypeArray }) {
+              PropertySpec.builder(t, arrayListClassName.parameterizedBy(paramBodyClassName))
+            } else {
+              PropertySpec.builder(t, paramBodyClassName)
+            }
           paramBody.mutable()
           paramBody.addAnnotation(
             AnnotationSpec.builder(serializableSerialNameClassName)
               .addMember("\"$t\"").build()
           )
           val paramsStr = u.joinToString { param -> param.paramName }
-          paramBody.initializer(
-            CodeBlock.builder()
-              .addStatement("%T($paramsStr)", paramBodyClassName)
-              .build()
-          )
+          val callObjCode = CodeBlock.builder()
+//          u.onEach { logger.warn("paramPostObjType=${it.paramPostObjType}") }
+          if (u.any { it.paramPostObjType == requestParamPostObjTypeArray }) {
+//            logger.warn("paramPostObjType is array")
+            callObjCode.addStatement("arrayListOf(%T($paramsStr))", paramBodyClassName)
+          } else {
+            callObjCode.addStatement("%T($paramsStr)", paramBodyClassName)
+          }
+//          logger.warn("callObjCode ${callObjCode.build().toString()}")
+          paramBody.initializer(callObjCode.build())
           propertySpecSpecList.add(paramBody.build())
         }
+//      logger.warn("propertySpecSpecList ${propertySpecSpecList.count()}")
+//      propertySpecSpecList.onEach {
+//        logger.warn("propspec initializer = ${it.initializer}")
+//      }
     }
     return propertySpecSpecList.ifEmpty { emptyList() }
   }

@@ -24,13 +24,22 @@ import uii.ang.creator.annotation.*
       paramName = "uName",
       paramType = "String",
       paramQueryType = requestParamTypeBody,
-      paramPostObjName = "date"
+      paramPostObjName = "_user",
+      paramPostObjType = requestParamPostObjTypeObject
     ),
     Parameter(
       paramName = "uTypeID",
       paramType = "String",
       paramQueryType = requestParamTypeBody,
-      paramPostObjName = "_user"
+      paramPostObjName = "_user",
+      paramPostObjType = requestParamPostObjTypeObject
+    ),
+    Parameter(
+      paramName = "_date",
+      paramType = "String",
+      paramQueryType = requestParamTypeBody,
+      paramPostObjName = "date",
+      paramPostObjType = requestParamPostObjTypeArray
     ),
   ],
   getCallFailureFuncPath = "getCallFailure",
