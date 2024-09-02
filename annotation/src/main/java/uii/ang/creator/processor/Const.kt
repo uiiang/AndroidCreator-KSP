@@ -55,7 +55,6 @@ object Const {
 
   val baseRemoteResponseClassName = ClassName(baseKtorPackageName, "RemoteResponse")
   val baseNetworkCallResultClassName = ClassName(baseKtorPackageName, "NetworkCallResult")
-  val baseCallFailureClassName = ClassName(baseKtorPackageName, "CallFailure")
   val baseErrorModelClassName = ClassName(baseKtorPackageName, "ErrorModel")
   val baseDomainResultClassName = ClassName(baseDomainResultPackageName, "Result")
   val baseDomainResultSuccessMemberName =
@@ -65,6 +64,7 @@ object Const {
 
   val baseDomainResultMemberName = MemberName(baseDomainResultPackageName, "mapSuccess")
 
+  val arrayListClassName = ArrayList::class.asClassName()
   val listClassName = List::class.asClassName()
   val hashMapClassName = HashMap::class.asClassName()
   val stringClassName = String::class.asClassName()

@@ -6,7 +6,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import uii.ang.creator.annotation.requestMethodGet
 import uii.ang.creator.annotation.requestMethodPost
-import uii.ang.creator.processor.Const.baseCallFailureClassName
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
 import uii.ang.creator.processor.Const.intClassName
 import uii.ang.creator.processor.Const.koinNamedClassName
@@ -169,13 +168,13 @@ class UseCaseKtorHelper(
 //      paramList += "paramMap"
 
       baseNetworkCallResultClassName
-        .parameterizedBy(listOf(returnChain.values.last(), baseCallFailureClassName))
+        .parameterizedBy(listOf(returnChain.values.last(), callFailureClassName))
 //      }
     } else {
       baseNetworkCallResultClassName.parameterizedBy(
         listOf(
           data.sourceClassDeclaration.toClassName(),
-          baseCallFailureClassName
+          callFailureClassName
         )
       )
     }

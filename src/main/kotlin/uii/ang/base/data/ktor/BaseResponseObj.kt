@@ -1,4 +1,4 @@
-package uii.ang.ivisitor.base.data.ktor
+package uii.ang.base.data.ktor
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

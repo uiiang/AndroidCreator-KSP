@@ -6,7 +6,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import uii.ang.creator.annotation.requestMethodGet
 import uii.ang.creator.annotation.requestMethodPost
-import uii.ang.creator.processor.Const.baseCallFailureClassName
 import uii.ang.creator.processor.Const.baseErrorModelClassName
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
 import uii.ang.creator.processor.Const.intClassName
@@ -115,12 +114,12 @@ class RepositoryKtorImplHelper(
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
     val retCallResult = if (returnChain.values.isNotEmpty()) {
       baseNetworkCallResultClassName
-        .parameterizedBy(listOf(returnChain.values.last(), baseCallFailureClassName))
+        .parameterizedBy(listOf(returnChain.values.last(), callFailureClassName))
     } else {
       baseNetworkCallResultClassName.parameterizedBy(
         listOf(
           data.sourceClassDeclaration.toClassName(),
-          baseCallFailureClassName
+          callFailureClassName
         )
       )
     }
@@ -162,7 +161,7 @@ class RepositoryKtorImplHelper(
       .addStatement("\t\tif (%M(it)) {", checkResponseSuccessFunc)
       .addStatement("\t\t\temit(")
       .addStatement("\t\t\t\t%T(", baseNetworkCallResultClassName)
-      .addStatement("\t\t\t\t\tvalue = result")
+      .addStatement("\t\t\t\t\tvalue = it")
       .add(toModelCode.build())
       .addStatement("")
       .addStatement("\t\t\t\t)")
@@ -183,7 +182,7 @@ class RepositoryKtorImplHelper(
       .addStatement("\t.%M { e ->", kotlinFlowCatchMemberName)
       .addStatement("\t\temit(")
       .addStatement("\t\t\t%T(", baseNetworkCallResultClassName)
-      .addStatement("\t\t\t\terror = %T(", baseCallFailureClassName)
+      .addStatement("\t\t\t\terror = %T(", callFailureClassName)
       .addStatement("\t\t\t\t\t%T(", baseErrorModelClassName)
       .addStatement("\t\t\t\t\t\tcode = -1,")
       .addStatement("\t\t\t\t\t\terrorMessage = e.message ?: \"\"")

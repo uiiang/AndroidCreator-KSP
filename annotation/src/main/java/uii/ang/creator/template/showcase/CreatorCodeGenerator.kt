@@ -77,7 +77,8 @@ object CreatorCodeGenerator {
         generatorRepositoryKtor(logger, data)
         generatorRepositoryImplKtor(logger, data)
         generatorUseCaseKtor(logger, data)
-        if (data.annotationData.method == requestMethodPost) {
+        if (data.annotationData.method == requestMethodPost &&
+          data.annotationData.parameters.isNotEmpty()) {
           generatorQueryBodyObj(logger, data)
         }
 //        generatorResponse(logger, data)
@@ -91,7 +92,7 @@ object CreatorCodeGenerator {
 
   private fun generatorQueryBodyObj(logger: KSPLogger, data: CreatorData) {
     val queryBodyHelper = RequestQueryBodyHelper(logger, data)
-    data.annotationData.methodName
+//    data.annotationData.methodName
     val queryBodyObjClassNameStr = queryBodyHelper.requestBodyClassName.simpleName
     val queryBodyClassName = queryBodyHelper.genClassBuilder()
     val queryBodyCodeBuilder = CodeBuilder.getOrCreate(

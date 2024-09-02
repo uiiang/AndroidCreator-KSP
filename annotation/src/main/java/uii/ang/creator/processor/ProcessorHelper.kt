@@ -110,11 +110,13 @@ open class ProcessorHelper(
     null
   }
   val checkResponseSuccessFunc = if (data.checkResponseSuccessFuncPath.isNotEmpty()) {
-    MemberName(baseKtorPackageName, data.checkResponseSuccessFuncPath)
+    MemberName(responsePackageName, data.checkResponseSuccessFuncPath)
   } else null
   val getCallFailureFunc = if (data.getCallFailureFuncPath.isNotEmpty()) {
-    MemberName(baseKtorPackageName, data.getCallFailureFuncPath)
+    MemberName(responsePackageName, data.getCallFailureFuncPath)
   } else null
+  val callFailureClassName = ClassName(responsePackageName, "CallFailure")
+
 }
 
 

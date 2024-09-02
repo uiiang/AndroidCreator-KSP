@@ -6,21 +6,14 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import uii.ang.creator.annotation.requestMethodGet
 import uii.ang.creator.annotation.requestMethodPost
-import uii.ang.creator.codegen.CodeBuilder
-import uii.ang.creator.processor.Const.baseCallFailureClassName
-import uii.ang.creator.processor.Const.baseDomainResultClassName
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
 import uii.ang.creator.processor.Const.intClassName
 import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
-import uii.ang.creator.processor.Const.kotlinFlowFlowMemberName
 import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
 import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
-import uii.ang.creator.processor.Utils.getRequestParameterSpecBody
-import uii.ang.creator.processor.Utils.getRequestParameterSpecBodyWithMap
-import uii.ang.creator.processor.Utils.getRequestParameterSpecList
 import uii.ang.creator.processor.Utils.requestParamHasBody
 import uii.ang.creator.processor.Utils.requestParamHasMap
 
@@ -93,10 +86,10 @@ class RepositoryKtorHelper(
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
     val retCallResult = if (returnChain.values.isNotEmpty()) {
        baseNetworkCallResultClassName
-        .parameterizedBy(listOf(returnChain.values.last(), baseCallFailureClassName))
+        .parameterizedBy(listOf(returnChain.values.last(), callFailureClassName))
     } else {
       baseNetworkCallResultClassName
-        .parameterizedBy(listOf(data.sourceClassDeclaration.toClassName(), baseCallFailureClassName))
+        .parameterizedBy(listOf(data.sourceClassDeclaration.toClassName(), callFailureClassName))
     }
     genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
     return genFunction

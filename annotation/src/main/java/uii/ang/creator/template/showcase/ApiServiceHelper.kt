@@ -119,26 +119,33 @@ class ApiServiceHelper(
       )
 //    return client.post(FETCH_S_API_GETBRANCH) {
     val serverUrlCode = if (anno.isDynamicBaseUrl) {
-      "serverUrl + "
+      "serverUrl/"
     } else ""
+    val queryPath = generateParameters
+      .filter { it.paramQueryType == requestParamTypePath }.joinToString("/$") { it.paramName }
+    val requestUrl = if (serverUrlCode.isNotEmpty()) {
+      "\"\$$serverUrlCode\$$fetchUrl/\$$queryPath\""
+    } else {
+      "\"\$$fetchUrl/\$$queryPath\""
+    }
     val fetchCode = CodeBlock.builder()
       .addStatement("")
-      .addStatement("return client.%M($serverUrlCode$fetchUrl) {", requestMethod)
+      .addStatement("return client.%M($requestUrl) {", requestMethod)
     if (anno.method == requestMethodPost) {
       fetchCode.addStatement("\t%M(bodyStr)", ktorSetBody)
     }
     if (anno.method == requestMethodGet) {
       fetchCode.addStatement("\turl {")
-      generateParameters.onEach { para ->
-        when (para.paramQueryType) {
-          requestParamTypePath-> {
-            appendPathSegments
-            fetchCode.addStatement("\t\t%M(\"${para.paramName}\", ${para.paramName})", appendPathSegments)
-          }
-          else -> {
-            fetchCode.addStatement("\t\tparameters.append(\"${para.paramName}\", ${para.paramName})")
-          }
-        }
+      generateParameters.filter { it.paramQueryType != requestParamTypePath }.onEach { para ->
+//        when (para.paramQueryType) {
+//          requestParamTypePath-> {
+//            appendPathSegments
+//            fetchCode.addStatement("\t\t%M(\"${para.paramName}\", ${para.paramName})", appendPathSegments)
+//          }
+//          else -> {
+        fetchCode.addStatement("\t\tparameters.append(\"${para.paramName}\", ${para.paramName})")
+//          }
+//        }
       }
 
       fetchCode.addStatement("\t}")

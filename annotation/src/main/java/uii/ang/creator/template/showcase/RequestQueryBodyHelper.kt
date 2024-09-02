@@ -4,7 +4,6 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.squareup.kotlinpoet.*
 import uii.ang.creator.annotation.Parameter
 import uii.ang.creator.annotation.requestParamTypeBody
-import uii.ang.creator.processor.Const.baseRequestBodyClassName
 import uii.ang.creator.processor.Const.requestBodyPackageName
 import uii.ang.creator.processor.Const.serializableClassName
 import uii.ang.creator.processor.Const.serializableSerialNameClassName
@@ -52,6 +51,8 @@ class RequestQueryBodyHelper(
             } else {
               paramSpec.defaultValue("\"\"")
             }
+          } else {
+            paramSpec.defaultValue("null")
           }
         }
         paramSpec.build()
