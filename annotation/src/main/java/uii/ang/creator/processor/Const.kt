@@ -19,6 +19,8 @@ object Const {
   val databasePackageName = "$basePackageName.$modulePackageName.data.datasource.database"
 
   val repositoryImplPackageName = "$basePackageName.$modulePackageName.data.repository"
+  val pagingSourcePackageName = "$basePackageName.$modulePackageName.data.pagination"
+
   val koinDataModuleGenName = "DataModuleGen"
   val koinApiServiceModuleGenName = "ApiServiceModule"
 
@@ -43,6 +45,15 @@ object Const {
   val moduleToDomainMemberName = MemberName(apiModelPackageName, "toDomainModel")
   val moduleToEntityMemberName = MemberName(apiModelPackageName, "toEntityModel")
   val localCfgRepositoryClassName = ClassName(localCfgRepositoryPackageName, "LocalCfgRepository")
+
+  // android 翻页
+  val pagingSourceClassName = ClassName("androidx.paging", "PagingSource")
+  val pagingStateClassName = ClassName("androidx.paging", "PagingState")
+  val loadParamsClassName = ClassName("androidx.paging.PagingSource","LoadParams")
+  val loadResultClassName = ClassName("androidx.paging.PagingSource","LoadResult")
+  val pagingDataClassName = ClassName("androidx.paging", "PagingData")
+  val pagerClassName = ClassName("androidx.paging", "Pager")
+  val pagingConfigClassName = ClassName("androidx.paging", "PagingConfig")
 
   // base模块包含的类
   val baseRetrofitApiResultClassName = ClassName(baseRetrofitPackageName, "ApiResult")
@@ -103,10 +114,10 @@ object Const {
   val serialDecodeFromStringMemberName = MemberName("kotlinx.serialization", "decodeFromString")
 
   // flow
-  val kotlinFlowFlowOnMemberName = MemberName("kotlinx.coroutines.flow","flowOn")
-  val kotlinFlowFlowMemberName = ClassName("kotlinx.coroutines.flow","flow")
-  val kotlinFlowCatchMemberName = MemberName("kotlinx.coroutines.flow","catch")
-  val kotlinFlowFlowClassName = ClassName("kotlinx.coroutines.flow","Flow")
+  val kotlinFlowFlowOnMemberName = MemberName("kotlinx.coroutines.flow", "flowOn")
+  val kotlinFlowFlowMemberName = ClassName("kotlinx.coroutines.flow", "flow")
+  val kotlinFlowCatchMemberName = MemberName("kotlinx.coroutines.flow", "catch")
+  val kotlinFlowFlowClassName = ClassName("kotlinx.coroutines.flow", "Flow")
   val kotlinxCoroutineDispatcherClassName = ClassName("kotlinx.coroutines", "CoroutineDispatcher")
   val kotlinxWithContextClassName = MemberName("kotlinx.coroutines", "withContext")
 
@@ -144,6 +155,8 @@ object Const {
   val ktorParameter = MemberName(ktorRequestBasePackageName, "parameter")
   val ktorPost = MemberName(ktorRequestBasePackageName, "post")
   val ktorSetBody = MemberName(ktorRequestBasePackageName, "setBody")
+  val ktorAccept = MemberName(ktorRequestBasePackageName, "accept")
+  val ktorContentType = ClassName(ktorHttpBasePackageName, "ContentType")
 
   val appendPathSegments = MemberName(ktorHttpBasePackageName, "appendPathSegments")
 }

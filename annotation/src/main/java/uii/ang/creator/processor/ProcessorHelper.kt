@@ -8,6 +8,7 @@ import uii.ang.creator.processor.Const.apiServicePackageName
 import uii.ang.creator.processor.Const.baseKtorPackageName
 import uii.ang.creator.processor.Const.databasePackageName
 import uii.ang.creator.processor.Const.entityModelPackageName
+import uii.ang.creator.processor.Const.pagingSourcePackageName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.requestBodyPackageName
@@ -79,6 +80,11 @@ open class ProcessorHelper(
     repositoryImplPackageName,
     if (data.annotationData.retrofitServiceClassName.isEmpty()) "${data.sourceClassDeclaration.simpleName.getShortName()}RepositoryImpl"
     else "${data.annotationData.retrofitServiceClassName}RepositoryImpl"
+  )
+
+  val pageSourceClassName = ClassName(
+    pagingSourcePackageName,
+    "${classDeclaration.simpleName.getShortName()}PagingSource"
   )
 
   val requestBodyClassName = ClassName(

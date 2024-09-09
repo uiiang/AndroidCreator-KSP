@@ -11,6 +11,7 @@ import com.squareup.kotlinpoet.ksp.toTypeName
 import uii.ang.creator.annotation.*
 import uii.ang.creator.processor.Const.anyClassName
 import uii.ang.creator.processor.Const.apiModelPackageName
+import uii.ang.creator.processor.Const.domainModulePackageName
 import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.hashMapClassName
 import uii.ang.creator.processor.Const.listClassName
@@ -105,9 +106,10 @@ object Utils {
 
   fun getListGenericsCreatorAnnotation(ksType: KSType):
           KSNode? {
-    val annoList = ksType.declaration.annotations.filter {
-      it.isCreatorAnnotation()
-    }
+    val annoList = ksType.declaration.annotations
+//      .filter {
+//      it.isCreatorAnnotation()
+//    }
     return if (annoList.count() > 0) annoList.first().parent else null
   }
 
@@ -207,8 +209,10 @@ object Utils {
     return toTypeName.isBaseType()
   }
 
-  private fun getEntityModelWrapperType(it: KSValueParameter,
-                                        logger: KSPLogger): TypeName {
+  private fun getEntityModelWrapperType(
+    it: KSValueParameter,
+    logger: KSPLogger
+  ): TypeName {
     val resolve = it.type.resolve()
     val toTypeName = resolve.toTypeName()
     val wrapperType = if (toTypeName.isBaseType()) {
@@ -240,6 +244,18 @@ object Utils {
       retClassName
     }
     return wrapperType
+  }
+
+  fun getGenerics(logger: KSPLogger,
+             data: CreatorData): ClassName {
+    val returnChain = findParseReturnKSTypeChain(data.sourceClassDeclaration, logger)
+    val retClassKsType = returnChain.values.last()
+    val genericsClassName = retClassKsType.arguments.first()
+      .type?.resolve()?.let { it1 -> getListGenericsCreatorAnnotation(it1) }
+    //    val genericsClassName = ksNode
+    logger.warn("genericsClassName ${genericsClassName}")
+    val pageDataClassName = ClassName("$domainModulePackageName.model", genericsClassName.toString())
+    return pageDataClassName
   }
 
   private fun getApiModelWrapperType(
@@ -280,7 +296,7 @@ object Utils {
     return wrapperType
   }
 
-  fun findHasCreatorAnnoClass(param: KSValueParameter, logger: KSPLogger): KSClassDeclaration? {
+  private fun findHasCreatorAnnoClass(param: KSValueParameter, logger: KSPLogger): KSClassDeclaration? {
     val resolve = param.type.resolve()
     val toTypeName = resolve.toTypeName()
     if (toTypeName.isList()) {
@@ -314,7 +330,10 @@ object Utils {
   /**
    * 查找标注ParseReturn注解的参数链条
    */
-  fun findParseReturnChain(classDeclaration: KSClassDeclaration, logger: KSPLogger): Map<KSName, TypeName> {
+  fun findParseReturnChain(
+    classDeclaration: KSClassDeclaration,
+    logger: KSPLogger
+  ): Map<KSName, TypeName> {
 //    val chainList: MutableList<PropertyDescriptor> = mutableListOf()
     val chainMap: MutableMap<KSName, TypeName> = mutableMapOf()
     val tmpMap: MutableMap<KSName, TypeName> = mutableMapOf()
@@ -374,6 +393,89 @@ object Utils {
         creatorDataClass?.let { cd ->
           if (upperName != null && upperTypeName != null) {
             tmpMap[upperName] = upperTypeName
+          }
+          traverse(cd, it.name, toTypeName, logger)
+        }
+      }
+//      }
+    }
+    traverse(classDeclaration, null, null, logger)
+//    if (chainMap.isEmpty()) {
+//      chainMap[classDeclaration.simpleName] = classDeclaration.toClassName()
+//    }
+    logger.warn("查找${classDeclaration.simpleName.getShortName()}的ParseReturn链条结果 ${chainMap.count()} 层")
+    chainMap.forEach { (t, u) ->
+      logger.warn("\t参数名：${t.getShortName()} 类型：${u}")
+    }
+    return chainMap
+  }
+
+  /**
+   * 查找标注ParseReturn注解的参数链条
+   */
+  fun findParseReturnKSTypeChain(
+    classDeclaration: KSClassDeclaration,
+    logger: KSPLogger
+  ): Map<KSName, KSType> {
+//    val chainList: MutableList<PropertyDescriptor> = mutableListOf()
+    val chainMap: MutableMap<KSName, KSType> = mutableMapOf()
+    val tmpMap: MutableMap<KSName, KSType> = mutableMapOf()
+
+    // name, typeName是当前要解析的类的上一级类的标识，用于保存链条的顺序
+    fun traverse(
+      classDeclaration: KSClassDeclaration,
+      upperName: KSName?,
+      upperTypeName: TypeName?,
+      logger: KSPLogger
+    ) {
+      val currentClassName = classDeclaration.simpleName.getShortName()
+      logger.warn("开始检查数据类$currentClassName")
+      // 1, 判断当前参数是否标注@ParseReturn
+      // 1.1, 如果有返回参数typeName kotlin.String // kotlin.collections.List<uii.ang.domain.Album>
+      // 1.2, 如果没有判断参数原类型是否为标注@Creator注解的自定义dataclass，
+      // 如果是则使用自定义dataclass的构造函数里的参数递归判断第1步
+      // 如果没有找到链条，没有标注ParseReturn注解，则使用原数据类做为返回数据类型
+      val parameters = classDeclaration.primaryConstructor?.parameters ?: emptyList()
+      // 构造函数中的参数不为空时
+      parameters.filter {
+        // 1, 判断当前参数是否标注@ParseReturn
+//      logger.warn("\t开始检查参数${it.name?.getShortName()}")
+        it.hasAnnotation<ParseReturn>()
+      }
+        .onEach { logger.warn("\t在数据类$currentClassName 中找到一个ParseReturn注解， ${it.name?.getShortName()}") }
+        .onEach {
+          // 将符合条件的类转换成PropertyDescriptor
+          val resolve = it.type.resolve()
+          val toTypeName = resolve.toTypeName()
+          if (upperName != null && upperTypeName != null) {
+            tmpMap[upperName] = resolve
+          }
+          chainMap.putAll(tmpMap)
+          chainMap[it.name!!] = resolve
+          tmpMap.clear()
+//          chainList.add(convertKSValueParameterToPropertyDescriptor(it, classDeclaration))
+//          logger.warn("chainList = ${chainList.count()}")
+        }
+
+//      if (hasParseReturnList.isEmpty()) {
+      // 1.2, 如果没有判断参数原类型是否为标注@Creator注解的自定义dataclass，
+      logger.warn("数据类$currentClassName 的参数中未发现使用@ParseReturn注解的参数，开始检查参数是否为@Creator")
+
+      parameters.filter {
+        val resolve = it.type.resolve()
+        val toTypeName = resolve.toTypeName()
+        !toTypeName.isBaseType()
+      }.onEach {
+        val resolve = it.type.resolve()
+        val toTypeName = resolve.toTypeName()
+        // toTypeName=kotlin.collections.List<uii.ang.domain.Nation> isList=true hasParseReturn=true
+        // toTypeName=$toTypeName isList=${toTypeName.isList()}
+        logger.warn("\t找到参数 ${it.name?.getShortName()} 是否List对象=${toTypeName.isList()} 完整类型为=$toTypeName ")
+        val creatorDataClass = findHasCreatorAnnoClass(it, logger)
+        logger.warn("\t\t此参数为@Creator注解数据类=${creatorDataClass != null}")
+        creatorDataClass?.let { cd ->
+          if (upperName != null && upperTypeName != null) {
+            tmpMap[upperName] = resolve
           }
           traverse(cd, it.name, toTypeName, logger)
         }

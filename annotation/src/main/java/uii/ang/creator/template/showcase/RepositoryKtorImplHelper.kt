@@ -15,12 +15,16 @@ import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
 import uii.ang.creator.processor.Const.kotlinFlowFlowMemberName
 import uii.ang.creator.processor.Const.kotlinFlowFlowOnMemberName
 import uii.ang.creator.processor.Const.kotlinxCoroutineDispatcherClassName
+import uii.ang.creator.processor.Const.pagerClassName
+import uii.ang.creator.processor.Const.pagingConfigClassName
+import uii.ang.creator.processor.Const.pagingDataClassName
 import uii.ang.creator.processor.Const.serialEncodeToStringMemberName
 import uii.ang.creator.processor.Const.serializableJsonClassName
 import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
+import uii.ang.creator.processor.Utils.getGenerics
 import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
 import uii.ang.creator.processor.Utils.requestParamHasBody
 import uii.ang.creator.processor.Utils.requestParamHasMap
@@ -54,7 +58,7 @@ class RepositoryKtorImplHelper(
     return classBuilder
   }
 
-  fun genRepositoryFuncCode(): FunSpec.Builder {
+  private fun genRepositoryFuncCode(): FunSpec.Builder {
     logger.warn("开始生成 RepositoryImpl方法")
     val anno = data.annotationData
     val methodName = anno.methodName
@@ -101,16 +105,13 @@ class RepositoryKtorImplHelper(
         genFunction.addParameter(
           ParameterSpec.builder(para.paramName, paramTypeClassName).build()
         )
+//        if (data.annotationData.isSupportPage) {
+//          genFunction.addParameter(
+//            ParameterSpec.builder(data.annotationData.pageParamName, stringClassName).build()
+//          )
+//        }
       }
     }
-//    if (hasBody) {
-//      val bodyParamSpec = getRequestParameterSpecBody(methodName)
-//      genFunction.addParameter(bodyParamSpec.build())
-//    }
-//    if (hasMap) {
-//      val bodyParamSpec = getRequestParameterSpecBodyWithMap()
-//      genFunction.addParameter(bodyParamSpec.build())
-//    }
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
     val retCallResult = if (returnChain.values.isNotEmpty()) {
       baseNetworkCallResultClassName
@@ -123,75 +124,114 @@ class RepositoryKtorImplHelper(
         )
       )
     }
-    genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
+    logger.warn("repositoryImpl ${data.annotationData.url} annotationData.isSupportPage=${data.annotationData.isSupportPage}")
+    if (data.annotationData.isSupportPage) {
 
-//      Json { encodeDefaults = true }.encodeToString(body)
-    val convertJsonCode = CodeBlock.builder()
-    convertJsonCode.addStatement(
-      "val jsonStr = %T { encodeDefaults = true }.%M(body)",
-      serializableJsonClassName,
-      serialEncodeToStringMemberName
-    )
-    val callApiService = CodeBlock.builder()
-
-    val paramStr = when (anno.method) {
-      requestMethodPost -> "jsonStr"
-      else -> {
-        generateParameters.joinToString(", ") { it.paramName }
-      }
-    }
-    val serverUrlCode = if (anno.isDynamicBaseUrl) {
-      "serverUrl, "
-    }else ""
-    callApiService.addStatement("\tval result = apiService($serverUrlCode$paramStr)")
-
-    val toModelCode = CodeBlock.builder()
-    returnChain.forEach { (t, u) ->
-      toModelCode.add("\t\t\t\t\t.${t.getShortName()}")
-    }
-    val retCode = CodeBlock.builder()
-      .addStatement("")
-    retCode.addStatement("return %T {", kotlinFlowFlowMemberName.parameterizedBy(retCallResult))
-
-    if (anno.method == requestMethodPost) {
-      retCode.add(convertJsonCode.build())
-    }
-    retCode.add(callApiService.build())
-      .addStatement("\tresult.let {")
-      .addStatement("\t\tif (%M(it)) {", checkResponseSuccessFunc)
-      .addStatement("\t\t\temit(")
-      .addStatement("\t\t\t\t%T(", baseNetworkCallResultClassName)
-      .addStatement("\t\t\t\t\tvalue = it")
-      .add(toModelCode.build())
-      .addStatement("")
-      .addStatement("\t\t\t\t)")
-      .addStatement("\t\t\t)")
-      .addStatement("\t\t} else {")
-//        .addStatement("} ?: run {")
-      .addStatement("\t\t\temit(")
-      .addStatement("\t\t\t\t%T(", baseNetworkCallResultClassName)
-      .addStatement("\t\t\t\t\terror = %M(it)", getCallFailureFunc)
-      .addStatement("\t\t\t\t)")
-      .addStatement("\t\t\t)")
-      .addStatement("\t\t}")
-      .addStatement("\t}")
-      .addStatement(
-        "}.%M(dispatcher)",
-        kotlinFlowFlowOnMemberName
+      val pageDataClassName = getGenerics(logger, data)
+      genFunction.returns(
+        kotlinFlowFlowClassName
+          .parameterizedBy(
+            pagingDataClassName
+              .parameterizedBy(pageDataClassName)
+          )
       )
-      .addStatement("\t.%M { e ->", kotlinFlowCatchMemberName)
-      .addStatement("\t\temit(")
-      .addStatement("\t\t\t%T(", baseNetworkCallResultClassName)
-      .addStatement("\t\t\t\terror = %T(", callFailureClassName)
-      .addStatement("\t\t\t\t\t%T(", baseErrorModelClassName)
-      .addStatement("\t\t\t\t\t\tcode = -1,")
-      .addStatement("\t\t\t\t\t\terrorMessage = e.message ?: \"\"")
-      .addStatement("\t\t\t\t\t)")
-      .addStatement("\t\t\t\t)")
-      .addStatement("\t\t\t)")
-      .addStatement("\t\t)")
-      .addStatement("}")
-    genFunction.addCode(retCode.build())
+      val pagingConfigCode = CodeBlock.builder()
+      pagingConfigCode.addStatement(
+        "\tconfig = %T(pageSize = ${data.annotationData.pageSize}, prefetchDistance = ${data.annotationData.prefetchDistance}),",
+        pagingConfigClassName
+      )
+      val paramsStr = generateParameters.joinToString(", ") { para ->
+        "${para.paramName} = ${para.paramName}"
+      }
+      val pagingSourceFactoryCode = CodeBlock.builder()
+      pagingSourceFactoryCode.addStatement("\tpagingSourceFactory = {")
+      pagingSourceFactoryCode.addStatement("\t\t%T(", pageSourceClassName)
+      pagingSourceFactoryCode.addStatement("\t\t\tapiService = apiService, $paramsStr")
+      pagingSourceFactoryCode.addStatement("\t\t)")
+      pagingSourceFactoryCode.addStatement("\t}")
+
+      val retCode = CodeBlock.builder()
+        .addStatement("")
+      retCode.addStatement("return %T(", pagerClassName)
+      retCode.add(pagingConfigCode.build())
+      retCode.add(pagingSourceFactoryCode.build())
+      retCode.addStatement(").flow.%M(dispatcher)", kotlinFlowFlowOnMemberName)
+      genFunction.addCode(retCode.build())
+    } else {
+      genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
+//      Json { encodeDefaults = true }.encodeToString(body)
+      val convertJsonCode = CodeBlock.builder()
+      convertJsonCode.addStatement(
+        "val jsonStr = %T { encodeDefaults = true }.%M(body)",
+        serializableJsonClassName,
+        serialEncodeToStringMemberName
+      )
+      val callApiService = CodeBlock.builder()
+
+      val paramStr = when (anno.method) {
+        requestMethodPost -> "jsonStr"
+        else -> {
+          generateParameters.joinToString(", ") { it.paramName }
+        }
+      }
+      val serverUrlCode = if (anno.isDynamicBaseUrl) {
+        "serverUrl, "
+      } else ""
+      callApiService.addStatement("\tval result = apiService($serverUrlCode$paramStr)")
+
+      val toModelCode = CodeBlock.builder()
+      returnChain.forEach { (t, u) ->
+        if (u.isNullable) {
+          toModelCode.add("?.${t.getShortName()}")
+        } else {
+          toModelCode.add(".${t.getShortName()}")
+        }
+      }
+      val retCode = CodeBlock.builder()
+        .addStatement("")
+      retCode.addStatement("return %T {", kotlinFlowFlowMemberName.parameterizedBy(retCallResult))
+
+      if (anno.method == requestMethodPost) {
+        retCode.add(convertJsonCode.build())
+      }
+      retCode.add(callApiService.build())
+        .addStatement("\tresult.let {")
+        .addStatement("\t\tif (%M(it)) {", checkResponseSuccessFunc)
+        .addStatement("\t\t\temit(")
+        .addStatement("\t\t\t\t%T(", baseNetworkCallResultClassName)
+        .addStatement("\t\t\t\t\tvalue = it")
+        .add(toModelCode.build())
+        .addStatement("")
+        .addStatement("\t\t\t\t)")
+        .addStatement("\t\t\t)")
+        .addStatement("\t\t} else {")
+//        .addStatement("} ?: run {")
+        .addStatement("\t\t\temit(")
+        .addStatement("\t\t\t\t%T(", baseNetworkCallResultClassName)
+        .addStatement("\t\t\t\t\terror = %M(it)", getCallFailureFunc)
+        .addStatement("\t\t\t\t)")
+        .addStatement("\t\t\t)")
+        .addStatement("\t\t}")
+        .addStatement("\t}")
+        .addStatement(
+          "}.%M(dispatcher)",
+          kotlinFlowFlowOnMemberName
+        )
+        .addStatement("\t.%M { e ->", kotlinFlowCatchMemberName)
+        .addStatement("\t\temit(")
+        .addStatement("\t\t\t%T(", baseNetworkCallResultClassName)
+        .addStatement("\t\t\t\terror = %T(", callFailureClassName)
+        .addStatement("\t\t\t\t\t%T(", baseErrorModelClassName)
+        .addStatement("\t\t\t\t\t\tcode = -1,")
+        .addStatement("\t\t\t\t\t\terrorMessage = e.message ?: \"\"")
+        .addStatement("\t\t\t\t\t)")
+        .addStatement("\t\t\t\t)")
+        .addStatement("\t\t\t)")
+        .addStatement("\t\t)")
+        .addStatement("}")
+      genFunction.addCode(retCode.build())
+
+    }
 
     return genFunction
   }

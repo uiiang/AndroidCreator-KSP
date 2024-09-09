@@ -81,3 +81,7 @@ annotation class Query(
   // 查询数据库的方法名，多个字段相同方法名拼在一个方法里
   val queryMethodName: String,
 )
+
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.CLASS)
+annotation class Page(val pageParam: String = "page")

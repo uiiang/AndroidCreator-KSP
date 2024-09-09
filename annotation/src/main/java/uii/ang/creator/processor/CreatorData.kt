@@ -42,8 +42,23 @@ class CreatorData(
    * 如果是动态baseUrl，在useCase,Repository,apiServer的方法中，会增加url的传入参数
    * 如果不是，不会传入参数，直接使用ktor配置的地址
    */
-  val isDynamicBaseUrl: Boolean = false
-
+  val isDynamicBaseUrl: Boolean = annotationData.isDynamicBaseUrl
+  /**
+   * 是否支持page分页
+   */
+  val isSupportPage: Boolean = annotationData.isSupportPage
+  /**
+   * 分布参数 - 页码
+   */
+  val pageParamName: String = annotationData.pageParamName
+  /**
+   * 每页数据量
+   */
+  val pageSize: Int = annotationData.pageSize
+  /**
+   * 预加载翻页参数
+   */
+  val prefetchDistance: Int = annotationData.prefetchDistance
   // 使用primaryConstructor来转换构造函数中的参数，可以获得给参数标注的注解
   val primaryConstructorParameters: List<PropertyDescriptor> =
     sourceClassDeclaration.primaryConstructor?.parameters?.map {
@@ -124,6 +139,22 @@ class CreatorData(
      * 如果不是，不会传入参数，直接使用ktor配置的地址
      */
     val isDynamicBaseUrl: Boolean = false,
+    /**
+     * 是否支持page分页
+     */
+    val isSupportPage: Boolean = true,
+    /**
+     * 分布参数 - 页码
+     */
+    val pageParamName: String,
+    /**
+     * 每页数据量
+     */
+    val pageSize: Int,
+    /**
+     * 预加载翻页参数
+     */
+    val prefetchDistance: Int,
   ) {
     companion object {
       fun from(annotation: KSAnnotation): AnnotationData {
@@ -147,6 +178,10 @@ class CreatorData(
           checkResponseSuccessFuncPath = annotation.arguments.first { it.name?.asString() == Creator::checkResponseSuccessFuncPath.name }.value as String,
           getCallFailureFuncPath = annotation.arguments.first { it.name?.asString() == Creator::getCallFailureFuncPath.name }.value as String,
           isDynamicBaseUrl = annotation.arguments.first { it.name?.asString() == Creator::isDynamicBaseUrl.name }.value as Boolean,
+          isSupportPage = annotation.arguments.first { it.name?.asString() == Creator::isSupportPage.name }.value as Boolean,
+          pageParamName = annotation.arguments.first { it.name?.asString() == Creator::pageParamName.name }.value as String,
+          pageSize = annotation.arguments.first { it.name?.asString() == Creator::pageSize.name }.value as Int,
+          prefetchDistance = annotation.arguments.first { it.name?.asString() == Creator::prefetchDistance.name }.value as Int,
 
         )
       }

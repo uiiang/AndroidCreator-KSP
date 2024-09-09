@@ -17,6 +17,7 @@ import uii.ang.creator.processor.Const.entityModelPackageName
 import uii.ang.creator.processor.Const.koinApiServiceModuleGenName
 import uii.ang.creator.processor.Const.koinDataModuleGenName
 import uii.ang.creator.processor.Const.koinDomainModuleGenName
+import uii.ang.creator.processor.Const.pagingSourcePackageName
 import uii.ang.creator.processor.Const.repositoryImplPackageName
 import uii.ang.creator.processor.Const.repositoryPackageName
 import uii.ang.creator.processor.Const.requestBodyPackageName
@@ -33,61 +34,66 @@ object CreatorCodeGenerator {
     data: CreatorData, resolver: Resolver, logger: KSPLogger,
     index: Int, allSize: Int
   ) {
-    if (data.generateApiType == apiTypeRetrofit) {
-//    val processorHelper = ProcessorHelper(logger, data, basePackageName)
-      val apiModelHelper = ApiModelHelper(logger, data)
-      val responseHelper = ResponseHelper(logger, data)
-      val retrofitServiceHelper = RetrofitServiceHelper(logger, data)
-      val repositoryHelper = RepositoryHelper(logger, data)
-      val repositoryImplHelper = RepositoryImplHelper(logger, data)
-      val useCaseHelper = UseCaseHelper(logger, data)
-      val entityModelHelper = EntityModelHelper(logger, data)
-      var daoHelper = DaoHelper(logger, data)
-      // 生成ApiDomain代码
-      if (data.generateApiModel) {
-        generatorApiModel(logger, data)
-      }
-      if (data.generateEntityModel) {
-        generatorEntityModel(entityModelHelper, data)
-        generatorDao(daoHelper, data, logger, index, allSize)
-      }
-
-//      val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
-//      if (hasBody) {
-//        generatorQueryBodyObj(queryBodyHelper, data)
-//      }
-
-      // 生成Response代码
-      if (data.generateResponse) {
-        generatorResponse(logger, data)
-      }
-
-      // 生成Retrofit代码
-      if (data.generateRetrofitService) {
-        generatorRetrofitService(retrofitServiceHelper, logger)
-        generatorRepository(repositoryHelper, repositoryImplHelper, logger)
-      }
-
-      generatorUseCase(useCaseHelper, logger)
-    } else if (data.generateApiType == apiTypeKtor) {
-      val generateApiService = data.generateApiService
-      if (generateApiService) {
+//    if (data.generateApiType == apiTypeRetrofit) {
+////    val processorHelper = ProcessorHelper(logger, data, basePackageName)
+//      val apiModelHelper = ApiModelHelper(logger, data)
+//      val responseHelper = ResponseHelper(logger, data)
+//      val retrofitServiceHelper = RetrofitServiceHelper(logger, data)
+//      val repositoryHelper = RepositoryHelper(logger, data)
+//      val repositoryImplHelper = RepositoryImplHelper(logger, data)
+//      val useCaseHelper = UseCaseHelper(logger, data)
+//      val entityModelHelper = EntityModelHelper(logger, data)
+//      var daoHelper = DaoHelper(logger, data)
+//      // 生成ApiDomain代码
+//      if (data.generateApiModel) {
 //        generatorApiModel(logger, data)
-        generatorApiService(logger, data)
-        generatorRepositoryKtor(logger, data)
-        generatorRepositoryImplKtor(logger, data)
-        generatorUseCaseKtor(logger, data)
-        if (data.annotationData.method == requestMethodPost &&
-          data.annotationData.parameters.isNotEmpty()) {
-          generatorQueryBodyObj(logger, data)
-        }
+//      }
+//      if (data.generateEntityModel) {
+//        generatorEntityModel(entityModelHelper, data)
+//        generatorDao(daoHelper, data, logger, index, allSize)
+//      }
+//
+////      val hasBody = data.annotationData.parameters.any { param -> param.paramQueryType == requestParamTypeBody }
+////      if (hasBody) {
+////        generatorQueryBodyObj(queryBodyHelper, data)
+////      }
+//
+//      // 生成Response代码
+//      if (data.generateResponse) {
 //        generatorResponse(logger, data)
+//      }
+//
+//      // 生成Retrofit代码
+//      if (data.generateRetrofitService) {
+//        generatorRetrofitService(retrofitServiceHelper, logger)
+//        generatorRepository(repositoryHelper, repositoryImplHelper, logger)
+//      }
+//
+//      generatorUseCase(useCaseHelper, logger)
+//    } else if (data.generateApiType == apiTypeKtor) {
+    val generateApiService = data.generateApiService
+    if (generateApiService) {
+//        generatorApiModel(logger, data)
+      generatorApiService(logger, data)
+      generatorRepositoryKtor(logger, data)
+      generatorRepositoryImplKtor(logger, data)
+//        logger.warn("isSupportPage = ${data.annotationData.isSupportPage}")
+      if (data.annotationData.isSupportPage) {
+        generatorPaginationKtor(logger, data)
       }
+      generatorUseCaseKtor(logger, data)
+      if (data.annotationData.method == requestMethodPost &&
+        data.annotationData.parameters.isNotEmpty()
+      ) {
+        generatorQueryBodyObj(logger, data)
+      }
+//        generatorResponse(logger, data)
+    }
 //      if (data.generateApiModel) {
 //        val apiModelHelper = ApiModelHelper(logger, data)
 //        generatorApiModel(apiModelHelper, data)
 //      }
-    }
+//    }
   }
 
   private fun generatorQueryBodyObj(logger: KSPLogger, data: CreatorData) {
@@ -103,6 +109,15 @@ object CreatorCodeGenerator {
     paramBodyList.onEach {
       queryBodyCodeBuilder.addType(it)
     }
+  }
+
+  private fun generatorPaginationKtor(logger: KSPLogger, data: CreatorData) {
+    val paginationHelper = PaginationHelper(logger, data)
+    val pageSourceClassNameStr = paginationHelper.pageSourceClassName.simpleName
+    val pageSourceBuilder = paginationHelper.genClassBuilder()
+    CodeBuilder.getOrCreate(
+      pagingSourcePackageName, pageSourceClassNameStr,
+      typeBuilderProvider = { pageSourceBuilder })
   }
 
   private fun generatorUseCaseKtor(logger: KSPLogger, data: CreatorData) {
@@ -160,6 +175,8 @@ object CreatorCodeGenerator {
     logger: KSPLogger,
     data: CreatorData
   ) {
+
+    logger.warn("start generatorApiService")
     val apiServiceHelper = ApiServiceHelper(logger, data)
     CodeBuilder.getOrCreate(
       apiServicePackageName,

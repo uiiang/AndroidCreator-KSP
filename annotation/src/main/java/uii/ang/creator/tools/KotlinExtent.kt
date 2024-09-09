@@ -7,6 +7,7 @@ import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.*
 import uii.ang.creator.annotation.Creator
+import uii.ang.creator.annotation.Page
 import uii.ang.creator.annotation.Parameter
 import uii.ang.creator.processor.CreatorData
 import java.util.*
@@ -163,6 +164,10 @@ fun KSPropertyDeclaration.isNullable(): Boolean {
 
 fun KSAnnotation.isCreatorAnnotation(): Boolean {
   return shortName.getShortName() == Creator::class.simpleName
+}
+
+fun KSAnnotation.isPageAnnotation():Boolean{
+  return shortName.getShortName() == Page::class.simpleName
 }
 
 fun KSType.isNullable(): Boolean {

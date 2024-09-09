@@ -13,7 +13,9 @@ import uii.ang.creator.processor.Const.baseKtorPackageName
 import uii.ang.creator.processor.Const.baseRemoteResponseClassName
 import uii.ang.creator.processor.Const.intClassName
 import uii.ang.creator.processor.Const.koinSingleOfMemberName
+import uii.ang.creator.processor.Const.ktorAccept
 import uii.ang.creator.processor.Const.ktorBody
+import uii.ang.creator.processor.Const.ktorContentType
 import uii.ang.creator.processor.Const.ktorGet
 import uii.ang.creator.processor.Const.ktorPost
 import uii.ang.creator.processor.Const.ktorSetBody
@@ -34,13 +36,16 @@ class ApiServiceHelper(
         .replace("=", "_")
         .uppercase()
     }"
+    logger.warn("ApiServiceHelper genClassBuilder ${data.annotationData.url} annotationData.isSupportPage=${data.annotationData.isSupportPage}")
+
     val constructorParam = genConstructor()
     val property = convertProperty(fetchUrl)
-    val fetchFunc = generateFetchFuncCode(fetchUrl)
-    return TypeSpec.classBuilder(apiServiceClassName)
+//    val fetchFunc = generateFetchFuncCode(fetchUrl)
+    val classBuilder =  TypeSpec.classBuilder(apiServiceClassName)
       .primaryConstructor(constructorParam.build())
       .addProperties(property)
-      .addFunction(fetchFunc.build())
+    classBuilder.addFunction(generateFetchFuncCode(fetchUrl).build())
+    return classBuilder
   }
 
   private fun genConstructor(): FunSpec.Builder {
@@ -74,8 +79,9 @@ class ApiServiceHelper(
     return retList
   }
 
-  fun generateFetchFuncCode(fetchUrl: String): FunSpec.Builder {
+  private fun generateFetchFuncCode(fetchUrl: String): FunSpec.Builder {
     val anno = data.annotationData
+    logger.warn("ApiServiceHelper generateFetchFuncCode ${anno.url} annotationData.isSupportPage=${anno.isSupportPage}")
     val methodName = anno.methodName
     val requestMethod = when (anno.method) {
       requestMethodPost -> ktorPost
@@ -110,44 +116,62 @@ class ApiServiceHelper(
           ParameterSpec.builder(para.paramName, paramTypeClassName).build()
         )
       }
+      logger.warn("apiService ${anno.url} annotationData.isSupportPage=${anno.isSupportPage}")
+      if (anno.isSupportPage) {
+        genFunction.addParameter(
+          ParameterSpec.builder(anno.pageParamName, intClassName).build()
+        )
+      }
     }
     genFunction
       .returns(
 //        baseRemoteResponseClassName
-//          .parameterizedBy(data.sourceClassDeclaration.toClassName())
+//          .parameterizedBy (data.sourceClassDeclaration.toClassName())
         data.sourceClassDeclaration.toClassName()
       )
 //    return client.post(FETCH_S_API_GETBRANCH) {
     val serverUrlCode = if (anno.isDynamicBaseUrl) {
       "serverUrl/"
     } else ""
-    val queryPath = generateParameters
+    var queryPath = generateParameters
       .filter { it.paramQueryType == requestParamTypePath }.joinToString("/$") { it.paramName }
+    logger.warn("请求参数字符串判断前 = $queryPath")
+    queryPath = if (queryPath.isNotEmpty()) {
+      "/\$$queryPath\""
+    } else ""
+    logger.warn("请求参数字符串判断后 = $queryPath")
     val requestUrl = if (serverUrlCode.isNotEmpty()) {
-      "\"\$$serverUrlCode\$$fetchUrl/\$$queryPath\""
+      "\"\$$serverUrlCode\$$fetchUrl$queryPath\""
     } else {
-      "\"\$$fetchUrl/\$$queryPath\""
+      "\"\$$fetchUrl$queryPath\""
     }
     val fetchCode = CodeBlock.builder()
       .addStatement("")
       .addStatement("return client.%M($requestUrl) {", requestMethod)
+//      .addStatement("%M(%T.Application.Json)", ktorAccept, ktorContentType)
     if (anno.method == requestMethodPost) {
       fetchCode.addStatement("\t%M(bodyStr)", ktorSetBody)
     }
-    if (anno.method == requestMethodGet) {
+    if (anno.method == requestMethodGet)  {
       fetchCode.addStatement("\turl {")
-      generateParameters.filter { it.paramQueryType != requestParamTypePath }.onEach { para ->
+      if (generateParameters.any { it.paramQueryType != requestParamTypePath }) {
+//        fetchCode.addStatement("\turl {")
+        generateParameters.filter { it.paramQueryType != requestParamTypePath }.onEach { para ->
 //        when (para.paramQueryType) {
 //          requestParamTypePath-> {
 //            appendPathSegments
 //            fetchCode.addStatement("\t\t%M(\"${para.paramName}\", ${para.paramName})", appendPathSegments)
 //          }
 //          else -> {
-        fetchCode.addStatement("\t\tparameters.append(\"${para.paramName}\", ${para.paramName})")
+          fetchCode.addStatement("\t\tparameters.append(\"${para.paramName}\", ${para.paramName})")
 //          }
 //        }
+        }
+//        fetchCode.addStatement("\t}")
       }
-
+      if (anno.isSupportPage) {
+        fetchCode.addStatement("\t\tparameters.append(\"${anno.pageParamName}\", page.toString())")
+      }
       fetchCode.addStatement("\t}")
     }
     fetchCode.addStatement("}.%M()", ktorBody)

@@ -13,10 +13,12 @@ import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
 import uii.ang.creator.processor.Const.kotlinxCoroutineDispatcherClassName
 import uii.ang.creator.processor.Const.kotlinxWithContextClassName
 import uii.ang.creator.processor.Const.localCfgRepositoryClassName
+import uii.ang.creator.processor.Const.pagingDataClassName
 import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
+import uii.ang.creator.processor.Utils.getGenerics
 import uii.ang.creator.tools.firstCharLowerCase
 
 class UseCaseKtorHelper(
@@ -85,16 +87,12 @@ class UseCaseKtorHelper(
   }
 
 
-  fun genUseCaseFunCode(): FunSpec.Builder {
+  private fun genUseCaseFunCode(): FunSpec.Builder {
     val anno = data.annotationData
     val methodName = anno.methodName
     val generateParameters = anno.parameters
     val genFunction = FunSpec.builder("invoke")
       .addModifiers(KModifier.SUSPEND, KModifier.OPERATOR)
-//      .addTypeVariable(TypeVariableName("T"))
-//    val parameterSpecList = getRequestParameterSpecList(generateParameters, true)
-//    genFunction.addParameters(parameterSpecList)
-//    genFunction.addParameter(ParameterSpec.builder("url", stringClassName).build())
 
     if (anno.method == requestMethodPost) {
       genFunction.addParameter(ParameterSpec.builder("body", requestBodyClassName).build())
@@ -114,69 +112,22 @@ class UseCaseKtorHelper(
 
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
     val funCodeBlock = CodeBlock.builder()
-    val retCallResult = if (returnChain.values.isNotEmpty()) {
-//      val repositoryInterfaceName = repositoryInterfaceClassName.simpleName.firstCharLowerCase()
-
-//      val url = "${localCfgRepository.getServerProtocol()}://${localCfgRepository.getBaseServerUrl()}"
-//      funCodeBlock.addStatement("val url = \"\${localCfgRepository.getServerProtocol()}://\${localCfgRepository.getBaseServerUrl()}\"")
-//      funCodeBlock.addStatement("val url = \"\${protocol}://\${url}\"")
-//      val hasBody = requestParamHasBody(generateParameters)
-//      val hasMap = requestParamHasMap(generateParameters)
-//      val noBodyParamList = getRequestParamWithoutBody(generateParameters)
-//      var paramList = noBodyParamList.joinToString(", ") { param ->
-//        param.paramName
-//      }
-//      if (hasBody) {
-//        val bodyParamList = getRequestParamWithBody(generateParameters)
-//          .joinToString(",") {
-////          if (it.paramType=="String") {
-////            "\n${it.paramName} = \"${it.paramName}\""
-////          } else {
-//            "\n${it.paramName} = ${it.paramName}"
-////          }
-//          }
-//        val queryBodyClassName = "${methodName}QueryBody"
-//        val queryBodyCodeBlock = CodeBlock.builder()
-//          .addStatement(
-//            "val ${queryBodyClassName.firstCharLowerCase()} = %T(",
-//            ClassName(requestBodyPackageName, queryBodyClassName.firstCharUpperCase())
-//          )
-//          .addStatement(bodyParamList)
-//          .addStatement(")")
-//        genFunction.addCode(queryBodyCodeBlock.build())
-//        if (paramList.isNotEmpty()) {
-//          paramList += ", "
-//        }
-//        paramList += queryBodyClassName
-//        funCodeBlock.addStatement(
-//          "%T.d(\"$queryBodyClassName params=\${$queryBodyClassName.toString()}\")",
-//          timberClassName
-//        )
-//      }
-
-//      if (hasMap) {
-//        val bodyParamList = getRequestParamWithMap(generateParameters)
-//        val queryMapCodeBlock = CodeBlock.builder()
-//        queryMapCodeBlock.addStatement("val paramMap = %T()", getRequestHashMapClassName())
-//        bodyParamList.forEach { param ->
-//          queryMapCodeBlock.addStatement("paramMap[\"${param.paramName}\"] = ${param.paramName}")
-//        }
-//        funCodeBlock.add(queryMapCodeBlock.build())
-//      if (paramList.isNotEmpty()) {
-//        paramList += ", "
-//      }
-//      paramList += "paramMap"
-
-      baseNetworkCallResultClassName
-        .parameterizedBy(listOf(returnChain.values.last(), callFailureClassName))
-//      }
+    val retCallResult = if (data.annotationData.isSupportPage) {
+      val pageDataClassName = getGenerics(logger, data)
+      pagingDataClassName
+        .parameterizedBy(pageDataClassName)
     } else {
-      baseNetworkCallResultClassName.parameterizedBy(
-        listOf(
-          data.sourceClassDeclaration.toClassName(),
-          callFailureClassName
+      if (returnChain.values.isNotEmpty()) {
+        baseNetworkCallResultClassName
+          .parameterizedBy(listOf(returnChain.values.last(), callFailureClassName))
+      } else {
+        baseNetworkCallResultClassName.parameterizedBy(
+          listOf(
+            data.sourceClassDeclaration.toClassName(),
+            callFailureClassName
+          )
         )
-      )
+      }
     }
 
     funCodeBlock.addStatement("").addStatement("return %M(dispatcher) {", kotlinxWithContextClassName)

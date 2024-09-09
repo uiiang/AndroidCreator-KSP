@@ -100,6 +100,22 @@ annotation class Creator(
    * 如果不是，不会传入参数，直接使用ktor配置的地址
    */
   val isDynamicBaseUrl: Boolean = false,
+  /**
+   * 是否支持page分页
+   */
+  val isSupportPage: Boolean = false,
+  /**
+   * 分布参数 - 页码
+   */
+  val pageParamName: String = "page",
+  /**
+   * 每页数据量
+   */
+  val pageSize: Int = 10,
+  /**
+   * 预加载翻页参数
+   */
+  val prefetchDistance: Int = 2,
 )
 
 

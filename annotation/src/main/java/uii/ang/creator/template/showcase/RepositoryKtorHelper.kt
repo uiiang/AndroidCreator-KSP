@@ -9,10 +9,12 @@ import uii.ang.creator.annotation.requestMethodPost
 import uii.ang.creator.processor.Const.baseNetworkCallResultClassName
 import uii.ang.creator.processor.Const.intClassName
 import uii.ang.creator.processor.Const.kotlinFlowFlowClassName
+import uii.ang.creator.processor.Const.pagingDataClassName
 import uii.ang.creator.processor.Const.stringClassName
 import uii.ang.creator.processor.CreatorData
 import uii.ang.creator.processor.ProcessorHelper
 import uii.ang.creator.processor.Utils.findParseReturnChain
+import uii.ang.creator.processor.Utils.getGenerics
 import uii.ang.creator.processor.Utils.getRequestParamWithoutBody
 import uii.ang.creator.processor.Utils.requestParamHasBody
 import uii.ang.creator.processor.Utils.requestParamHasMap
@@ -45,9 +47,6 @@ class RepositoryKtorHelper(
 
     val genFunction = FunSpec.builder("invoke")
       .addModifiers(KModifier.ABSTRACT, KModifier.SUSPEND, KModifier.OPERATOR)
-//      .addTypeVariable(TypeVariableName("T"))
-//    val parameterSpecList = getRequestParameterSpecList(noBodyParamList, true)
-//    genFunction.addParameters(parameterSpecList)
 
     if (anno.isDynamicBaseUrl) {
       genFunction
@@ -72,26 +71,31 @@ class RepositoryKtorHelper(
         genFunction.addParameter(
           ParameterSpec.builder(para.paramName, paramTypeClassName).build()
         )
+//        if (data.annotationData.isSupportPage) {
+//          genFunction.addParameter(
+//            ParameterSpec.builder(data.annotationData.pageParamName, stringClassName).build()
+//          )
+//        }
       }
     }
 
-//    if (hasBody) {
-//      val bodyParamSpec = getRequestParameterSpecBody(methodName)
-//      genFunction.addParameter(bodyParamSpec.build())
-//    }
-//    if (hasMap) {
-//      val bodyParamSpec = getRequestParameterSpecBodyWithMap()
-//      genFunction.addParameter(bodyParamSpec.build())
-//    }
     val returnChain = findParseReturnChain(data.sourceClassDeclaration, logger)
     val retCallResult = if (returnChain.values.isNotEmpty()) {
-       baseNetworkCallResultClassName
+      baseNetworkCallResultClassName
         .parameterizedBy(listOf(returnChain.values.last(), callFailureClassName))
     } else {
       baseNetworkCallResultClassName
         .parameterizedBy(listOf(data.sourceClassDeclaration.toClassName(), callFailureClassName))
     }
-    genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
+    if (data.annotationData.isSupportPage) {
+      val pageDataClassName = getGenerics(logger, data)
+      genFunction.returns(kotlinFlowFlowClassName
+        .parameterizedBy(pagingDataClassName
+          .parameterizedBy(pageDataClassName)))
+//      genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(pagingDataClassName.parameterizedBy(returnChain.values.last())))
+    } else {
+      genFunction.returns(kotlinFlowFlowClassName.parameterizedBy(retCallResult))
+    }
     return genFunction
   }
 }
